@@ -8,8 +8,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <!-- Google Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<!-- Chart.js para gráficas -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
   * {
     margin: 0;
@@ -248,6 +246,22 @@
     color: #ff4757;
   }
 
+  .blocked-users {
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 10px;
+    background: rgba(255, 71, 87, 0.05);
+    border-radius: 10px;
+  }
+
+  .blocked-user {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid rgba(255, 71, 87, 0.2);
+  }
+
   /* Posts */
   .post {
     border-radius: 20px;
@@ -267,6 +281,7 @@
     height: 50px;
     border-radius: 50%;
     object-fit: cover;
+    border: 3px solid #4169E1;
   }
 
   /* Rating stars */
@@ -333,6 +348,128 @@
     border: none;
     border-radius: 8px;
     cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .btn-danger:hover {
+    background: #ff3344;
+  }
+
+  .btn-warning {
+    background: #ffa502;
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+
+  .btn-success {
+    background: #00d25b;
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+
+  .post-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+    flex-wrap: wrap;
+    border-top: 1px solid rgba(128, 128, 128, 0.2);
+    padding-top: 15px;
+  }
+
+  /* Comentarios */
+  .comments-toggle {
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: 25px;
+    background: rgba(65, 105, 225, 0.1);
+    margin: 15px 0;
+    transition: all 0.3s;
+  }
+
+  .comments-toggle:hover {
+    background: rgba(65, 105, 225, 0.2);
+    transform: translateX(5px);
+  }
+
+  .comments-section {
+    margin-top: 20px;
+    border-radius: 15px;
+    padding: 20px;
+    display: none;
+    animation: slideDown 0.3s ease;
+    background: rgba(128, 128, 128, 0.05);
+  }
+
+  .comments-section.show {
+    display: block;
+  }
+
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .comment {
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    background: rgba(65, 105, 225, 0.05);
+    animation: fadeIn 0.3s;
+  }
+
+  .comment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+  }
+
+  .comment-user {
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .comment-user img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+  }
+
+  .comment-date {
+    font-size: 11px;
+    opacity: 0.7;
+  }
+
+  .comment-actions {
+    display: flex;
+    gap: 5px;
+    margin-top: 10px;
+  }
+
+  .comment-input {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  .comment-input input {
+    flex: 1;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(128, 128, 128, 0.2);
+    font-size: 14px;
   }
 
   /* Notification */
@@ -351,6 +488,10 @@
 
   .notification.error {
     border-left-color: #ef4444;
+  }
+
+  .notification.warning {
+    border-left-color: #ffa502;
   }
 
   @keyframes slideInRight {
@@ -413,6 +554,14 @@
     .nav-buttons {
       flex-wrap: wrap;
     }
+    
+    .post-actions {
+      flex-direction: column;
+    }
+    
+    .post-actions button {
+      width: 100%;
+    }
   }
 </style>
 </head>
@@ -430,7 +579,6 @@
     <span class="logo-text">Social RD</span>
   </div>
   
-  <!-- Mensaje de bienvenida -->
   <div class="welcome-card">
     <i class="fas fa-graduation-cap"></i>
     <h3>🎓 ¡Bienvenido a Social RD!</h3>
@@ -515,9 +663,6 @@
         <button class="nav-btn" onclick="showProfile()" id="navProfile">
           <i class="fas fa-user"></i> Perfil
         </button>
-        <button class="nav-btn" onclick="showStats()" id="navStats">
-          <i class="fas fa-chart-bar"></i> Estadísticas
-        </button>
         <button class="nav-btn" onclick="showSettings()" id="navSettings">
           <i class="fas fa-cog"></i> Ajustes
         </button>
@@ -530,7 +675,7 @@
         <span id="profileMiniName"></span>
         <span id="adminMiniBadge" style="display: none;" class="admin-badge">Admin</span>
       </div>
-      <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle" style="background: none; border: none; font-size: 20px;">
+      <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle">
         <i class="fas fa-moon"></i>
       </button>
     </div>
@@ -563,7 +708,7 @@
     <div class="welcome-card">
       <i class="fas fa-chalkboard-teacher"></i>
       <h3>📚 Califica a tus profesores</h3>
-      <p>Comparte tu experiencia con los docentes y ayuda a otros estudiantes<br>a elegir mejor sus clases.</p>
+      <p>Comparte tu experiencia con los docentes y ayuda a otros estudiantes a elegir mejor sus clases.</p>
     </div>
     
     <h3><i class="fas fa-pen-fancy"></i> Calificar a un Profesor</h3>
@@ -575,12 +720,7 @@
     
     <input type="file" id="image" accept="image/*" style="display: none;">
     
-    <select id="teacherSelect" style="width: 100%; padding: 15px; border-radius: 10px; margin: 10px 0;">
-      <option value="">Selecciona un profesor</option>
-      <option value="Prof. Rodríguez - Matemáticas">Prof. Rodríguez - Matemáticas</option>
-      <option value="Prof. García - Lengua">Prof. García - Lengua</option>
-      <option value="Prof. Martínez - Ciencias">Prof. Martínez - Ciencias</option>
-    </select>
+    <input type="text" id="teacherName" placeholder="Nombre del profesor" style="width: 100%; padding: 15px; border-radius: 10px; margin: 10px 0;">
     
     <textarea id="desc" placeholder="Describe tu experiencia..." rows="4" style="width: 100%; padding: 15px; border-radius: 10px; margin: 10px 0;"></textarea>
     
@@ -601,9 +741,9 @@
     
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
       <h3><i class="fas fa-stream"></i> Calificaciones</h3>
-      <div>
-        <button class="btn-secondary" onclick="loadPosts()">Actualizar</button>
-      </div>
+      <button class="btn-secondary" onclick="loadPosts()">
+        <i class="fas fa-sync-alt"></i> Actualizar
+      </button>
     </div>
     
     <div id="posts"></div>
@@ -618,7 +758,7 @@
           <div class="avatar-overlay" onclick="document.getElementById('avatarInput').click()">
             <i class="fas fa-camera"></i>
           </div>
-          <input type="file" id="avatarInput" accept="image/*" style="display: none;">
+          <input type="file" id="avatarInput" accept="image/*" style="display: none;" onchange="updateAvatar(event)">
         </div>
         
         <div class="profile-info">
@@ -634,20 +774,20 @@
               <div class="number" id="profilePostsCount">0</div>
               <div class="label">Calificaciones</div>
             </div>
+            <div class="profile-stat">
+              <div class="number" id="profileRatingAvg">0.0</div>
+              <div class="label">Promedio</div>
+            </div>
           </div>
+          
+          <button class="btn-primary" onclick="editProfile()">
+            <i class="fas fa-edit"></i> Editar Perfil
+          </button>
         </div>
       </div>
       
       <h4>Mis Calificaciones</h4>
       <div id="userPosts"></div>
-    </div>
-  </div>
-  
-  <!-- SECCIÓN ESTADÍSTICAS -->
-  <div id="statsSection" style="display: none;">
-    <div class="stats-card">
-      <h3><i class="fas fa-chart-line"></i> Estadísticas</h3>
-      <div id="topTeachers">Cargando...</div>
     </div>
   </div>
   
@@ -667,6 +807,26 @@
         </div>
       </div>
       
+      <div class="settings-section">
+        <h4>Perfil</h4>
+        <div class="setting-item">
+          <span><i class="fas fa-user"></i> Nombre de usuario</span>
+          <button class="btn-secondary" onclick="changeUsername()">Cambiar</button>
+        </div>
+        <div class="setting-item">
+          <span><i class="fas fa-envelope"></i> Correo electrónico</span>
+          <button class="btn-secondary" onclick="changeEmail()">Cambiar</button>
+        </div>
+        <div class="setting-item">
+          <span><i class="fas fa-lock"></i> Contraseña</span>
+          <button class="btn-secondary" onclick="changePassword()">Cambiar</button>
+        </div>
+        <div class="setting-item">
+          <span><i class="fas fa-pencil"></i> Biografía</span>
+          <button class="btn-secondary" onclick="editBio()">Editar</button>
+        </div>
+      </div>
+      
       <button class="btn-danger" onclick="logout()" style="width: 100%; padding: 15px; margin-top: 20px;">
         <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
       </button>
@@ -676,200 +836,42 @@
 
 <script>
 // ===== CONFIGURACIÓN SUPABASE =====
-const SUPABASE_URL = 'https://iwdqfzuhllttesdonrav.supabase.co';  // <-- Pon tu URL aquí
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml3ZHFmenVobGx0dGVzZG9ucmF2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3ODA3NTIsImV4cCI6MjA4NzM1Njc1Mn0.gVZpQcj3d7GvVp2IMh0gwIlhwBSjQQ7Ml3wUWU-Nn8A'
+const SUPABASE_URL = 'https://iwdqfzuhllttesdonrav.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml3ZHFmenVobGx0dGVzZG9ucmF2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE3ODA3NTIsImV4cCI6MjA4NzM1Njc1Mn0.gVZpQcj3d7GvVp2IMh0gwIlhwBSjQQ7Ml3wUWU-Nn8A';
+
 // ===== VARIABLES GLOBALES =====
 let currentUser = null;
 let isAdmin = false;
 let newPostRating = 0;
 
-// ===== FUNCIONES SUPABASE =====
+// ===== FUNCIÓN DE CONSULTA MEJORADA =====
 async function query(endpoint, options = {}) {
-    const response = await fetch(`${SUPABASE_URL}${endpoint}`, {
-        ...options,
-        headers: {
-            'apikey': SUPABASE_KEY,
-            'Authorization': `Bearer ${SUPABASE_KEY}`,
-            'Content-Type': 'application/json',
-            ...options.headers
-        }
-    });
-    
-    if (!response.ok) {
-        const error = await response.text();
-        throw new Error(error);
-    }
-    
-    return response.json();
-}
-
-// ===== CARGAR POSTS =====
-async function loadPosts() {
     try {
-        const posts = await query('/rest/v1/posts?select=*&order=created_at.desc');
+        const url = `${SUPABASE_URL}${endpoint}`;
+        console.log('🔍 Consultando:', url);
         
-        if (posts.length === 0) {
-            document.getElementById("posts").innerHTML = "<p style='text-align:center; padding:40px;'>No hay calificaciones aún</p>";
-            return;
-        }
-        
-        let html = "";
-        for (const post of posts) {
-            html += `
-                <div class="post" style="margin-bottom:25px; padding:25px; border-radius:20px; background:${document.body.classList.contains('dark-theme') ? '#2d3748' : 'white'}; box-shadow:0 5px 20px rgba(0,0,0,0.1);">
-                    <div style="display:flex; align-items:center; gap:15px; margin-bottom:15px;">
-                        <img src="https://ui-avatars.com/api/?name=${post.username}&background=4169E1&color=fff" style="width:60px; height:60px; border-radius:50%; object-fit:cover; border:3px solid #4169E1;">
-                        <div>
-                            <div style="display:flex; align-items:center; gap:10px;">
-                                <span style="font-weight:600; font-size:18px;">${post.username}</span>
-                                ${post.username === 'ADMIN' ? '<span style="background:#ff4757; color:white; padding:4px 12px; border-radius:20px; font-size:12px;">Admin</span>' : ''}
-                            </div>
-                            <div style="font-size:13px; opacity:0.7;">
-                                <i class="far fa-clock"></i> ${new Date(post.created_at).toLocaleString()}
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div style="margin:15px 0; padding:10px 20px; background:#4169E1; color:white; border-radius:30px; display:inline-block;">
-                        <i class="fas fa-chalkboard-teacher"></i> ${post.teacher} 
-                        <span style="margin-left:10px; background:white; color:#4169E1; padding:3px 10px; border-radius:20px;">
-                            ⭐ ${post.teacher_rating}/5
-                        </span>
-                    </div>
-                    
-                    <div style="margin:20px 0;">
-                        <img src="${post.image}" style="width:100%; max-height:450px; object-fit:cover; border-radius:15px; cursor:pointer;" onclick="window.open(this.src)">
-                    </div>
-                    
-                    <p style="margin:20px 0; font-size:16px; line-height:1.7;">${post.description}</p>
-                </div>
-            `;
-        }
-        
-        document.getElementById("posts").innerHTML = html;
-        console.log(`✅ Mostrados ${posts.length} posts`);
-    } catch (error) {
-        console.error('Error cargando posts:', error);
-        document.getElementById("posts").innerHTML = "<p style='color:red; text-align:center;'>Error cargando posts</p>";
-    }
-}
-
-// ===== SUBIR POST =====
-async function upload() {
-    if (!currentUser) {
-        showNotification("Debes iniciar sesión", "error");
-        return;
-    }
-    
-    const imageFile = document.getElementById("image").files[0];
-    const description = document.getElementById("desc").value.trim();
-    const teacher = document.getElementById("teacherSelect").value;
-    
-    if (!imageFile || !description || !teacher) {
-        showNotification("Completa todos los campos", "error");
-        return;
-    }
-    
-    if (newPostRating === 0) {
-        showNotification("Selecciona una calificación", "error");
-        return;
-    }
-    
-    const reader = new FileReader();
-    reader.onload = async function(e) {
-        try {
-            await query('/rest/v1/posts', {
-                method: 'POST',
-                body: JSON.stringify({
-                    username: currentUser,
-                    teacher: teacher,
-                    description: description,
-                    image: e.target.result,
-                    teacher_rating: newPostRating
-                })
-            });
-            
-            showNotification("✅ ¡Publicado!");
-            
-            document.getElementById("desc").value = "";
-            document.getElementById("image").value = "";
-            document.getElementById("teacherSelect").value = "";
-            newPostRating = 0;
-            document.querySelectorAll("#newPostStars .star").forEach(s => s.classList.remove("active"));
-            
-            await loadPosts();
-        } catch (error) {
-            showNotification("Error al publicar", "error");
-        }
-    };
-    reader.readAsDataURL(imageFile);
-}
-
-// ===== LOGIN =====
-async function login() {
-    const username = document.getElementById("loginUser").value.trim();
-    const password = document.getElementById("loginPass").value;
-    
-    try {
-        const users = await query(`/rest/v1/users?username=eq.${username}&password=eq.${password}&select=*`);
-        
-        if (users.length > 0) {
-            currentUser = users[0].username;
-            isAdmin = currentUser === "ADMIN";
-            
-            document.getElementById("login").style.display = "none";
-            document.getElementById("app").style.display = "block";
-            document.getElementById("profileMiniName").innerText = currentUser;
-            
-            if (isAdmin) {
-                document.getElementById("adminMiniBadge").style.display = "inline";
-                document.getElementById("adminPanel").style.display = "block";
+        const response = await fetch(url, {
+            ...options,
+            headers: {
+                'apikey': SUPABASE_KEY,
+                'Authorization': `Bearer ${SUPABASE_KEY}`,
+                'Content-Type': 'application/json',
+                'Prefer': 'return=representation',
+                ...options.headers
             }
-            
-            showNotification(`🎉 ¡Bienvenido ${currentUser}!`);
-            await loadPosts();
-            showFeed();
-        } else {
-            showNotification("Usuario o contraseña incorrectos", "error");
-        }
-    } catch (error) {
-        showNotification("Error al iniciar sesión", "error");
-    }
-}
-
-// ===== REGISTRO =====
-async function register() {
-    const username = document.getElementById("regUser").value.trim();
-    const email = document.getElementById("regEmail").value.trim();
-    const password = document.getElementById("regPass").value;
-    const confirmPass = document.getElementById("regConfirmPass").value;
-    
-    if (!username || !email || !password) {
-        showNotification("Completa todos los campos", "error");
-        return;
-    }
-    
-    if (password !== confirmPass) {
-        showNotification("Las contraseñas no coinciden", "error");
-        return;
-    }
-    
-    try {
-        await query('/rest/v1/users', {
-            method: 'POST',
-            body: JSON.stringify({
-                username,
-                email,
-                password,
-                avatar: `https://ui-avatars.com/api/?name=${username}&background=4169E1&color=fff`,
-                role: "user"
-            })
         });
         
-        showNotification("✅ Registro exitoso!");
-        showLogin();
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('❌ Error respuesta:', response.status, errorText);
+            throw new Error(`HTTP ${response.status}: ${errorText}`);
+        }
+        
+        const data = await response.json();
+        return data;
     } catch (error) {
-        showNotification("El usuario ya existe", "error");
+        console.error('❌ Error en query:', error);
+        throw error;
     }
 }
 
@@ -897,7 +899,6 @@ function showLogin() {
 function showFeed() {
     document.getElementById("feedSection").style.display = "block";
     document.getElementById("profileSection").style.display = "none";
-    document.getElementById("statsSection").style.display = "none";
     document.getElementById("settingsSection").style.display = "none";
     
     document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
@@ -906,21 +907,26 @@ function showFeed() {
     loadPosts();
 }
 
-function showProfile() { showNotification("Perfil en construcción"); }
-function showStats() { showNotification("Estadísticas en construcción"); }
+function showProfile() {
+    document.getElementById("feedSection").style.display = "none";
+    document.getElementById("profileSection").style.display = "block";
+    document.getElementById("settingsSection").style.display = "none";
+    
+    document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+    document.getElementById("navProfile").classList.add("active");
+    
+    if (currentUser) {
+        loadUserProfile();
+    }
+}
+
 function showSettings() {
     document.getElementById("feedSection").style.display = "none";
     document.getElementById("profileSection").style.display = "none";
-    document.getElementById("statsSection").style.display = "none";
     document.getElementById("settingsSection").style.display = "block";
-}
-
-function logout() {
-    currentUser = null;
-    isAdmin = false;
-    document.getElementById("app").style.display = "none";
-    document.getElementById("login").style.display = "block";
-    showNotification("👋 ¡Hasta pronto!");
+    
+    document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+    document.getElementById("navSettings").classList.add("active");
 }
 
 function toggleTheme() {
@@ -933,12 +939,611 @@ function setRating(rating) {
     newPostRating = rating;
     const stars = document.querySelectorAll("#newPostStars .star");
     stars.forEach((star, index) => {
-        if (index < rating) star.classList.add("active");
-        else star.classList.remove("active");
+        if (index < rating) {
+            star.classList.add("active");
+        } else {
+            star.classList.remove("active");
+        }
     });
 }
 
+// ===== LOGIN CORREGIDO =====
+async function login() {
+    const username = document.getElementById("loginUser").value.trim();
+    const password = document.getElementById("loginPass").value;
+    
+    if (!username || !password) {
+        showNotification("Ingresa usuario y contraseña", "error");
+        return;
+    }
+    
+    try {
+        console.log('🔍 Buscando usuario:', username);
+        
+        // Buscar usuario por nombre
+        const users = await query(`/rest/v1/users?username=eq.${encodeURIComponent(username)}&select=*`);
+        
+        console.log('📦 Usuarios encontrados:', users);
+        
+        if (users && users.length > 0) {
+            const user = users[0];
+            console.log('✅ Usuario encontrado:', user);
+            
+            // Comparar contraseña
+            if (user.password === password) {
+                console.log('✅ Contraseña correcta');
+                
+                // Verificar si está bloqueado
+                const blocked = await query(`/rest/v1/blocked_users?username=eq.${encodeURIComponent(username)}&select=*`);
+                
+                if (blocked && blocked.length > 0) {
+                    showNotification("❌ Este usuario ha sido bloqueado", "error");
+                    return;
+                }
+                
+                // Login exitoso
+                currentUser = user.username;
+                isAdmin = currentUser === "ADMIN";
+                
+                document.getElementById("login").style.display = "none";
+                document.getElementById("app").style.display = "block";
+                document.getElementById("profileMiniName").innerText = currentUser;
+                document.getElementById("profileMiniAvatar").src = user.avatar;
+                document.getElementById("profileAvatar").src = user.avatar;
+                document.getElementById("profileName").innerText = currentUser;
+                document.getElementById("profileEmail").innerText = user.email;
+                
+                if (isAdmin) {
+                    document.getElementById("adminMiniBadge").style.display = "inline";
+                    document.getElementById("adminPanel").style.display = "block";
+                    loadAdminPanel();
+                }
+                
+                showNotification(`🎉 ¡Bienvenido ${currentUser}!`);
+                await loadPosts();
+                showFeed();
+            } else {
+                console.log('❌ Contraseña incorrecta');
+                showNotification("❌ Contraseña incorrecta", "error");
+            }
+        } else {
+            console.log('❌ Usuario no encontrado');
+            showNotification("❌ Usuario no encontrado", "error");
+        }
+    } catch (error) {
+        console.error('❌ Error en login:', error);
+        showNotification("Error al iniciar sesión: " + error.message, "error");
+    }
+}
+
+// ===== REGISTRO =====
+async function register() {
+    const username = document.getElementById("regUser").value.trim();
+    const email = document.getElementById("regEmail").value.trim();
+    const password = document.getElementById("regPass").value;
+    const confirmPass = document.getElementById("regConfirmPass").value;
+    
+    if (!username || !email || !password) {
+        showNotification("Completa todos los campos", "error");
+        return;
+    }
+    
+    if (password !== confirmPass) {
+        showNotification("Las contraseñas no coinciden", "error");
+        return;
+    }
+    
+    try {
+        // Verificar si existe
+        const existing = await query(`/rest/v1/users?username=eq.${encodeURIComponent(username)}&select=username`);
+        
+        if (existing && existing.length > 0) {
+            showNotification("❌ El usuario ya existe", "error");
+            return;
+        }
+        
+        // Crear usuario
+        await query('/rest/v1/users', {
+            method: 'POST',
+            body: JSON.stringify({
+                username: username,
+                email: email,
+                password: password,
+                avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(username)}&background=4169E1&color=fff`,
+                bio: "Estudiante comprometido con la educación",
+                role: "user"
+            })
+        });
+        
+        showNotification("✅ Registro exitoso! Ahora inicia sesión");
+        showLogin();
+        
+        // Limpiar campos
+        document.getElementById("regUser").value = "";
+        document.getElementById("regEmail").value = "";
+        document.getElementById("regPass").value = "";
+        document.getElementById("regConfirmPass").value = "";
+        
+    } catch (error) {
+        console.error("Error en registro:", error);
+        showNotification("Error al registrar: " + error.message, "error");
+    }
+}
+
+// ===== LOGOUT =====
+function logout() {
+    currentUser = null;
+    isAdmin = false;
+    document.getElementById("app").style.display = "none";
+    document.getElementById("login").style.display = "block";
+    showNotification("👋 ¡Hasta pronto!");
+}
+
+// ===== CARGAR POSTS =====
+async function loadPosts() {
+    if (!currentUser) return;
+    
+    try {
+        console.log('📥 Cargando posts...');
+        
+        const postsData = await query('/rest/v1/posts?select=*&order=created_at.desc');
+        console.log('📦 Posts cargados:', postsData);
+        
+        let commentsData = [];
+        try {
+            commentsData = await query('/rest/v1/comments?select=*&order=created_at.desc');
+        } catch (e) {
+            console.log('No hay comentarios aún');
+        }
+        
+        if (!postsData || postsData.length === 0) {
+            document.getElementById("posts").innerHTML = "<p style='text-align:center; padding:40px;'>No hay calificaciones aún. ¡Sé el primero!</p>";
+            return;
+        }
+        
+        let html = "";
+        for (const post of postsData) {
+            const postComments = commentsData ? commentsData.filter(c => c.post_id === post.id) : [];
+            
+            html += `
+                <div class="post" id="post-${post.id}">
+                    <div style="display:flex; align-items:center; gap:15px; margin-bottom:15px;">
+                        <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(post.username)}&background=4169E1&color=fff" class="user-avatar">
+                        <div>
+                            <div style="display:flex; align-items:center; gap:10px;">
+                                <span style="font-weight:600; font-size:18px;">${post.username}</span>
+                                ${post.username === 'ADMIN' ? '<span class="admin-badge">Admin</span>' : ''}
+                            </div>
+                            <div style="font-size:13px; opacity:0.7;">
+                                <i class="far fa-clock"></i> ${new Date(post.created_at).toLocaleString()}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin:15px 0; padding:10px 20px; background:#4169E1; color:white; border-radius:30px; display:inline-block;">
+                        <i class="fas fa-chalkboard-teacher"></i> ${post.teacher} 
+                        <span style="margin-left:10px; background:white; color:#4169E1; padding:3px 10px; border-radius:20px;">
+                            ⭐ ${post.teacher_rating}/5
+                        </span>
+                    </div>
+                    
+                    <div style="margin:20px 0;">
+                        <img src="${post.image}" style="width:100%; max-height:450px; object-fit:cover; border-radius:15px; cursor:pointer;" onclick="window.open(this.src)">
+                    </div>
+                    
+                    <p style="margin:20px 0; font-size:16px; line-height:1.7;">${post.description}</p>
+                    
+                    <div class="comments-toggle" onclick="toggleComments(${post.id})">
+                        <i class="fas fa-comment"></i> Comentarios (${postComments.length})
+                    </div>
+                    
+                    <div class="comments-section" id="comments-${post.id}">
+                        <div id="comments-list-${post.id}">
+                            ${postComments.map(comment => `
+                                <div class="comment" id="comment-${comment.id}">
+                                    <div class="comment-header">
+                                        <span class="comment-user">
+                                            <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(comment.username)}&background=4169E1&color=fff" alt="">
+                                            ${comment.username}
+                                            ${comment.username === 'ADMIN' ? '<span class="admin-badge">Admin</span>' : ''}
+                                        </span>
+                                        <span class="comment-date">${new Date(comment.created_at).toLocaleString()}</span>
+                                    </div>
+                                    <p>${comment.content}</p>
+                                    <div class="comment-actions">
+                                        ${(isAdmin || comment.username === currentUser) ? `
+                                            <button class="btn-danger" onclick="deleteComment(${comment.id})" style="padding:5px 10px; font-size:12px;">
+                                                <i class="fas fa-trash"></i> Eliminar
+                                            </button>
+                                        ` : ''}
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        
+                        <div class="comment-input">
+                            <input type="text" id="commentInput-${post.id}" placeholder="Escribe un comentario...">
+                            <button class="btn-primary" onclick="addComment(${post.id})">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="post-actions">
+                        ${(isAdmin || post.username === currentUser) ? `
+                            <button class="btn-danger" onclick="deletePost(${post.id})">
+                                <i class="fas fa-trash-alt"></i> Eliminar Publicación
+                            </button>
+                        ` : ''}
+                        
+                        ${isAdmin && post.username !== 'ADMIN' ? `
+                            <button class="btn-warning" onclick="blockUser('${post.username}')">
+                                <i class="fas fa-ban"></i> Bloquear Usuario
+                            </button>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+        }
+        
+        document.getElementById("posts").innerHTML = html;
+        
+        if (isAdmin) loadAdminPanel();
+        
+    } catch (error) {
+        console.error("Error cargando posts:", error);
+        document.getElementById("posts").innerHTML = "<p style='color:red; text-align:center;'>Error cargando posts</p>";
+    }
+}
+
+// ===== SUBIR POST =====
+async function upload() {
+    if (!currentUser) {
+        showNotification("Debes iniciar sesión", "error");
+        return;
+    }
+    
+    const imageFile = document.getElementById("image").files[0];
+    const teacher = document.getElementById("teacherName").value.trim();
+    const description = document.getElementById("desc").value.trim();
+    
+    if (!imageFile || !teacher || !description) {
+        showNotification("Completa todos los campos", "error");
+        return;
+    }
+    
+    if (newPostRating === 0) {
+        showNotification("Selecciona una calificación", "error");
+        return;
+    }
+    
+    const reader = new FileReader();
+    reader.onload = async function(e) {
+        try {
+            await query('/rest/v1/posts', {
+                method: 'POST',
+                body: JSON.stringify({
+                    username: currentUser,
+                    teacher: teacher,
+                    description: description,
+                    image: e.target.result,
+                    teacher_rating: newPostRating,
+                    created_at: new Date().toISOString()
+                })
+            });
+            
+            showNotification("✅ ¡Publicación creada!");
+            
+            // Limpiar formulario
+            document.getElementById("image").value = "";
+            document.getElementById("teacherName").value = "";
+            document.getElementById("desc").value = "";
+            newPostRating = 0;
+            document.querySelectorAll("#newPostStars .star").forEach(s => s.classList.remove("active"));
+            
+            await loadPosts();
+            
+        } catch (error) {
+            console.error("Error publicando:", error);
+            showNotification("Error al publicar: " + error.message, "error");
+        }
+    };
+    reader.readAsDataURL(imageFile);
+}
+
+// ===== COMENTARIOS =====
+function toggleComments(postId) {
+    const commentsSection = document.getElementById(`comments-${postId}`);
+    if (commentsSection) {
+        commentsSection.classList.toggle("show");
+    }
+}
+
+async function addComment(postId) {
+    if (!currentUser) {
+        showNotification("Debes iniciar sesión", "error");
+        return;
+    }
+    
+    const input = document.getElementById(`commentInput-${postId}`);
+    const content = input.value.trim();
+    
+    if (!content) {
+        showNotification("Escribe un comentario", "error");
+        return;
+    }
+    
+    try {
+        await query('/rest/v1/comments', {
+            method: 'POST',
+            body: JSON.stringify({
+                post_id: postId,
+                username: currentUser,
+                content: content,
+                created_at: new Date().toISOString()
+            })
+        });
+        
+        showNotification("💬 Comentario agregado");
+        input.value = "";
+        await loadPosts();
+        
+        // Abrir comentarios automáticamente
+        const commentsSection = document.getElementById(`comments-${postId}`);
+        if (commentsSection) {
+            commentsSection.classList.add("show");
+        }
+        
+    } catch (error) {
+        console.error("Error agregando comentario:", error);
+        showNotification("Error al comentar: " + error.message, "error");
+    }
+}
+
+async function deleteComment(commentId) {
+    if (!confirm("¿Eliminar este comentario?")) return;
+    
+    try {
+        await query(`/rest/v1/comments?id=eq.${commentId}`, {
+            method: 'DELETE'
+        });
+        
+        showNotification("🗑️ Comentario eliminado");
+        await loadPosts();
+        
+    } catch (error) {
+        console.error("Error eliminando comentario:", error);
+        showNotification("Error al eliminar: " + error.message, "error");
+    }
+}
+
+async function deletePost(postId) {
+    if (!confirm("¿Eliminar esta publicación?")) return;
+    
+    try {
+        // Eliminar comentarios asociados
+        await query(`/rest/v1/comments?post_id=eq.${postId}`, {
+            method: 'DELETE'
+        });
+        
+        // Eliminar post
+        await query(`/rest/v1/posts?id=eq.${postId}`, {
+            method: 'DELETE'
+        });
+        
+        showNotification("🗑️ Publicación eliminada");
+        await loadPosts();
+        
+    } catch (error) {
+        console.error("Error eliminando post:", error);
+        showNotification("Error al eliminar: " + error.message, "error");
+    }
+}
+
+// ===== ADMIN =====
+async function loadAdminPanel() {
+    try {
+        const usersData = await query('/rest/v1/users?select=id');
+        const postsData = await query('/rest/v1/posts?select=id');
+        const commentsData = await query('/rest/v1/comments?select=id');
+        const blockedData = await query('/rest/v1/blocked_users?select=*');
+        
+        document.getElementById("totalUsers").innerText = usersData ? usersData.length : 0;
+        document.getElementById("totalPosts").innerText = postsData ? postsData.length : 0;
+        document.getElementById("totalComments").innerText = commentsData ? commentsData.length : 0;
+        
+        const blockedDiv = document.getElementById("blockedUsers");
+        if (!blockedData || blockedData.length === 0) {
+            blockedDiv.innerHTML = "<p>No hay usuarios bloqueados</p>";
+        } else {
+            blockedDiv.innerHTML = blockedData.map(user => `
+                <div class="blocked-user">
+                    <span><i class="fas fa-ban" style="color:#ff4757;"></i> ${user.username}</span>
+                    <button class="btn-success" onclick="unblockUser('${user.username}')" style="padding:5px 10px;">
+                        <i class="fas fa-check"></i> Desbloquear
+                    </button>
+                </div>
+            `).join('');
+        }
+    } catch (error) {
+        console.error("Error cargando panel admin:", error);
+    }
+}
+
+async function blockUser(username) {
+    if (!confirm(`¿Bloquear al usuario ${username}?`)) return;
+    
+    try {
+        await query('/rest/v1/blocked_users', {
+            method: 'POST',
+            body: JSON.stringify({
+                username: username,
+                blocked_at: new Date().toISOString()
+            })
+        });
+        
+        showNotification(`✅ Usuario ${username} bloqueado`);
+        await loadPosts();
+        if (isAdmin) loadAdminPanel();
+        
+    } catch (error) {
+        console.error("Error bloqueando usuario:", error);
+        showNotification("Error al bloquear: " + error.message, "error");
+    }
+}
+
+async function unblockUser(username) {
+    try {
+        await query(`/rest/v1/blocked_users?username=eq.${encodeURIComponent(username)}`, {
+            method: 'DELETE'
+        });
+        
+        showNotification(`✅ Usuario ${username} desbloqueado`);
+        loadAdminPanel();
+        
+    } catch (error) {
+        console.error("Error desbloqueando usuario:", error);
+        showNotification("Error al desbloquear: " + error.message, "error");
+    }
+}
+
+// ===== PERFIL =====
+async function loadUserProfile() {
+    if (!currentUser) return;
+    
+    try {
+        const userData = await query(`/rest/v1/users?username=eq.${encodeURIComponent(currentUser)}&select=*`);
+        const userPosts = await query(`/rest/v1/posts?username=eq.${encodeURIComponent(currentUser)}&order=created_at.desc`);
+        
+        if (userData && userData.length > 0) {
+            const user = userData[0];
+            
+            document.getElementById("profileName").innerText = user.username;
+            document.getElementById("profileEmail").innerText = user.email;
+            document.getElementById("profileAvatar").src = user.avatar;
+            document.getElementById("profileMiniAvatar").src = user.avatar;
+            document.getElementById("profileBio").innerHTML = `<p>${user.bio || "Estudiante comprometido con la educación"}</p>`;
+            document.getElementById("profilePostsCount").innerText = userPosts ? userPosts.length : 0;
+            
+            // Calcular promedio
+            let totalRating = 0;
+            if (userPosts) {
+                userPosts.forEach(p => totalRating += p.teacher_rating);
+            }
+            const avg = userPosts && userPosts.length > 0 ? (totalRating / userPosts.length).toFixed(1) : "0.0";
+            document.getElementById("profileRatingAvg").innerText = avg;
+            
+            // Mostrar posts del usuario
+            let userPostsHtml = "";
+            if (userPosts && userPosts.length > 0) {
+                userPosts.forEach(post => {
+                    userPostsHtml += `
+                        <div class="post" style="margin-bottom:15px;">
+                            <div style="background:#4169E1; color:white; padding:5px 15px; border-radius:20px; display:inline-block; margin-bottom:10px;">
+                                ${post.teacher} ⭐ ${post.teacher_rating}/5
+                            </div>
+                            <img src="${post.image}" style="width:100%; border-radius:10px; margin:10px 0;">
+                            <p>${post.description}</p>
+                            <small>${new Date(post.created_at).toLocaleString()}</small>
+                        </div>
+                    `;
+                });
+            } else {
+                userPostsHtml = "<p style='text-align:center; padding:30px;'>No has calificado profesores aún</p>";
+            }
+            
+            document.getElementById("userPosts").innerHTML = userPostsHtml;
+        }
+    } catch (error) {
+        console.error("Error cargando perfil:", error);
+    }
+}
+
+// ===== FUNCIONES DE PERFIL =====
+function editProfile() {
+    editBio();
+}
+
+function editBio() {
+    const newBio = prompt("Escribe tu nueva biografía:");
+    if (newBio) {
+        updateProfile({ bio: newBio });
+    }
+}
+
+function changeUsername() {
+    const newUsername = prompt("Nuevo nombre de usuario:");
+    if (newUsername && newUsername !== currentUser) {
+        updateProfile({ username: newUsername });
+    }
+}
+
+function changeEmail() {
+    const newEmail = prompt("Nuevo correo electrónico:");
+    if (newEmail) {
+        updateProfile({ email: newEmail });
+    }
+}
+
+function changePassword() {
+    const newPass = prompt("Nueva contraseña (mínimo 6 caracteres):");
+    if (newPass && newPass.length >= 6) {
+        updateProfile({ password: newPass });
+    } else {
+        showNotification("La contraseña debe tener al menos 6 caracteres", "error");
+    }
+}
+
+async function updateProfile(updates) {
+    try {
+        await query(`/rest/v1/users?username=eq.${encodeURIComponent(currentUser)}`, {
+            method: 'PATCH',
+            body: JSON.stringify(updates)
+        });
+        
+        if (updates.username) {
+            currentUser = updates.username;
+            document.getElementById("profileMiniName").innerText = currentUser;
+            document.getElementById("profileName").innerText = currentUser;
+        }
+        
+        showNotification("✅ Perfil actualizado");
+        loadUserProfile();
+        
+    } catch (error) {
+        console.error("Error actualizando perfil:", error);
+        showNotification("Error al actualizar: " + error.message, "error");
+    }
+}
+
+async function updateAvatar(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = async function(e) {
+        const avatarUrl = e.target.result;
+        
+        try {
+            await query(`/rest/v1/users?username=eq.${encodeURIComponent(currentUser)}`, {
+                method: 'PATCH',
+                body: JSON.stringify({ avatar: avatarUrl })
+            });
+            
+            document.getElementById("profileAvatar").src = avatarUrl;
+            document.getElementById("profileMiniAvatar").src = avatarUrl;
+            showNotification("📸 Foto actualizada");
+            
+        } catch (error) {
+            console.error("Error actualizando avatar:", error);
+            showNotification("Error al actualizar foto: " + error.message, "error");
+        }
+    };
+    reader.readAsDataURL(file);
+}
+
 // ===== INICIAR =====
+console.log("🚀 Página cargada - Lista para usar");
 document.getElementById("login").style.display = "block";
 </script>
 </body>
