@@ -844,6 +844,34 @@ let currentUser = null;
 let isAdmin = false;
 let newPostRating = 0;
 
+// [CORREGIDO] Función para guardar sesión
+function saveSession(username, admin, userData) {
+    localStorage.setItem('socialRD_user', username);
+    localStorage.setItem('socialRD_admin', admin);
+    localStorage.setItem('socialRD_data', JSON.stringify(userData || {}));
+}
+
+// [CORREGIDO] Función para cargar sesión
+function loadSession() {
+    const savedUser = localStorage.getItem('socialRD_user');
+    const savedAdmin = localStorage.getItem('socialRD_admin') === 'true';
+    const savedData = JSON.parse(localStorage.getItem('socialRD_data') || '{}');
+    
+    if (savedUser) {
+        currentUser = savedUser;
+        isAdmin = savedAdmin;
+        return { currentUser: savedUser, isAdmin: savedAdmin, userData: savedData };
+    }
+    return null;
+}
+
+// [CORREGIDO] Función para limpiar sesión
+function clearSession() {
+    localStorage.removeItem('socialRD_user');
+    localStorage.removeItem('socialRD_admin');
+    localStorage.removeItem('socialRD_data');
+}
+
 // ===== FUNCIÓN DE CONSULTA MEJORADA =====
 async function query(endpoint, options = {}) {
     try {
@@ -985,6 +1013,9 @@ async function login() {
                 currentUser = user.username;
                 isAdmin = currentUser === "ADMIN";
                 
+                // [CORREGIDO] Guardar sesión
+                saveSession(currentUser, isAdmin, user);
+                
                 document.getElementById("login").style.display = "none";
                 document.getElementById("app").style.display = "block";
                 document.getElementById("profileMiniName").innerText = currentUser;
@@ -1074,6 +1105,8 @@ async function register() {
 function logout() {
     currentUser = null;
     isAdmin = false;
+    // [CORREGIDO] Limpiar sesión guardada
+    clearSession();
     document.getElementById("app").style.display = "none";
     document.getElementById("login").style.display = "block";
     showNotification("👋 ¡Hasta pronto!");
@@ -1232,7 +1265,8 @@ async function upload() {
                 })
             });
             
-            showNotification("✅ ¡Publicación creada!");
+            // [CORREGIDO] Notificación más visible y clara
+            showNotification("✅ ¡Publicación creada exitosamente!", "success");
             
             // Limpiar formulario
             document.getElementById("image").value = "";
@@ -1241,7 +1275,10 @@ async function upload() {
             newPostRating = 0;
             document.querySelectorAll("#newPostStars .star").forEach(s => s.classList.remove("active"));
             
-            await loadPosts();
+            // [CORREGIDO] Pequeña pausa para asegurar que se vea la notificación
+            setTimeout(async () => {
+                await loadPosts();
+            }, 500);
             
         } catch (error) {
             console.error("Error publicando:", error);
@@ -1505,6 +1542,8 @@ async function updateProfile(updates) {
             currentUser = updates.username;
             document.getElementById("profileMiniName").innerText = currentUser;
             document.getElementById("profileName").innerText = currentUser;
+            // [CORREGIDO] Actualizar sesión guardada
+            saveSession(currentUser, isAdmin, updates);
         }
         
         showNotification("✅ Perfil actualizado");
@@ -1542,9 +1581,71 @@ async function updateAvatar(event) {
     reader.readAsDataURL(file);
 }
 
+// [CORREGIDO] Función para verificar sesión al cargar la página
+async function checkSession() {
+    const session = loadSession();
+    if (session) {
+        currentUser = session.currentUser;
+        isAdmin = session.isAdmin;
+        
+        try {
+            // Verificar que el usuario sigue existiendo y no está bloqueado
+            const users = await query(`/rest/v1/users?username=eq.${encodeURIComponent(currentUser)}&select=*`);
+            
+            if (users && users.length > 0) {
+                const user = users[0];
+                
+                // Verificar si está bloqueado
+                const blocked = await query(`/rest/v1/blocked_users?username=eq.${encodeURIComponent(currentUser)}&select=*`);
+                
+                if (blocked && blocked.length > 0) {
+                    // Usuario bloqueado, cerrar sesión
+                    clearSession();
+                    showNotification("❌ Tu cuenta ha sido bloqueada", "error");
+                    return;
+                }
+                
+                // Sesión válida, mostrar app
+                document.getElementById("login").style.display = "none";
+                document.getElementById("app").style.display = "block";
+                document.getElementById("profileMiniName").innerText = currentUser;
+                document.getElementById("profileMiniAvatar").src = user.avatar;
+                document.getElementById("profileAvatar").src = user.avatar;
+                document.getElementById("profileName").innerText = currentUser;
+                document.getElementById("profileEmail").innerText = user.email;
+                
+                if (isAdmin) {
+                    document.getElementById("adminMiniBadge").style.display = "inline";
+                    document.getElementById("adminPanel").style.display = "block";
+                    loadAdminPanel();
+                }
+                
+                showNotification(`🎉 ¡Bienvenido de nuevo ${currentUser}!`);
+                await loadPosts();
+                showFeed();
+            } else {
+                // Usuario no existe, limpiar sesión
+                clearSession();
+            }
+        } catch (error) {
+            console.error("Error verificando sesión:", error);
+            clearSession();
+        }
+    }
+}
+
 // ===== INICIAR =====
 console.log("🚀 Página cargada - Lista para usar");
-document.getElementById("login").style.display = "block";
+
+// [CORREGIDO] Verificar sesión al cargar la página
+window.onload = function() {
+    checkSession();
+};
+
+// [CORREGIDO] Si no hay sesión, mostrar login
+if (!loadSession()) {
+    document.getElementById("login").style.display = "block";
+}
 </script>
 </body>
 </html>
