@@ -3,11 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Social RD 🌊 - Califica a tus Profesores</title>
+<title>Social RD 🌊 - Rate My Professor Dominicano</title>
 <!-- Font Awesome 6 -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<!-- Animate.css -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 <style>
   * {
     margin: 0;
@@ -16,259 +18,360 @@
   }
 
   body {
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Inter', sans-serif;
     min-height: 100vh;
-    padding: 20px;
     transition: all 0.3s ease;
+    background: #f8fafc;
   }
 
-  /* Tema claro */
+  /* ===== TEMA CLARO ===== */
   body.light-theme {
-    background: linear-gradient(135deg, #87CEEB 0%, #4169E1 100%);
+    --bg-primary: #f0f4f8;
+    --bg-secondary: #ffffff;
+    --text-primary: #1e293b;
+    --text-secondary: #64748b;
+    --accent-primary: #3b82f6;
+    --accent-secondary: #60a5fa;
+    --accent-gradient: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    --card-shadow: 0 20px 40px -15px rgba(0,0,0,0.1);
+    --border-color: #e2e8f0;
+    --success: #10b981;
+    --danger: #ef4444;
+    --warning: #f59e0b;
   }
 
-  body.light-theme #login, 
-  body.light-theme #app,
-  body.light-theme #register,
-  body.light-theme .post,
-  body.light-theme .comments-section,
-  body.light-theme .profile-card,
-  body.light-theme .settings-card,
-  body.light-theme .welcome-card,
-  body.light-theme .admin-panel,
-  body.light-theme .stats-card {
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    color: #333;
-  }
-
-  /* Tema oscuro */
+  /* ===== TEMA OSCURO ===== */
   body.dark-theme {
-    background: linear-gradient(135deg, #1a2639 0%, #0f172a 100%);
+    --bg-primary: #0f172a;
+    --bg-secondary: #1e293b;
+    --text-primary: #f1f5f9;
+    --text-secondary: #94a3b8;
+    --accent-primary: #3b82f6;
+    --accent-secondary: #60a5fa;
+    --accent-gradient: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    --card-shadow: 0 20px 40px -15px rgba(0,0,0,0.5);
+    --border-color: #334155;
+    --success: #10b981;
+    --danger: #ef4444;
+    --warning: #f59e0b;
   }
 
-  body.dark-theme #login, 
-  body.dark-theme #app,
-  body.dark-theme #register,
-  body.dark-theme .post,
-  body.dark-theme .comments-section,
-  body.dark-theme .profile-card,
-  body.dark-theme .settings-card,
-  body.dark-theme .welcome-card,
-  body.dark-theme .admin-panel,
-  body.dark-theme .stats-card {
-    background: rgba(30, 41, 59, 0.95);
-    backdrop-filter: blur(10px);
-    color: #fff;
+  body {
+    background: var(--bg-primary);
+    color: var(--text-primary);
   }
 
-  body.dark-theme input,
-  body.dark-theme textarea,
-  body.dark-theme select {
-    background: #334155;
-    border-color: #475569;
-    color: #fff;
+  /* ===== SCROLLBAR PERSONALIZADA ===== */
+  ::-webkit-scrollbar {
+    width: 10px;
   }
 
-  /* Logo */
+  ::-webkit-scrollbar-track {
+    background: var(--bg-primary);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--accent-primary);
+    border-radius: 10px;
+  }
+
+  /* ===== CONTENEDORES PRINCIPALES ===== */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  #login, #register, #app {
+    max-width: 1200px;
+    margin: 30px auto;
+    border-radius: 40px;
+    padding: 40px;
+    background: var(--bg-secondary);
+    box-shadow: var(--card-shadow);
+    animation: slideUp 0.6s ease;
+  }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ===== LOGO ===== */
   .logo-container {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 15px;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
   }
 
   .logo-icon {
-    width: 60px;
-    height: 60px;
-    background: linear-gradient(135deg, #4169E1, #87CEEB);
-    border-radius: 50%;
+    width: 70px;
+    height: 70px;
+    background: var(--accent-gradient);
+    border-radius: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 30px;
+    font-size: 35px;
     color: white;
     animation: float 3s ease-in-out infinite;
-    box-shadow: 0 10px 30px rgba(65, 105, 225, 0.5);
+    transform: rotate(-5deg);
+    box-shadow: 0 20px 30px -10px var(--accent-primary);
   }
 
   @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
+    0%, 100% { transform: translateY(0) rotate(-5deg); }
+    50% { transform: translateY(-10px) rotate(-5deg); }
   }
 
   .logo-text {
-    font-size: 36px;
+    font-size: 42px;
     font-weight: 800;
-    background: linear-gradient(135deg, #4169E1, #87CEEB);
+    background: var(--accent-gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
 
-  /* Contenedores */
-  #login, #app, #register {
-    max-width: 1000px;
-    margin: 30px auto;
-    border-radius: 30px;
-    padding: 40px;
-    box-shadow: 0 30px 80px rgba(0,0,0,0.3);
-    animation: slideUp 0.6s ease;
-  }
-
-  @keyframes slideUp {
-    0% { opacity: 0; transform: translateY(30px); }
-    100% { opacity: 1; transform: translateY(0); }
-  }
-
-  /* Welcome card */
+  /* ===== WELCOME CARD ===== */
   .welcome-card {
-    padding: 30px;
-    border-radius: 20px;
-    margin-bottom: 30px;
+    background: var(--accent-gradient);
+    color: white;
+    padding: 40px;
+    border-radius: 30px;
+    margin-bottom: 40px;
     text-align: center;
-    border-left: 5px solid #4169E1;
-    animation: pulse 2s infinite;
+    position: relative;
+    overflow: hidden;
   }
 
-  @keyframes pulse {
-    0% { box-shadow: 0 5px 20px rgba(65, 105, 225, 0.3); }
-    50% { box-shadow: 0 10px 30px rgba(65, 105, 225, 0.6); }
-    100% { box-shadow: 0 5px 20px rgba(65, 105, 225, 0.3); }
+  .welcome-card::before {
+    content: "🎓";
+    position: absolute;
+    right: -20px;
+    bottom: -20px;
+    font-size: 150px;
+    opacity: 0.1;
+    transform: rotate(-15deg);
   }
 
-  /* Header */
+  .welcome-card h3 {
+    font-size: 32px;
+    margin-bottom: 15px;
+  }
+
+  .welcome-card p {
+    font-size: 18px;
+    opacity: 0.9;
+  }
+
+  /* ===== HEADER ===== */
   .app-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 30px;
     padding: 20px;
-    background: rgba(65, 105, 225, 0.1);
-    border-radius: 20px;
+    background: var(--bg-secondary);
+    border-radius: 30px;
+    box-shadow: var(--card-shadow);
     flex-wrap: wrap;
     gap: 15px;
-  }
-
-  .header-left {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    flex-wrap: wrap;
   }
 
   .nav-buttons {
     display: flex;
     gap: 10px;
-    background: rgba(128, 128, 128, 0.1);
+    background: var(--bg-primary);
     padding: 5px;
-    border-radius: 15px;
+    border-radius: 20px;
   }
 
   .nav-btn {
     background: none;
     border: none;
-    padding: 10px 20px;
+    padding: 12px 25px;
     cursor: pointer;
-    font-size: 14px;
-    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 500;
+    border-radius: 15px;
     transition: all 0.3s;
-    color: inherit;
+    color: var(--text-secondary);
   }
 
   .nav-btn:hover {
-    background: rgba(65, 105, 225, 0.1);
+    color: var(--accent-primary);
+    background: rgba(59, 130, 246, 0.1);
   }
 
   .nav-btn.active {
-    background: #4169E1;
+    background: var(--accent-primary);
     color: white;
-  }
-
-  .header-right {
-    display: flex;
-    align-items: center;
-    gap: 15px;
   }
 
   .profile-mini {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 15px;
     cursor: pointer;
-    padding: 8px 20px;
-    border-radius: 30px;
-    background: rgba(65, 105, 225, 0.1);
+    padding: 8px 25px 8px 15px;
+    border-radius: 40px;
+    background: var(--bg-primary);
+    transition: all 0.3s;
+  }
+
+  .profile-mini:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px -10px var(--accent-primary);
   }
 
   .profile-mini img {
-    width: 40px;
-    height: 40px;
+    width: 45px;
+    height: 45px;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid #4169E1;
+    border: 3px solid var(--accent-primary);
   }
 
   .admin-badge {
-    background: #ff4757;
+    background: var(--danger);
     color: white;
     padding: 3px 10px;
-    border-radius: 15px;
+    border-radius: 20px;
     font-size: 12px;
+    font-weight: 600;
     margin-left: 5px;
   }
 
-  /* Admin Panel */
-  .admin-panel {
-    padding: 25px;
-    border-radius: 20px;
-    margin-bottom: 30px;
-    border-left: 5px solid #ff4757;
+  /* ===== BOTONES ===== */
+  .btn-primary {
+    background: var(--accent-gradient);
+    color: white;
+    padding: 14px 30px;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 16px;
+    transition: all 0.3s;
+    box-shadow: 0 10px 20px -10px var(--accent-primary);
   }
 
-  .admin-stats {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 30px -10px var(--accent-primary);
+  }
+
+  .btn-secondary {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    padding: 14px 30px;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 16px;
+    transition: all 0.3s;
+  }
+
+  .btn-secondary:hover {
+    background: var(--border-color);
+  }
+
+  .btn-danger {
+    background: var(--danger);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s;
+  }
+
+  .btn-danger:hover {
+    background: #dc2626;
+    transform: translateY(-2px);
+  }
+
+  .btn-warning {
+    background: var(--warning);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s;
+  }
+
+  .btn-warning:hover {
+    background: #d97706;
+    transform: translateY(-2px);
+  }
+
+  .btn-success {
+    background: var(--success);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s;
+  }
+
+  .btn-success:hover {
+    background: #059669;
+    transform: translateY(-2px);
+  }
+
+  /* ===== INPUTS ===== */
+  .input-group {
+    position: relative;
     margin-bottom: 20px;
   }
 
-  .stat-box {
-    background: rgba(255, 71, 87, 0.1);
-    padding: 20px;
+  .input-group i {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-secondary);
+    font-size: 18px;
+  }
+
+  .input-group input,
+  .input-group textarea,
+  .input-group select {
+    width: 100%;
+    padding: 16px 20px 16px 50px;
+    border: 2px solid var(--border-color);
     border-radius: 15px;
-    text-align: center;
+    font-size: 16px;
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    transition: all 0.3s;
   }
 
-  .stat-box .number {
-    font-size: 32px;
-    font-weight: bold;
-    color: #ff4757;
+  .input-group input:focus,
+  .input-group textarea:focus,
+  .input-group select:focus {
+    border-color: var(--accent-primary);
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
   }
 
-  .blocked-users {
-    max-height: 200px;
-    overflow-y: auto;
-    padding: 10px;
-    background: rgba(255, 71, 87, 0.05);
-    border-radius: 10px;
-  }
-
-  .blocked-user {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-    border-bottom: 1px solid rgba(255, 71, 87, 0.2);
-  }
-
-  /* Posts */
+  /* ===== POSTS ===== */
   .post {
-    border-radius: 20px;
-    padding: 25px;
-    margin-bottom: 25px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    background: var(--bg-secondary);
+    border-radius: 30px;
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: var(--card-shadow);
     animation: fadeInUp 0.5s;
+    border: 1px solid var(--border-color);
   }
 
   @keyframes fadeInUp {
@@ -276,43 +379,97 @@
     to { opacity: 1; transform: translateY(0); }
   }
 
-  .user-avatar {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid #4169E1;
+  .post-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
   }
 
-  /* Rating stars */
+  .post-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--accent-primary);
+  }
+
+  .post-user-info h4 {
+    font-size: 18px;
+    margin-bottom: 5px;
+  }
+
+  .post-date {
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  .teacher-badge {
+    background: var(--accent-gradient);
+    color: white;
+    padding: 8px 20px;
+    border-radius: 30px;
+    display: inline-block;
+    margin-bottom: 20px;
+    font-weight: 600;
+  }
+
+  .post-image {
+    width: 100%;
+    max-height: 500px;
+    object-fit: cover;
+    border-radius: 20px;
+    margin: 20px 0;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .post-image:hover {
+    transform: scale(1.02);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+  }
+
+  .post-description {
+    font-size: 16px;
+    line-height: 1.8;
+    margin: 20px 0;
+    color: var(--text-primary);
+  }
+
+  /* ===== RATING STARS ===== */
   .rating-stars {
     display: flex;
     gap: 10px;
     margin: 15px 0;
-    align-items: center;
   }
 
   .star {
-    font-size: 32px;
+    font-size: 35px;
     cursor: pointer;
-    color: #ddd;
-    transition: all 0.3s;
+    color: #cbd5e1;
+    transition: all 0.2s;
   }
 
   .star:hover {
     transform: scale(1.2);
+    color: #fbbf24;
   }
 
   .star.active {
-    color: #ffd700;
+    color: #fbbf24;
   }
 
-  /* Upload area */
+  .star-small {
+    font-size: 20px;
+    color: #fbbf24;
+  }
+
+  /* ===== UPLOAD AREA ===== */
   .upload-area {
-    background: rgba(128, 128, 128, 0.05);
-    border: 3px dashed rgba(65, 105, 225, 0.3);
-    border-radius: 20px;
-    padding: 40px;
+    background: var(--bg-primary);
+    border: 3px dashed var(--accent-primary);
+    border-radius: 30px;
+    padding: 50px;
     text-align: center;
     cursor: pointer;
     margin: 20px 0;
@@ -320,93 +477,43 @@
   }
 
   .upload-area:hover {
-    border-color: #4169E1;
-    background: rgba(65, 105, 225, 0.05);
+    background: rgba(59, 130, 246, 0.05);
+    transform: scale(1.02);
   }
 
-  /* Buttons */
-  .btn-primary {
-    background: #4169E1;
-    color: white;
-    padding: 12px 25px;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    font-weight: 500;
-    transition: all 0.3s;
+  .upload-area i {
+    font-size: 60px;
+    color: var(--accent-primary);
+    margin-bottom: 15px;
   }
 
-  .btn-primary:hover {
-    background: #3154b3;
-    transform: translateY(-2px);
-  }
-
-  .btn-danger {
-    background: #ff4757;
-    color: white;
-    padding: 8px 15px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s;
-  }
-
-  .btn-danger:hover {
-    background: #ff3344;
-  }
-
-  .btn-warning {
-    background: #ffa502;
-    color: white;
-    padding: 8px 15px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-  }
-
-  .btn-success {
-    background: #00d25b;
-    color: white;
-    padding: 8px 15px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-  }
-
-  .post-actions {
-    display: flex;
-    gap: 10px;
-    margin-top: 15px;
-    flex-wrap: wrap;
-    border-top: 1px solid rgba(128, 128, 128, 0.2);
-    padding-top: 15px;
-  }
-
-  /* Comentarios */
+  /* ===== COMENTARIOS ===== */
   .comments-toggle {
     cursor: pointer;
     display: inline-flex;
     align-items: center;
-    gap: 8px;
-    padding: 10px 20px;
-    border-radius: 25px;
-    background: rgba(65, 105, 225, 0.1);
+    gap: 10px;
+    padding: 12px 25px;
+    border-radius: 30px;
+    background: var(--bg-primary);
     margin: 15px 0;
     transition: all 0.3s;
+    font-weight: 500;
   }
 
   .comments-toggle:hover {
-    background: rgba(65, 105, 225, 0.2);
+    background: var(--accent-primary);
+    color: white;
     transform: translateX(5px);
   }
 
   .comments-section {
     margin-top: 20px;
-    border-radius: 15px;
+    border-radius: 20px;
     padding: 20px;
     display: none;
     animation: slideDown 0.3s ease;
-    background: rgba(128, 128, 128, 0.05);
+    background: var(--bg-primary);
   }
 
   .comments-section.show {
@@ -419,18 +526,18 @@
   }
 
   .comment {
-    padding: 15px;
-    border-radius: 12px;
-    margin-bottom: 10px;
-    background: rgba(65, 105, 225, 0.05);
-    animation: fadeIn 0.3s;
+    background: var(--bg-secondary);
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 15px;
+    border-left: 4px solid var(--accent-primary);
   }
 
   .comment-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
     flex-wrap: wrap;
   }
 
@@ -442,20 +549,15 @@
   }
 
   .comment-user img {
-    width: 30px;
-    height: 30px;
+    width: 35px;
+    height: 35px;
     border-radius: 50%;
-  }
-
-  .comment-date {
-    font-size: 11px;
-    opacity: 0.7;
   }
 
   .comment-actions {
     display: flex;
-    gap: 5px;
-    margin-top: 10px;
+    gap: 10px;
+    margin-top: 15px;
   }
 
   .comment-input {
@@ -466,45 +568,216 @@
 
   .comment-input input {
     flex: 1;
-    padding: 12px;
-    border-radius: 10px;
-    border: 1px solid rgba(128, 128, 128, 0.2);
-    font-size: 14px;
+    padding: 15px;
+    border-radius: 15px;
+    border: 2px solid var(--border-color);
+    background: var(--bg-secondary);
+    color: var(--text-primary);
   }
 
-  /* Notification */
+  .comment-input input:focus {
+    border-color: var(--accent-primary);
+    outline: none;
+  }
+
+  /* ===== VOTOS ÚTILES ===== */
+  .vote-buttons {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .vote-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-secondary);
+    font-size: 14px;
+    padding: 5px 10px;
+    border-radius: 8px;
+    transition: all 0.2s;
+  }
+
+  .vote-btn:hover {
+    background: var(--bg-primary);
+    color: var(--accent-primary);
+  }
+
+  .vote-btn.voted {
+    color: var(--accent-primary);
+  }
+
+  /* ===== BUSCADOR ===== */
+  .search-box {
+    background: var(--bg-secondary);
+    border-radius: 50px;
+    padding: 5px 5px 5px 25px;
+    display: flex;
+    align-items: center;
+    border: 2px solid var(--border-color);
+    margin-bottom: 30px;
+  }
+
+  .search-box input {
+    flex: 1;
+    border: none;
+    padding: 15px 0;
+    background: transparent;
+    color: var(--text-primary);
+    font-size: 16px;
+  }
+
+  .search-box input:focus {
+    outline: none;
+  }
+
+  .search-box button {
+    background: var(--accent-gradient);
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s;
+  }
+
+  .search-box button:hover {
+    transform: scale(1.05);
+  }
+
+  /* ===== PROFESSOR CARDS ===== */
+  .professors-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 25px;
+    margin: 30px 0;
+  }
+
+  .professor-card {
+    background: var(--bg-secondary);
+    border-radius: 25px;
+    padding: 25px;
+    box-shadow: var(--card-shadow);
+    cursor: pointer;
+    transition: all 0.3s;
+    border: 1px solid var(--border-color);
+  }
+
+  .professor-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 30px 50px -20px var(--accent-primary);
+  }
+
+  .professor-name {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 10px 0;
+  }
+
+  .professor-rating {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 15px 0;
+  }
+
+  .rating-number {
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--accent-primary);
+  }
+
+  .professor-stats {
+    display: flex;
+    justify-content: space-between;
+    color: var(--text-secondary);
+    font-size: 14px;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid var(--border-color);
+  }
+
+  /* ===== ADMIN PANEL ===== */
+  .admin-panel {
+    background: var(--bg-secondary);
+    border-radius: 30px;
+    padding: 30px;
+    margin-bottom: 30px;
+    border-left: 6px solid var(--danger);
+  }
+
+  .admin-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin: 30px 0;
+  }
+
+  .stat-card {
+    background: var(--bg-primary);
+    padding: 25px;
+    border-radius: 20px;
+    text-align: center;
+  }
+
+  .stat-number {
+    font-size: 40px;
+    font-weight: 800;
+    color: var(--accent-primary);
+    margin-bottom: 5px;
+  }
+
+  .blocked-users {
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 15px;
+    background: var(--bg-primary);
+    border-radius: 15px;
+  }
+
+  .blocked-user-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  /* ===== NOTIFICACIONES ===== */
   .notification {
     position: fixed;
     top: 20px;
     right: 20px;
-    padding: 15px 25px;
-    border-radius: 10px;
+    padding: 16px 24px;
+    border-radius: 12px;
     background: white;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-    animation: slideInRight 0.3s ease;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    animation: slideIn 0.3s ease;
     z-index: 9999;
-    border-left: 4px solid #10b981;
+    border-left: 4px solid var(--success);
+    max-width: 350px;
   }
 
   .notification.error {
-    border-left-color: #ef4444;
+    border-left-color: var(--danger);
   }
 
   .notification.warning {
-    border-left-color: #ffa502;
+    border-left-color: var(--warning);
   }
 
-  @keyframes slideInRight {
+  @keyframes slideIn {
     from { transform: translateX(100%); opacity: 0; }
     to { transform: translateX(0); opacity: 1; }
   }
 
-  /* Switch */
+  /* ===== SWITCH ===== */
   .switch {
     position: relative;
     display: inline-block;
-    width: 50px;
-    height: 24px;
+    width: 60px;
+    height: 30px;
   }
 
   .switch input {
@@ -520,47 +793,55 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #ccc;
-    transition: .4s;
-    border-radius: 24px;
+    background-color: var(--border-color);
+    transition: .3s;
+    border-radius: 30px;
   }
 
   .slider:before {
     position: absolute;
     content: "";
-    height: 18px;
-    width: 18px;
+    height: 24px;
+    width: 24px;
     left: 3px;
     bottom: 3px;
     background-color: white;
-    transition: .4s;
+    transition: .3s;
     border-radius: 50%;
   }
 
   input:checked + .slider {
-    background-color: #4169E1;
+    background-color: var(--accent-primary);
   }
 
   input:checked + .slider:before {
-    transform: translateX(26px);
+    transform: translateX(30px);
   }
 
-  /* Responsive */
+  /* ===== RESPONSIVE ===== */
   @media (max-width: 768px) {
     .app-header {
       flex-direction: column;
     }
     
     .nav-buttons {
-      flex-wrap: wrap;
-    }
-    
-    .post-actions {
-      flex-direction: column;
-    }
-    
-    .post-actions button {
       width: 100%;
+      justify-content: center;
+    }
+    
+    .professors-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .search-box {
+      flex-direction: column;
+      background: transparent;
+      padding: 0;
+    }
+    
+    .search-box button {
+      width: 100%;
+      margin-top: 10px;
     }
   }
 </style>
@@ -571,43 +852,42 @@
 <div id="notification" class="notification" style="display: none;"></div>
 
 <!-- LOGIN -->
-<div id="login">
-  <div class="logo-container">
+<div id="login" class="container">
+  <div class="logo-container animate__animated animate__bounceIn">
     <div class="logo-icon">
       <i class="fas fa-chalkboard-teacher"></i>
     </div>
     <span class="logo-text">Social RD</span>
   </div>
   
-  <div class="welcome-card">
-    <i class="fas fa-graduation-cap"></i>
+  <div class="welcome-card animate__animated animate__fadeInUp">
+    <i class="fas fa-graduation-cap fa-3x mb-4"></i>
     <h3>🎓 ¡Bienvenido a Social RD!</h3>
-    <p>Esta página fue creada especialmente para calificar a los profesores,<br>
-    para que los estudiantes elijan mejor a los docentes.<br>
-    <strong>¡Tu opinión es importante para mejorar la educación!</strong></p>
+    <p>La primera red social dominicana para calificar profesores<br>
+    <strong>¡Ayuda a mejorar la educación con tu opinión!</strong></p>
   </div>
   
   <div class="input-group">
     <i class="fas fa-user"></i>
-    <input id="loginUser" placeholder="Usuario" style="width: 100%; padding: 15px 45px; border-radius: 10px;">
+    <input id="loginUser" placeholder="Nombre de usuario" autocomplete="off">
   </div>
   
   <div class="input-group">
     <i class="fas fa-lock"></i>
-    <input id="loginPass" type="password" placeholder="Contraseña" style="width: 100%; padding: 15px 45px; border-radius: 10px;">
+    <input id="loginPass" type="password" placeholder="Contraseña">
   </div>
   
-  <button class="btn-primary" onclick="login()" style="width: 100%; padding: 15px; margin-bottom: 10px;">
+  <button class="btn-primary" onclick="window.loginFunction()" style="width: 100%; margin-bottom: 15px;">
     <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
   </button>
   
-  <button class="btn-secondary" onclick="showRegister()" style="width: 100%; padding: 15px;">
+  <button class="btn-secondary" onclick="window.showRegister()" style="width: 100%;">
     <i class="fas fa-user-plus"></i> Crear Cuenta
   </button>
 </div>
 
 <!-- REGISTER -->
-<div id="register" style="display: none;">
+<div id="register" class="container" style="display: none;">
   <div class="logo-container">
     <div class="logo-icon">
       <i class="fas fa-chalkboard-teacher"></i>
@@ -615,67 +895,68 @@
     <span class="logo-text">Social RD</span>
   </div>
   
-  <div style="text-align: center; margin-bottom: 30px;">
-    <h2>Únete a la comunidad educativa</h2>
-  </div>
+  <h2 style="text-align: center; margin-bottom: 30px;">Únete a la comunidad</h2>
   
   <div class="input-group">
     <i class="fas fa-user"></i>
-    <input id="regUser" placeholder="Nombre de usuario" style="width: 100%; padding: 15px 45px; border-radius: 10px;">
+    <input id="regUser" placeholder="Nombre de usuario">
   </div>
   
   <div class="input-group">
     <i class="fas fa-envelope"></i>
-    <input id="regEmail" type="email" placeholder="Correo electrónico" style="width: 100%; padding: 15px 45px; border-radius: 10px;">
+    <input id="regEmail" type="email" placeholder="Correo electrónico">
   </div>
   
   <div class="input-group">
     <i class="fas fa-lock"></i>
-    <input id="regPass" type="password" placeholder="Contraseña" style="width: 100%; padding: 15px 45px; border-radius: 10px;">
+    <input id="regPass" type="password" placeholder="Contraseña">
   </div>
   
   <div class="input-group">
     <i class="fas fa-lock"></i>
-    <input id="regConfirmPass" type="password" placeholder="Confirmar contraseña" style="width: 100%; padding: 15px 45px; border-radius: 10px;">
+    <input id="regConfirmPass" type="password" placeholder="Confirmar contraseña">
   </div>
   
-  <button class="btn-primary" onclick="register()" style="width: 100%; padding: 15px; margin-bottom: 10px;">
+  <button class="btn-primary" onclick="window.registerFunction()" style="width: 100%; margin-bottom: 15px;">
     <i class="fas fa-user-plus"></i> Registrarse
   </button>
   
-  <button class="btn-secondary" onclick="showLogin()" style="width: 100%; padding: 15px;">
+  <button class="btn-secondary" onclick="window.showLogin()" style="width: 100%;">
     <i class="fas fa-arrow-left"></i> Ya tengo cuenta
   </button>
 </div>
 
 <!-- APP PRINCIPAL -->
-<div id="app" style="display: none;">
+<div id="app" class="container" style="display: none;">
   <div class="app-header">
     <div class="header-left">
-      <div class="logo-icon" style="width: 40px; height: 40px; font-size: 20px;">
+      <div class="logo-icon" style="width: 50px; height: 50px; font-size: 25px;">
         <i class="fas fa-chalkboard-teacher"></i>
       </div>
       <h2>Social RD</h2>
       <div class="nav-buttons">
-        <button class="nav-btn active" onclick="showFeed()" id="navFeed">
+        <button class="nav-btn active" onclick="window.showFeed()" id="navFeed">
           <i class="fas fa-home"></i> Inicio
         </button>
-        <button class="nav-btn" onclick="showProfile()" id="navProfile">
+        <button class="nav-btn" onclick="window.showProfile()" id="navProfile">
           <i class="fas fa-user"></i> Perfil
         </button>
-        <button class="nav-btn" onclick="showSettings()" id="navSettings">
+        <button class="nav-btn" onclick="window.showProfessors()" id="navProfessors">
+          <i class="fas fa-chalkboard-teacher"></i> Profesores
+        </button>
+        <button class="nav-btn" onclick="window.showSettings()" id="navSettings">
           <i class="fas fa-cog"></i> Ajustes
         </button>
       </div>
     </div>
     
     <div class="header-right">
-      <div class="profile-mini" onclick="showProfile()">
-        <img id="profileMiniAvatar" src="https://ui-avatars.com/api/?name=User&background=4169E1&color=fff" alt="Avatar">
+      <div class="profile-mini" onclick="window.showProfile()">
+        <img id="profileMiniAvatar" src="https://ui-avatars.com/api/?name=User&background=3b82f6&color=fff" alt="Avatar">
         <span id="profileMiniName"></span>
         <span id="adminMiniBadge" style="display: none;" class="admin-badge">Admin</span>
       </div>
-      <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle">
+      <button class="theme-toggle" onclick="window.toggleTheme()" id="themeToggle">
         <i class="fas fa-moon"></i>
       </button>
     </div>
@@ -683,65 +964,95 @@
   
   <!-- PANEL DE ADMIN -->
   <div id="adminPanel" class="admin-panel" style="display: none;">
-    <h3><i class="fas fa-crown"></i> Panel de Administración</h3>
+    <h2><i class="fas fa-crown"></i> Panel de Administración</h2>
+    
     <div class="admin-stats">
-      <div class="stat-box">
-        <div class="number" id="totalUsers">0</div>
-        <div>Usuarios totales</div>
+      <div class="stat-card">
+        <div class="stat-number" id="totalUsers">0</div>
+        <div>Usuarios Totales</div>
       </div>
-      <div class="stat-box">
-        <div class="number" id="totalPosts">0</div>
+      <div class="stat-card">
+        <div class="stat-number" id="totalPosts">0</div>
         <div>Publicaciones</div>
       </div>
-      <div class="stat-box">
-        <div class="number" id="totalComments">0</div>
+      <div class="stat-card">
+        <div class="stat-number" id="totalComments">0</div>
         <div>Comentarios</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number" id="totalProfessors">0</div>
+        <div>Profesores</div>
       </div>
     </div>
     
-    <h4><i class="fas fa-ban"></i> Usuarios Bloqueados</h4>
+    <h3><i class="fas fa-ban"></i> Usuarios Bloqueados</h3>
     <div id="blockedUsers" class="blocked-users"></div>
+    
+    <h3 style="margin-top: 30px;"><i class="fas fa-flag"></i> Comentarios Reportados</h3>
+    <div id="reportedComments" class="blocked-users"></div>
   </div>
   
   <!-- SECCIÓN FEED -->
   <div id="feedSection">
     <div class="welcome-card">
-      <i class="fas fa-chalkboard-teacher"></i>
+      <i class="fas fa-chalkboard-teacher fa-3x mb-4"></i>
       <h3>📚 Califica a tus profesores</h3>
-      <p>Comparte tu experiencia con los docentes y ayuda a otros estudiantes a elegir mejor sus clases.</p>
+      <p>Comparte tu experiencia y ayuda a mejorar la educación dominicana</p>
     </div>
     
-    <h3><i class="fas fa-pen-fancy"></i> Calificar a un Profesor</h3>
+    <div class="search-box">
+      <input type="text" id="feedSearch" placeholder="🔍 Buscar por profesor o materia..." onkeyup="window.filterPosts()">
+      <button onclick="window.filterPosts()"><i class="fas fa-search"></i> Buscar</button>
+    </div>
+    
+    <h3><i class="fas fa-pen-fancy"></i> Nueva Calificación</h3>
     
     <div class="upload-area" onclick="document.getElementById('image').click()">
-      <i class="fas fa-cloud-upload-alt" style="font-size: 50px; color: #4169E1;"></i>
+      <i class="fas fa-cloud-upload-alt"></i>
       <h4>Sube una foto del profesor o la clase</h4>
+      <p>Haz clic para seleccionar una imagen</p>
     </div>
     
     <input type="file" id="image" accept="image/*" style="display: none;">
     
-    <input type="text" id="teacherName" placeholder="Nombre del profesor" style="width: 100%; padding: 15px; border-radius: 10px; margin: 10px 0;">
+    <div class="input-group">
+      <i class="fas fa-chalkboard-teacher"></i>
+      <input type="text" id="teacherName" placeholder="Nombre del profesor *">
+    </div>
     
-    <textarea id="desc" placeholder="Describe tu experiencia..." rows="4" style="width: 100%; padding: 15px; border-radius: 10px; margin: 10px 0;"></textarea>
+    <div class="input-group">
+      <i class="fas fa-book"></i>
+      <input type="text" id="subject" placeholder="Materia (ej: Matemáticas, Español...)">
+    </div>
     
-    <div style="margin: 15px 0;">
-      <label>Calificación (1-5 estrellas):</label>
+    <div class="input-group">
+      <i class="fas fa-university"></i>
+      <input type="text" id="institution" placeholder="Institución">
+    </div>
+    
+    <div class="input-group">
+      <i class="fas fa-align-left"></i>
+      <textarea id="desc" placeholder="Describe tu experiencia... *" rows="4"></textarea>
+    </div>
+    
+    <div style="margin: 20px 0;">
+      <label style="font-weight: 600; margin-bottom: 10px; display: block;">Calificación:</label>
       <div class="rating-stars" id="newPostStars">
-        <i class="fas fa-star star" onclick="setRating(1)"></i>
-        <i class="fas fa-star star" onclick="setRating(2)"></i>
-        <i class="fas fa-star star" onclick="setRating(3)"></i>
-        <i class="fas fa-star star" onclick="setRating(4)"></i>
-        <i class="fas fa-star star" onclick="setRating(5)"></i>
+        <i class="fas fa-star star" onclick="window.setRating(1)"></i>
+        <i class="fas fa-star star" onclick="window.setRating(2)"></i>
+        <i class="fas fa-star star" onclick="window.setRating(3)"></i>
+        <i class="fas fa-star star" onclick="window.setRating(4)"></i>
+        <i class="fas fa-star star" onclick="window.setRating(5)"></i>
       </div>
     </div>
     
-    <button class="btn-primary" onclick="upload()" style="width: 100%; padding: 15px; margin-bottom: 30px;">
+    <button class="btn-primary" onclick="window.upload()" style="width: 100%; padding: 18px; margin-bottom: 40px;">
       <i class="fas fa-paper-plane"></i> Publicar Calificación
     </button>
     
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-      <h3><i class="fas fa-stream"></i> Calificaciones</h3>
-      <button class="btn-secondary" onclick="loadPosts()">
+      <h3><i class="fas fa-stream"></i> Calificaciones Recientes</h3>
+      <button class="btn-secondary" onclick="window.loadPosts()">
         <i class="fas fa-sync-alt"></i> Actualizar
       </button>
     </div>
@@ -749,85 +1060,92 @@
     <div id="posts"></div>
   </div>
   
+  <!-- SECCIÓN PROFESORES -->
+  <div id="professorsSection" style="display: none;">
+    <h2 style="margin-bottom: 20px;"><i class="fas fa-chalkboard-teacher"></i> Profesores</h2>
+    
+    <div class="search-box">
+      <input type="text" id="professorSearch" placeholder="🔍 Buscar profesor..." onkeyup="window.filterProfessors()">
+      <button onclick="window.filterProfessors()"><i class="fas fa-search"></i> Buscar</button>
+    </div>
+    
+    <div id="professorsList" class="professors-grid"></div>
+  </div>
+  
   <!-- SECCIÓN PERFIL -->
   <div id="profileSection" style="display: none;">
-    <div class="profile-card">
-      <div class="profile-header">
-        <div class="profile-avatar">
-          <img id="profileAvatar" src="https://ui-avatars.com/api/?name=User&background=4169E1&color=fff" alt="Avatar">
-          <div class="avatar-overlay" onclick="document.getElementById('avatarInput').click()">
-            <i class="fas fa-camera"></i>
+    <div class="profile-card" style="background: var(--bg-secondary); border-radius: 30px; padding: 40px;">
+      <div style="display: flex; gap: 40px; flex-wrap: wrap; align-items: center; margin-bottom: 40px;">
+        <div style="position: relative;">
+          <img id="profileAvatar" src="https://ui-avatars.com/api/?name=User&background=3b82f6&color=fff" style="width: 150px; height: 150px; border-radius: 50%; border: 5px solid var(--accent-primary);">
+          <div style="position: absolute; bottom: 10px; right: 10px; background: var(--accent-primary); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer;" onclick="document.getElementById('avatarInput').click()">
+            <i class="fas fa-camera" style="color: white;"></i>
           </div>
-          <input type="file" id="avatarInput" accept="image/*" style="display: none;" onchange="updateAvatar(event)">
+          <input type="file" id="avatarInput" accept="image/*" style="display: none;" onchange="window.updateAvatar(event)">
         </div>
         
-        <div class="profile-info">
-          <h3 id="profileName"></h3>
-          <p id="profileEmail"></p>
-          
-          <div class="profile-bio" id="profileBio">
-            <p>Estudiante comprometido con la educación</p>
+        <div style="flex: 1;">
+          <h2 id="profileName" style="font-size: 32px; margin-bottom: 10px;"></h2>
+          <p id="profileEmail" style="color: var(--text-secondary); margin-bottom: 15px;"></p>
+          <div id="profileBio" style="background: var(--bg-primary); padding: 20px; border-radius: 15px; margin-bottom: 20px;">
+            Estudiante comprometido con la educación
           </div>
           
-          <div class="profile-stats">
-            <div class="profile-stat">
-              <div class="number" id="profilePostsCount">0</div>
-              <div class="label">Calificaciones</div>
+          <div style="display: flex; gap: 30px;">
+            <div>
+              <div style="font-size: 28px; font-weight: 700; color: var(--accent-primary);" id="profilePostsCount">0</div>
+              <div>Calificaciones</div>
             </div>
-            <div class="profile-stat">
-              <div class="number" id="profileRatingAvg">0.0</div>
-              <div class="label">Promedio</div>
+            <div>
+              <div style="font-size: 28px; font-weight: 700; color: var(--accent-primary);" id="profileRatingAvg">0.0</div>
+              <div>Promedio</div>
             </div>
           </div>
-          
-          <button class="btn-primary" onclick="editProfile()">
-            <i class="fas fa-edit"></i> Editar Perfil
-          </button>
         </div>
       </div>
       
-      <h4>Mis Calificaciones</h4>
+      <h3 style="margin-bottom: 20px;">Mis Calificaciones</h3>
       <div id="userPosts"></div>
     </div>
   </div>
   
   <!-- SECCIÓN AJUSTES -->
   <div id="settingsSection" style="display: none;">
-    <div class="settings-card">
-      <h3><i class="fas fa-cog"></i> Ajustes</h3>
+    <div style="background: var(--bg-secondary); border-radius: 30px; padding: 40px;">
+      <h2 style="margin-bottom: 30px;"><i class="fas fa-cog"></i> Ajustes</h2>
       
-      <div class="settings-section">
-        <h4>Apariencia</h4>
-        <div class="setting-item">
+      <div style="margin-bottom: 30px;">
+        <h3 style="margin-bottom: 20px;">Apariencia</h3>
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 20px; background: var(--bg-primary); border-radius: 15px;">
           <span><i class="fas fa-moon"></i> Modo Oscuro</span>
           <label class="switch">
-            <input type="checkbox" id="darkModeToggle" onchange="toggleTheme()">
+            <input type="checkbox" id="darkModeToggle" onchange="window.toggleTheme()">
             <span class="slider"></span>
           </label>
         </div>
       </div>
       
-      <div class="settings-section">
-        <h4>Perfil</h4>
-        <div class="setting-item">
+      <div style="margin-bottom: 30px;">
+        <h3 style="margin-bottom: 20px;">Perfil</h3>
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 20px; background: var(--bg-primary); border-radius: 15px; margin-bottom: 10px;">
           <span><i class="fas fa-user"></i> Nombre de usuario</span>
-          <button class="btn-secondary" onclick="changeUsername()">Cambiar</button>
+          <button class="btn-secondary" onclick="window.changeUsername()">Cambiar</button>
         </div>
-        <div class="setting-item">
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 20px; background: var(--bg-primary); border-radius: 15px; margin-bottom: 10px;">
           <span><i class="fas fa-envelope"></i> Correo electrónico</span>
-          <button class="btn-secondary" onclick="changeEmail()">Cambiar</button>
+          <button class="btn-secondary" onclick="window.changeEmail()">Cambiar</button>
         </div>
-        <div class="setting-item">
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 20px; background: var(--bg-primary); border-radius: 15px; margin-bottom: 10px;">
           <span><i class="fas fa-lock"></i> Contraseña</span>
-          <button class="btn-secondary" onclick="changePassword()">Cambiar</button>
+          <button class="btn-secondary" onclick="window.changePassword()">Cambiar</button>
         </div>
-        <div class="setting-item">
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 20px; background: var(--bg-primary); border-radius: 15px;">
           <span><i class="fas fa-pencil"></i> Biografía</span>
-          <button class="btn-secondary" onclick="editBio()">Editar</button>
+          <button class="btn-secondary" onclick="window.editBio()">Editar</button>
         </div>
       </div>
       
-      <button class="btn-danger" onclick="logout()" style="width: 100%; padding: 15px; margin-top: 20px;">
+      <button class="btn-danger" onclick="window.logout()" style="width: 100%; padding: 18px;">
         <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
       </button>
     </div>
@@ -843,15 +1161,16 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 let currentUser = null;
 let isAdmin = false;
 let newPostRating = 0;
+let allPosts = [];
+let allProfessors = [];
 
-// [CORREGIDO] Función para guardar sesión
+// ===== FUNCIONES DE UTILIDAD =====
 function saveSession(username, admin, userData) {
     localStorage.setItem('socialRD_user', username);
     localStorage.setItem('socialRD_admin', admin);
     localStorage.setItem('socialRD_data', JSON.stringify(userData || {}));
 }
 
-// [CORREGIDO] Función para cargar sesión
 function loadSession() {
     const savedUser = localStorage.getItem('socialRD_user');
     const savedAdmin = localStorage.getItem('socialRD_admin') === 'true';
@@ -865,14 +1184,24 @@ function loadSession() {
     return null;
 }
 
-// [CORREGIDO] Función para limpiar sesión
 function clearSession() {
     localStorage.removeItem('socialRD_user');
     localStorage.removeItem('socialRD_admin');
     localStorage.removeItem('socialRD_data');
 }
 
-// ===== FUNCIÓN DE CONSULTA MEJORADA =====
+// ===== NOTIFICACIONES =====
+function showNotification(message, type = "success") {
+    const notification = document.getElementById("notification");
+    notification.style.display = "block";
+    notification.className = `notification ${type}`;
+    notification.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i> ${message}`;
+    setTimeout(() => {
+        notification.style.display = "none";
+    }, 3000);
+}
+
+// ===== FUNCIONES DE CONSULTA =====
 async function query(endpoint, options = {}) {
     try {
         const url = `${SUPABASE_URL}${endpoint}`;
@@ -903,31 +1232,24 @@ async function query(endpoint, options = {}) {
     }
 }
 
-// ===== FUNCIONES DE UI =====
-function showNotification(message, type = "success") {
-    const notification = document.getElementById("notification");
-    notification.style.display = "block";
-    notification.className = `notification ${type}`;
-    notification.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i> ${message}`;
-    setTimeout(() => {
-        notification.style.display = "none";
-    }, 3000);
+// ===== FUNCIONES DE NAVEGACIÓN =====
+function showLogin() {
+    document.getElementById("login").style.display = "block";
+    document.getElementById("register").style.display = "none";
+    document.getElementById("app").style.display = "none";
 }
 
 function showRegister() {
     document.getElementById("login").style.display = "none";
     document.getElementById("register").style.display = "block";
-}
-
-function showLogin() {
-    document.getElementById("login").style.display = "block";
-    document.getElementById("register").style.display = "none";
+    document.getElementById("app").style.display = "none";
 }
 
 function showFeed() {
     document.getElementById("feedSection").style.display = "block";
     document.getElementById("profileSection").style.display = "none";
     document.getElementById("settingsSection").style.display = "none";
+    document.getElementById("professorsSection").style.display = "none";
     
     document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
     document.getElementById("navFeed").classList.add("active");
@@ -939,6 +1261,7 @@ function showProfile() {
     document.getElementById("feedSection").style.display = "none";
     document.getElementById("profileSection").style.display = "block";
     document.getElementById("settingsSection").style.display = "none";
+    document.getElementById("professorsSection").style.display = "none";
     
     document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
     document.getElementById("navProfile").classList.add("active");
@@ -948,21 +1271,42 @@ function showProfile() {
     }
 }
 
+function showProfessors() {
+    document.getElementById("feedSection").style.display = "none";
+    document.getElementById("profileSection").style.display = "none";
+    document.getElementById("settingsSection").style.display = "none";
+    document.getElementById("professorsSection").style.display = "block";
+    
+    document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+    document.getElementById("navProfessors").classList.add("active");
+    
+    loadProfessors();
+}
+
 function showSettings() {
     document.getElementById("feedSection").style.display = "none";
     document.getElementById("profileSection").style.display = "none";
     document.getElementById("settingsSection").style.display = "block";
+    document.getElementById("professorsSection").style.display = "none";
     
     document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
     document.getElementById("navSettings").classList.add("active");
 }
 
+// ===== TEMA =====
 function toggleTheme() {
     document.body.classList.toggle("dark-theme");
     const icon = document.getElementById("themeToggle").querySelector('i');
     icon.className = document.body.classList.contains("dark-theme") ? "fas fa-sun" : "fas fa-moon";
+    
+    // Sincronizar switch
+    const darkModeToggle = document.getElementById("darkModeToggle");
+    if (darkModeToggle) {
+        darkModeToggle.checked = document.body.classList.contains("dark-theme");
+    }
 }
 
+// ===== RATING =====
 function setRating(rating) {
     newPostRating = rating;
     const stars = document.querySelectorAll("#newPostStars .star");
@@ -975,8 +1319,8 @@ function setRating(rating) {
     });
 }
 
-// ===== LOGIN CORREGIDO =====
-async function login() {
+// ===== LOGIN =====
+async function loginFunction() {
     const username = document.getElementById("loginUser").value.trim();
     const password = document.getElementById("loginPass").value;
     
@@ -988,19 +1332,12 @@ async function login() {
     try {
         console.log('🔍 Buscando usuario:', username);
         
-        // Buscar usuario por nombre
         const users = await query(`/rest/v1/users?username=eq.${encodeURIComponent(username)}&select=*`);
-        
-        console.log('📦 Usuarios encontrados:', users);
         
         if (users && users.length > 0) {
             const user = users[0];
-            console.log('✅ Usuario encontrado:', user);
             
-            // Comparar contraseña
             if (user.password === password) {
-                console.log('✅ Contraseña correcta');
-                
                 // Verificar si está bloqueado
                 const blocked = await query(`/rest/v1/blocked_users?username=eq.${encodeURIComponent(username)}&select=*`);
                 
@@ -1013,7 +1350,6 @@ async function login() {
                 currentUser = user.username;
                 isAdmin = currentUser === "ADMIN";
                 
-                // [CORREGIDO] Guardar sesión
                 saveSession(currentUser, isAdmin, user);
                 
                 document.getElementById("login").style.display = "none";
@@ -1034,11 +1370,9 @@ async function login() {
                 await loadPosts();
                 showFeed();
             } else {
-                console.log('❌ Contraseña incorrecta');
                 showNotification("❌ Contraseña incorrecta", "error");
             }
         } else {
-            console.log('❌ Usuario no encontrado');
             showNotification("❌ Usuario no encontrado", "error");
         }
     } catch (error) {
@@ -1048,7 +1382,7 @@ async function login() {
 }
 
 // ===== REGISTRO =====
-async function register() {
+async function registerFunction() {
     const username = document.getElementById("regUser").value.trim();
     const email = document.getElementById("regEmail").value.trim();
     const password = document.getElementById("regPass").value;
@@ -1061,6 +1395,11 @@ async function register() {
     
     if (password !== confirmPass) {
         showNotification("Las contraseñas no coinciden", "error");
+        return;
+    }
+    
+    if (password.length < 6) {
+        showNotification("La contraseña debe tener al menos 6 caracteres", "error");
         return;
     }
     
@@ -1080,9 +1419,10 @@ async function register() {
                 username: username,
                 email: email,
                 password: password,
-                avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(username)}&background=4169E1&color=fff`,
+                avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(username)}&background=3b82f6&color=fff`,
                 bio: "Estudiante comprometido con la educación",
-                role: "user"
+                role: "user",
+                created_at: new Date().toISOString()
             })
         });
         
@@ -1105,7 +1445,6 @@ async function register() {
 function logout() {
     currentUser = null;
     isAdmin = false;
-    // [CORREGIDO] Limpiar sesión guardada
     clearSession();
     document.getElementById("app").style.display = "none";
     document.getElementById("login").style.display = "block";
@@ -1120,98 +1459,138 @@ async function loadPosts() {
         console.log('📥 Cargando posts...');
         
         const postsData = await query('/rest/v1/posts?select=*&order=created_at.desc');
-        console.log('📦 Posts cargados:', postsData);
+        allPosts = postsData || [];
         
         let commentsData = [];
+        let votesData = [];
+        let reportsData = [];
+        
         try {
-            commentsData = await query('/rest/v1/comments?select=*&order=created_at.desc');
+            commentsData = await query('/rest/v1/comments?select=*');
+            votesData = await query('/rest/v1/votes?select=*');
+            reportsData = await query('/rest/v1/reports?select=*');
         } catch (e) {
-            console.log('No hay comentarios aún');
+            console.log('Datos adicionales no disponibles');
         }
         
-        if (!postsData || postsData.length === 0) {
-            document.getElementById("posts").innerHTML = "<p style='text-align:center; padding:40px;'>No hay calificaciones aún. ¡Sé el primero!</p>";
+        if (!allPosts || allPosts.length === 0) {
+            document.getElementById("posts").innerHTML = "<div style='text-align:center; padding:60px; background: var(--bg-secondary); border-radius: 30px;'><i class='fas fa-inbox fa-4x' style='color: var(--text-secondary); margin-bottom: 20px;'></i><h3>No hay calificaciones aún</h3><p>¡Sé el primero en calificar un profesor!</p></div>";
             return;
         }
         
         let html = "";
-        for (const post of postsData) {
+        for (const post of allPosts) {
             const postComments = commentsData ? commentsData.filter(c => c.post_id === post.id) : [];
+            const postVotes = votesData ? votesData.filter(v => v.post_id === post.id) : [];
+            const helpfulVotes = postVotes.filter(v => v.vote_type === 'helpful').length;
+            const notHelpfulVotes = postVotes.filter(v => v.vote_type === 'not_helpful').length;
+            const isReported = reportsData ? reportsData.some(r => r.post_id === post.id && r.status === 'pending') : false;
             
             html += `
                 <div class="post" id="post-${post.id}">
-                    <div style="display:flex; align-items:center; gap:15px; margin-bottom:15px;">
-                        <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(post.username)}&background=4169E1&color=fff" class="user-avatar">
-                        <div>
-                            <div style="display:flex; align-items:center; gap:10px;">
-                                <span style="font-weight:600; font-size:18px;">${post.username}</span>
-                                ${post.username === 'ADMIN' ? '<span class="admin-badge">Admin</span>' : ''}
-                            </div>
-                            <div style="font-size:13px; opacity:0.7;">
-                                <i class="far fa-clock"></i> ${new Date(post.created_at).toLocaleString()}
-                            </div>
+                    <div class="post-header">
+                        <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(post.username)}&background=3b82f6&color=fff" class="post-avatar">
+                        <div class="post-user-info">
+                            <h4>${post.username} ${post.username === 'ADMIN' ? '<span class="admin-badge">Admin</span>' : ''}</h4>
+                            <div class="post-date"><i class="far fa-clock"></i> ${new Date(post.created_at).toLocaleString()}</div>
                         </div>
                     </div>
                     
-                    <div style="margin:15px 0; padding:10px 20px; background:#4169E1; color:white; border-radius:30px; display:inline-block;">
-                        <i class="fas fa-chalkboard-teacher"></i> ${post.teacher} 
-                        <span style="margin-left:10px; background:white; color:#4169E1; padding:3px 10px; border-radius:20px;">
-                            ⭐ ${post.teacher_rating}/5
+                    <div class="teacher-badge">
+                        <i class="fas fa-chalkboard-teacher"></i> ${post.teacher || 'Profesor'} 
+                        ${post.subject ? ` • ${post.subject}` : ''}
+                        ${post.institution ? ` • ${post.institution}` : ''}
+                        <span style="margin-left: 10px; background: white; color: var(--accent-primary); padding: 3px 10px; border-radius: 20px;">
+                            ⭐ ${post.teacher_rating || 0}/5
                         </span>
                     </div>
                     
-                    <div style="margin:20px 0;">
-                        <img src="${post.image}" style="width:100%; max-height:450px; object-fit:cover; border-radius:15px; cursor:pointer;" onclick="window.open(this.src)">
+                    ${post.image ? `<img src="${post.image}" class="post-image" onclick="window.open(this.src)">` : ''}
+                    
+                    <p class="post-description">${post.description || ''}</p>
+                    
+                    <div style="display: flex; gap: 20px; align-items: center; margin: 20px 0;">
+                        <div class="vote-buttons">
+                            <button class="vote-btn" onclick="window.votePost(${post.id}, 'helpful')">
+                                <i class="fas fa-thumbs-up"></i> Útil (${helpfulVotes})
+                            </button>
+                            <button class="vote-btn" onclick="window.votePost(${post.id}, 'not_helpful')">
+                                <i class="fas fa-thumbs-down"></i> No útil (${notHelpfulVotes})
+                            </button>
+                        </div>
+                        ${!isAdmin && post.username !== currentUser ? `
+                            <button class="btn-warning" style="padding: 8px 15px;" onclick="window.reportPost(${post.id})">
+                                <i class="fas fa-flag"></i> Reportar
+                            </button>
+                        ` : ''}
                     </div>
                     
-                    <p style="margin:20px 0; font-size:16px; line-height:1.7;">${post.description}</p>
-                    
-                    <div class="comments-toggle" onclick="toggleComments(${post.id})">
+                    <div class="comments-toggle" onclick="window.toggleComments(${post.id})">
                         <i class="fas fa-comment"></i> Comentarios (${postComments.length})
                     </div>
                     
                     <div class="comments-section" id="comments-${post.id}">
                         <div id="comments-list-${post.id}">
-                            ${postComments.map(comment => `
-                                <div class="comment" id="comment-${comment.id}">
-                                    <div class="comment-header">
-                                        <span class="comment-user">
-                                            <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(comment.username)}&background=4169E1&color=fff" alt="">
-                                            ${comment.username}
-                                            ${comment.username === 'ADMIN' ? '<span class="admin-badge">Admin</span>' : ''}
-                                        </span>
-                                        <span class="comment-date">${new Date(comment.created_at).toLocaleString()}</span>
+                            ${postComments.map(comment => {
+                                const commentVotes = votesData ? votesData.filter(v => v.comment_id === comment.id) : [];
+                                const commentHelpful = commentVotes.filter(v => v.vote_type === 'helpful').length;
+                                return `
+                                    <div class="comment" id="comment-${comment.id}">
+                                        <div class="comment-header">
+                                            <span class="comment-user">
+                                                <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(comment.username)}&background=3b82f6&color=fff" alt="">
+                                                ${comment.username}
+                                                ${comment.username === 'ADMIN' ? '<span class="admin-badge">Admin</span>' : ''}
+                                            </span>
+                                            <span class="comment-date">${new Date(comment.created_at).toLocaleString()}</span>
+                                        </div>
+                                        <p>${comment.content}</p>
+                                        <div style="display: flex; gap: 15px; align-items: center; margin-top: 10px;">
+                                            <div class="vote-buttons">
+                                                <button class="vote-btn" onclick="window.voteComment(${comment.id}, 'helpful')">
+                                                    <i class="fas fa-thumbs-up"></i> (${commentHelpful})
+                                                </button>
+                                            </div>
+                                            ${!isAdmin && comment.username !== currentUser ? `
+                                                <button class="btn-warning" style="padding: 5px 10px; font-size: 12px;" onclick="window.reportComment(${comment.id})">
+                                                    <i class="fas fa-flag"></i> Reportar
+                                                </button>
+                                            ` : ''}
+                                            ${(isAdmin || comment.username === currentUser) ? `
+                                                <button class="btn-danger" onclick="window.deleteComment(${comment.id})" style="padding:5px 10px; font-size:12px;">
+                                                    <i class="fas fa-trash"></i> Eliminar
+                                                </button>
+                                            ` : ''}
+                                        </div>
                                     </div>
-                                    <p>${comment.content}</p>
-                                    <div class="comment-actions">
-                                        ${(isAdmin || comment.username === currentUser) ? `
-                                            <button class="btn-danger" onclick="deleteComment(${comment.id})" style="padding:5px 10px; font-size:12px;">
-                                                <i class="fas fa-trash"></i> Eliminar
-                                            </button>
-                                        ` : ''}
-                                    </div>
-                                </div>
-                            `).join('')}
+                                `;
+                            }).join('')}
                         </div>
                         
                         <div class="comment-input">
                             <input type="text" id="commentInput-${post.id}" placeholder="Escribe un comentario...">
-                            <button class="btn-primary" onclick="addComment(${post.id})">
+                            <button class="btn-primary" onclick="window.addComment(${post.id})">
                                 <i class="fas fa-paper-plane"></i>
                             </button>
                         </div>
                     </div>
                     
-                    <div class="post-actions">
+                    <div class="post-actions" style="display: flex; gap: 10px; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border-color);">
                         ${(isAdmin || post.username === currentUser) ? `
-                            <button class="btn-danger" onclick="deletePost(${post.id})">
+                            <button class="btn-danger" onclick="window.deletePost(${post.id})">
                                 <i class="fas fa-trash-alt"></i> Eliminar Publicación
                             </button>
                         ` : ''}
                         
                         ${isAdmin && post.username !== 'ADMIN' ? `
-                            <button class="btn-warning" onclick="blockUser('${post.username}')">
+                            <button class="btn-warning" onclick="window.blockUser('${post.username}')">
                                 <i class="fas fa-ban"></i> Bloquear Usuario
+                            </button>
+                        ` : ''}
+                        
+                        ${isAdmin && isReported ? `
+                            <button class="btn-success" onclick="window.resolveReport(${post.id})">
+                                <i class="fas fa-check"></i> Resolver Reporte
                             </button>
                         ` : ''}
                     </div>
@@ -1225,8 +1604,144 @@ async function loadPosts() {
         
     } catch (error) {
         console.error("Error cargando posts:", error);
-        document.getElementById("posts").innerHTML = "<p style='color:red; text-align:center;'>Error cargando posts</p>";
+        document.getElementById("posts").innerHTML = "<p style='color: var(--danger); text-align:center; padding:40px;'>Error cargando posts</p>";
     }
+}
+
+// ===== FILTRAR POSTS =====
+function filterPosts() {
+    const searchTerm = document.getElementById("feedSearch").value.toLowerCase();
+    
+    if (!searchTerm) {
+        loadPosts();
+        return;
+    }
+    
+    const filtered = allPosts.filter(post => 
+        (post.teacher && post.teacher.toLowerCase().includes(searchTerm)) ||
+        (post.subject && post.subject.toLowerCase().includes(searchTerm)) ||
+        (post.institution && post.institution.toLowerCase().includes(searchTerm)) ||
+        (post.description && post.description.toLowerCase().includes(searchTerm))
+    );
+    
+    displayFilteredPosts(filtered);
+}
+
+function displayFilteredPosts(posts) {
+    if (posts.length === 0) {
+        document.getElementById("posts").innerHTML = "<div style='text-align:center; padding:60px;'><i class='fas fa-search fa-4x' style='color: var(--text-secondary);'></i><h3>No se encontraron resultados</h3></div>";
+        return;
+    }
+    
+    // Aquí iría la lógica para mostrar los posts filtrados
+    // Por simplicidad, recargamos todos y luego filtramos en memoria
+    loadPosts();
+}
+
+// ===== PROFESORES =====
+async function loadProfessors() {
+    try {
+        const posts = await query('/rest/v1/posts?select=teacher,subject,institution,teacher_rating,username');
+        
+        // Agrupar por profesor
+        const professorMap = new Map();
+        
+        posts.forEach(post => {
+            const teacherName = post.teacher;
+            if (!teacherName) return;
+            
+            if (!professorMap.has(teacherName)) {
+                professorMap.set(teacherName, {
+                    name: teacherName,
+                    subjects: new Set(),
+                    institutions: new Set(),
+                    ratings: [],
+                    reviews: 0
+                });
+            }
+            
+            const prof = professorMap.get(teacherName);
+            if (post.subject) prof.subjects.add(post.subject);
+            if (post.institution) prof.institutions.add(post.institution);
+            if (post.teacher_rating) prof.ratings.push(post.teacher_rating);
+            prof.reviews++;
+        });
+        
+        allProfessors = Array.from(professorMap.values()).map(prof => ({
+            ...prof,
+            subjects: Array.from(prof.subjects),
+            institutions: Array.from(prof.institutions),
+            avgRating: prof.ratings.length > 0 
+                ? (prof.ratings.reduce((a,b) => a + b, 0) / prof.ratings.length).toFixed(1)
+                : "N/A"
+        }));
+        
+        displayProfessors(allProfessors);
+        
+    } catch (error) {
+        console.error("Error cargando profesores:", error);
+    }
+}
+
+function displayProfessors(professors) {
+    const container = document.getElementById("professorsList");
+    
+    if (professors.length === 0) {
+        container.innerHTML = "<div style='text-align:center; padding:60px;'><i class='fas fa-chalkboard-teacher fa-4x'></i><h3>No hay profesores aún</h3></div>";
+        return;
+    }
+    
+    let html = "";
+    professors.sort((a, b) => (b.avgRating || 0) - (a.avgRating || 0));
+    
+    professors.forEach(prof => {
+        html += `
+            <div class="professor-card" onclick="window.viewProfessor('${prof.name}')">
+                <div style="display: flex; justify-content: space-between; align-items: start;">
+                    <i class="fas fa-chalkboard-teacher fa-2x" style="color: var(--accent-primary);"></i>
+                    <span class="admin-badge" style="background: var(--success);">${prof.reviews} reseñas</span>
+                </div>
+                <div class="professor-name">${prof.name}</div>
+                <div class="professor-rating">
+                    <span class="rating-number">${prof.avgRating}</span>
+                    <div>
+                        ${Array(5).fill(0).map((_, i) => 
+                            `<i class="fas fa-star star-small" style="color: ${i < Math.round(prof.avgRating) ? '#fbbf24' : '#cbd5e1'}"></i>`
+                        ).join('')}
+                    </div>
+                </div>
+                <div class="professor-stats">
+                    <span><i class="fas fa-book"></i> ${prof.subjects.length} materias</span>
+                    <span><i class="fas fa-university"></i> ${prof.institutions.length} instituciones</span>
+                </div>
+            </div>
+        `;
+    });
+    
+    container.innerHTML = html;
+}
+
+function filterProfessors() {
+    const searchTerm = document.getElementById("professorSearch").value.toLowerCase();
+    
+    if (!searchTerm) {
+        displayProfessors(allProfessors);
+        return;
+    }
+    
+    const filtered = allProfessors.filter(prof => 
+        prof.name.toLowerCase().includes(searchTerm) ||
+        prof.subjects.some(s => s.toLowerCase().includes(searchTerm)) ||
+        prof.institutions.some(i => i.toLowerCase().includes(searchTerm))
+    );
+    
+    displayProfessors(filtered);
+}
+
+function viewProfessor(professorName) {
+    document.getElementById("feedSearch").value = professorName;
+    showFeed();
+    filterPosts();
 }
 
 // ===== SUBIR POST =====
@@ -1238,10 +1753,12 @@ async function upload() {
     
     const imageFile = document.getElementById("image").files[0];
     const teacher = document.getElementById("teacherName").value.trim();
+    const subject = document.getElementById("subject").value.trim();
+    const institution = document.getElementById("institution").value.trim();
     const description = document.getElementById("desc").value.trim();
     
-    if (!imageFile || !teacher || !description) {
-        showNotification("Completa todos los campos", "error");
+    if (!teacher || !description) {
+        showNotification("Nombre del profesor y descripción son obligatorios", "error");
         return;
     }
     
@@ -1250,42 +1767,198 @@ async function upload() {
         return;
     }
     
-    const reader = new FileReader();
-    reader.onload = async function(e) {
-        try {
-            await query('/rest/v1/posts', {
+    const postData = {
+        username: currentUser,
+        teacher: teacher,
+        subject: subject || null,
+        institution: institution || null,
+        description: description,
+        teacher_rating: newPostRating,
+        created_at: new Date().toISOString()
+    };
+    
+    if (imageFile) {
+        const reader = new FileReader();
+        reader.onload = async function(e) {
+            postData.image = e.target.result;
+            await savePost(postData);
+        };
+        reader.readAsDataURL(imageFile);
+    } else {
+        await savePost(postData);
+    }
+}
+
+async function savePost(postData) {
+    try {
+        await query('/rest/v1/posts', {
+            method: 'POST',
+            body: JSON.stringify(postData)
+        });
+        
+        showNotification("✅ ¡Publicación creada exitosamente!", "success");
+        
+        // Limpiar formulario
+        document.getElementById("image").value = "";
+        document.getElementById("teacherName").value = "";
+        document.getElementById("subject").value = "";
+        document.getElementById("institution").value = "";
+        document.getElementById("desc").value = "";
+        newPostRating = 0;
+        document.querySelectorAll("#newPostStars .star").forEach(s => s.classList.remove("active"));
+        
+        setTimeout(async () => {
+            await loadPosts();
+        }, 500);
+        
+    } catch (error) {
+        console.error("Error publicando:", error);
+        showNotification("Error al publicar: " + error.message, "error");
+    }
+}
+
+// ===== VOTOS =====
+async function votePost(postId, voteType) {
+    if (!currentUser) {
+        showNotification("Debes iniciar sesión", "error");
+        return;
+    }
+    
+    try {
+        // Verificar si ya votó
+        const existing = await query(`/rest/v1/votes?post_id=eq.${postId}&username=eq.${encodeURIComponent(currentUser)}&select=*`);
+        
+        if (existing && existing.length > 0) {
+            // Actualizar voto existente
+            await query(`/rest/v1/votes?id=eq.${existing[0].id}`, {
+                method: 'PATCH',
+                body: JSON.stringify({ vote_type: voteType })
+            });
+        } else {
+            // Crear nuevo voto
+            await query('/rest/v1/votes', {
                 method: 'POST',
                 body: JSON.stringify({
+                    post_id: postId,
                     username: currentUser,
-                    teacher: teacher,
-                    description: description,
-                    image: e.target.result,
-                    teacher_rating: newPostRating,
+                    vote_type: voteType,
                     created_at: new Date().toISOString()
                 })
             });
-            
-            // [CORREGIDO] Notificación más visible y clara
-            showNotification("✅ ¡Publicación creada exitosamente!", "success");
-            
-            // Limpiar formulario
-            document.getElementById("image").value = "";
-            document.getElementById("teacherName").value = "";
-            document.getElementById("desc").value = "";
-            newPostRating = 0;
-            document.querySelectorAll("#newPostStars .star").forEach(s => s.classList.remove("active"));
-            
-            // [CORREGIDO] Pequeña pausa para asegurar que se vea la notificación
-            setTimeout(async () => {
-                await loadPosts();
-            }, 500);
-            
-        } catch (error) {
-            console.error("Error publicando:", error);
-            showNotification("Error al publicar: " + error.message, "error");
         }
-    };
-    reader.readAsDataURL(imageFile);
+        
+        showNotification("✅ Voto registrado");
+        await loadPosts();
+        
+    } catch (error) {
+        console.error("Error votando:", error);
+        showNotification("Error al votar: " + error.message, "error");
+    }
+}
+
+async function voteComment(commentId, voteType) {
+    if (!currentUser) {
+        showNotification("Debes iniciar sesión", "error");
+        return;
+    }
+    
+    try {
+        const existing = await query(`/rest/v1/votes?comment_id=eq.${commentId}&username=eq.${encodeURIComponent(currentUser)}&select=*`);
+        
+        if (existing && existing.length > 0) {
+            await query(`/rest/v1/votes?id=eq.${existing[0].id}`, {
+                method: 'PATCH',
+                body: JSON.stringify({ vote_type: voteType })
+            });
+        } else {
+            await query('/rest/v1/votes', {
+                method: 'POST',
+                body: JSON.stringify({
+                    comment_id: commentId,
+                    username: currentUser,
+                    vote_type: voteType,
+                    created_at: new Date().toISOString()
+                })
+            });
+        }
+        
+        showNotification("✅ Voto registrado");
+        await loadPosts();
+        
+    } catch (error) {
+        console.error("Error votando:", error);
+    }
+}
+
+// ===== REPORTES =====
+async function reportPost(postId) {
+    if (!currentUser) {
+        showNotification("Debes iniciar sesión", "error");
+        return;
+    }
+    
+    if (!confirm("¿Reportar esta publicación como inapropiada?")) return;
+    
+    try {
+        await query('/rest/v1/reports', {
+            method: 'POST',
+            body: JSON.stringify({
+                post_id: postId,
+                username: currentUser,
+                reason: "Contenido inapropiado",
+                status: "pending",
+                created_at: new Date().toISOString()
+            })
+        });
+        
+        showNotification("✅ Publicación reportada. Gracias por ayudar a mantener la comunidad segura.");
+        
+    } catch (error) {
+        console.error("Error reportando:", error);
+        showNotification("Error al reportar: " + error.message, "error");
+    }
+}
+
+async function reportComment(commentId) {
+    if (!currentUser) {
+        showNotification("Debes iniciar sesión", "error");
+        return;
+    }
+    
+    if (!confirm("¿Reportar este comentario como inapropiado?")) return;
+    
+    try {
+        await query('/rest/v1/reports', {
+            method: 'POST',
+            body: JSON.stringify({
+                comment_id: commentId,
+                username: currentUser,
+                reason: "Comentario inapropiado",
+                status: "pending",
+                created_at: new Date().toISOString()
+            })
+        });
+        
+        showNotification("✅ Comentario reportado");
+        
+    } catch (error) {
+        console.error("Error reportando:", error);
+    }
+}
+
+async function resolveReport(postId) {
+    try {
+        await query(`/rest/v1/reports?post_id=eq.${postId}`, {
+            method: 'PATCH',
+            body: JSON.stringify({ status: "resolved" })
+        });
+        
+        showNotification("✅ Reporte resuelto");
+        await loadPosts();
+        
+    } catch (error) {
+        console.error("Error resolviendo reporte:", error);
+    }
 }
 
 // ===== COMENTARIOS =====
@@ -1325,7 +1998,6 @@ async function addComment(postId) {
         input.value = "";
         await loadPosts();
         
-        // Abrir comentarios automáticamente
         const commentsSection = document.getElementById(`comments-${postId}`);
         if (commentsSection) {
             commentsSection.classList.add("show");
@@ -1363,6 +2035,16 @@ async function deletePost(postId) {
             method: 'DELETE'
         });
         
+        // Eliminar votos asociados
+        await query(`/rest/v1/votes?post_id=eq.${postId}`, {
+            method: 'DELETE'
+        });
+        
+        // Eliminar reportes asociados
+        await query(`/rest/v1/reports?post_id=eq.${postId}`, {
+            method: 'DELETE'
+        });
+        
         // Eliminar post
         await query(`/rest/v1/posts?id=eq.${postId}`, {
             method: 'DELETE'
@@ -1384,24 +2066,51 @@ async function loadAdminPanel() {
         const postsData = await query('/rest/v1/posts?select=id');
         const commentsData = await query('/rest/v1/comments?select=id');
         const blockedData = await query('/rest/v1/blocked_users?select=*');
+        const reportsData = await query('/rest/v1/reports?status=eq.pending&select=*,posts(*),comments(*)');
+        
+        // Contar profesores únicos
+        const professorsData = await query('/rest/v1/posts?select=teacher');
+        const uniqueProfessors = new Set(professorsData.map(p => p.teacher).filter(Boolean)).size;
         
         document.getElementById("totalUsers").innerText = usersData ? usersData.length : 0;
         document.getElementById("totalPosts").innerText = postsData ? postsData.length : 0;
         document.getElementById("totalComments").innerText = commentsData ? commentsData.length : 0;
+        document.getElementById("totalProfessors").innerText = uniqueProfessors;
         
+        // Usuarios bloqueados
         const blockedDiv = document.getElementById("blockedUsers");
         if (!blockedData || blockedData.length === 0) {
-            blockedDiv.innerHTML = "<p>No hay usuarios bloqueados</p>";
+            blockedDiv.innerHTML = "<p style='text-align:center; padding:20px;'>No hay usuarios bloqueados</p>";
         } else {
             blockedDiv.innerHTML = blockedData.map(user => `
-                <div class="blocked-user">
-                    <span><i class="fas fa-ban" style="color:#ff4757;"></i> ${user.username}</span>
-                    <button class="btn-success" onclick="unblockUser('${user.username}')" style="padding:5px 10px;">
+                <div class="blocked-user-item">
+                    <span><i class="fas fa-ban" style="color: var(--danger);"></i> ${user.username}</span>
+                    <button class="btn-success" onclick="window.unblockUser('${user.username}')" style="padding:8px 15px;">
                         <i class="fas fa-check"></i> Desbloquear
                     </button>
                 </div>
             `).join('');
         }
+        
+        // Comentarios reportados
+        const reportsDiv = document.getElementById("reportedComments");
+        if (!reportsData || reportsData.length === 0) {
+            reportsDiv.innerHTML = "<p style='text-align:center; padding:20px;'>No hay reportes pendientes</p>";
+        } else {
+            reportsDiv.innerHTML = reportsData.map(report => `
+                <div class="blocked-user-item">
+                    <div>
+                        <i class="fas fa-flag" style="color: var(--warning);"></i>
+                        ${report.post_id ? 'Publicación' : 'Comentario'} reportado
+                        <div style="font-size:12px; color: var(--text-secondary);">Por: ${report.username}</div>
+                    </div>
+                    <button class="btn-success" onclick="window.resolveReport(${report.post_id || report.comment_id})" style="padding:8px 15px;">
+                        <i class="fas fa-check"></i> Resolver
+                    </button>
+                </div>
+            `).join('');
+        }
+        
     } catch (error) {
         console.error("Error cargando panel admin:", error);
     }
@@ -1459,13 +2168,13 @@ async function loadUserProfile() {
             document.getElementById("profileEmail").innerText = user.email;
             document.getElementById("profileAvatar").src = user.avatar;
             document.getElementById("profileMiniAvatar").src = user.avatar;
-            document.getElementById("profileBio").innerHTML = `<p>${user.bio || "Estudiante comprometido con la educación"}</p>`;
+            document.getElementById("profileBio").innerHTML = user.bio || "Estudiante comprometido con la educación";
             document.getElementById("profilePostsCount").innerText = userPosts ? userPosts.length : 0;
             
             // Calcular promedio
             let totalRating = 0;
             if (userPosts) {
-                userPosts.forEach(p => totalRating += p.teacher_rating);
+                userPosts.forEach(p => totalRating += p.teacher_rating || 0);
             }
             const avg = userPosts && userPosts.length > 0 ? (totalRating / userPosts.length).toFixed(1) : "0.0";
             document.getElementById("profileRatingAvg").innerText = avg;
@@ -1476,17 +2185,18 @@ async function loadUserProfile() {
                 userPosts.forEach(post => {
                     userPostsHtml += `
                         <div class="post" style="margin-bottom:15px;">
-                            <div style="background:#4169E1; color:white; padding:5px 15px; border-radius:20px; display:inline-block; margin-bottom:10px;">
-                                ${post.teacher} ⭐ ${post.teacher_rating}/5
+                            <div style="background: var(--accent-gradient); color:white; padding:8px 20px; border-radius:30px; display:inline-block; margin-bottom:15px;">
+                                ${post.teacher} ⭐ ${post.teacher_rating || 0}/5
+                                ${post.subject ? ` • ${post.subject}` : ''}
                             </div>
-                            <img src="${post.image}" style="width:100%; border-radius:10px; margin:10px 0;">
+                            ${post.image ? `<img src="${post.image}" style="width:100%; border-radius:15px; margin:15px 0;">` : ''}
                             <p>${post.description}</p>
-                            <small>${new Date(post.created_at).toLocaleString()}</small>
+                            <small style="color: var(--text-secondary);">${new Date(post.created_at).toLocaleString()}</small>
                         </div>
                     `;
                 });
             } else {
-                userPostsHtml = "<p style='text-align:center; padding:30px;'>No has calificado profesores aún</p>";
+                userPostsHtml = "<div style='text-align:center; padding:40px; background: var(--bg-primary); border-radius: 20px;'><i class='fas fa-inbox fa-3x' style='color: var(--text-secondary);'></i><h4>No has calificado profesores aún</h4></div>";
             }
             
             document.getElementById("userPosts").innerHTML = userPostsHtml;
@@ -1517,8 +2227,10 @@ function changeUsername() {
 
 function changeEmail() {
     const newEmail = prompt("Nuevo correo electrónico:");
-    if (newEmail) {
+    if (newEmail && newEmail.includes('@')) {
         updateProfile({ email: newEmail });
+    } else {
+        showNotification("Correo electrónico inválido", "error");
     }
 }
 
@@ -1542,7 +2254,6 @@ async function updateProfile(updates) {
             currentUser = updates.username;
             document.getElementById("profileMiniName").innerText = currentUser;
             document.getElementById("profileName").innerText = currentUser;
-            // [CORREGIDO] Actualizar sesión guardada
             saveSession(currentUser, isAdmin, updates);
         }
         
@@ -1581,7 +2292,7 @@ async function updateAvatar(event) {
     reader.readAsDataURL(file);
 }
 
-// [CORREGIDO] Función para verificar sesión al cargar la página
+// ===== VERIFICAR SESIÓN =====
 async function checkSession() {
     const session = loadSession();
     if (session) {
@@ -1589,23 +2300,19 @@ async function checkSession() {
         isAdmin = session.isAdmin;
         
         try {
-            // Verificar que el usuario sigue existiendo y no está bloqueado
             const users = await query(`/rest/v1/users?username=eq.${encodeURIComponent(currentUser)}&select=*`);
             
             if (users && users.length > 0) {
                 const user = users[0];
                 
-                // Verificar si está bloqueado
                 const blocked = await query(`/rest/v1/blocked_users?username=eq.${encodeURIComponent(currentUser)}&select=*`);
                 
                 if (blocked && blocked.length > 0) {
-                    // Usuario bloqueado, cerrar sesión
                     clearSession();
                     showNotification("❌ Tu cuenta ha sido bloqueada", "error");
                     return;
                 }
                 
-                // Sesión válida, mostrar app
                 document.getElementById("login").style.display = "none";
                 document.getElementById("app").style.display = "block";
                 document.getElementById("profileMiniName").innerText = currentUser;
@@ -1624,7 +2331,6 @@ async function checkSession() {
                 await loadPosts();
                 showFeed();
             } else {
-                // Usuario no existe, limpiar sesión
                 clearSession();
             }
         } catch (error) {
@@ -1634,18 +2340,45 @@ async function checkSession() {
     }
 }
 
-// ===== INICIAR =====
-console.log("🚀 Página cargada - Lista para usar");
+// ===== EXPONER FUNCIONES GLOBALMENTE =====
+window.loginFunction = loginFunction;
+window.registerFunction = registerFunction;
+window.showLogin = showLogin;
+window.showRegister = showRegister;
+window.showFeed = showFeed;
+window.showProfile = showProfile;
+window.showProfessors = showProfessors;
+window.showSettings = showSettings;
+window.toggleTheme = toggleTheme;
+window.setRating = setRating;
+window.logout = logout;
+window.loadPosts = loadPosts;
+window.upload = upload;
+window.filterPosts = filterPosts;
+window.filterProfessors = filterProfessors;
+window.viewProfessor = viewProfessor;
+window.toggleComments = toggleComments;
+window.addComment = addComment;
+window.deleteComment = deleteComment;
+window.deletePost = deletePost;
+window.votePost = votePost;
+window.voteComment = voteComment;
+window.reportPost = reportPost;
+window.reportComment = reportComment;
+window.resolveReport = resolveReport;
+window.blockUser = blockUser;
+window.unblockUser = unblockUser;
+window.editProfile = editProfile;
+window.editBio = editBio;
+window.changeUsername = changeUsername;
+window.changeEmail = changeEmail;
+window.changePassword = changePassword;
+window.updateAvatar = updateAvatar;
 
-// [CORREGIDO] Verificar sesión al cargar la página
+// ===== INICIAR =====
 window.onload = function() {
     checkSession();
 };
-
-// [CORREGIDO] Si no hay sesión, mostrar login
-if (!loadSession()) {
-    document.getElementById("login").style.display = "block";
-}
 </script>
 </body>
 </html>
