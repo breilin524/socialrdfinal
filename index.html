@@ -6,7 +6,6 @@
 <meta name="theme-color" content="#3b82f6">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIlNvY2lhbCBSRCAtIFJhdGUgTXkgUHJvZmVzc29yIiwKICAic2hvcnRfbmFtZSI6ICJTb2NpYWwgUkQiLAogICJkZXNjcmlwdGlvbiI6ICJMYSBwcmltZXJhIHJlZCBzb2NpYWwgZG9taW5pY2FuYSBwYXJhIGNhbGlmaWNhciBwcm9mZXNvcmVzIiwKICAic3RhcnRfdXJsIjogIi4iLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiMzYjgyZjYiLAogICJ0aGVtZV9jb2xvciI6ICIjM2I4MmY2IiwKICAiaWNvbnMiOiBbCiAgICB7CiAgICAgICJzcmMiOiAiZGF0YTppbWFnZS9zdmcreG1sLDxzdmcgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJyB2aWV3Qm94PScwIDAgNTEyIDUxMic+PHJlY3Qgd2lkdGg9JzUxMicgaGVpZ2h0PSc1MTInIHJ4PSc2MCcgZmlsbD0nJTIzM2I4MmY2Jy8+PHRleHQgeD0nMjU2JyB5PSczMjAnIGZvbnQtc2l6ZT0nMjUwJyB0ZXh0LWFuY2hvcj0nbWlkZGxlJyBmaWxsPSd3aGl0ZScgZm9udC1mYW1pbHk9J3NhbnMtc2VyaWYnPvCfj5M8L3RleHQ+PC9zdmc+IiwKICAgICAgInNpemVzIjogIjUxMng1MTIiLAogICAgICAidHlwZSI6ICJpbWFnZS9zdmcreG1sIiwKICAgICAgInB1cnBvc2UiOiAiYW55IgogICAgfQogIF0KfQ==">
 <title>Social RD 🌊 - Red Social Dominicana</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -65,7 +64,6 @@ body { background: var(--bg-primary); color: var(--text-primary); }
 
 .app-header.collapsed {
     padding: 8px 20px;
-    background: var(--header-bg);
 }
 
 .app-header.collapsed .nav-buttons,
@@ -122,7 +120,10 @@ body { background: var(--bg-primary); color: var(--text-primary); }
     overflow-x: auto;
     transition: all 0.4s;
     max-height: 50px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
 }
+.app-header .nav-buttons::-webkit-scrollbar { display: none; }
 
 .app-header.collapsed .nav-buttons {
     max-height: 0;
@@ -146,6 +147,7 @@ body { background: var(--bg-primary); color: var(--text-primary); }
     display: flex;
     align-items: center;
     gap: 6px;
+    flex-shrink: 0;
 }
 
 .nav-btn:hover { color: var(--accent-primary); background: rgba(59, 130, 246, 0.08); }
@@ -223,25 +225,8 @@ body { background: var(--bg-primary); color: var(--text-primary); }
     font-size: 16px;
     flex-shrink: 0;
 }
-
 .theme-toggle:hover { background: var(--accent-primary); color: white; }
 
-/* ===== HAMBURGER MENU (para móvil) ===== */
-.menu-toggle {
-    display: none;
-    background: none;
-    border: none;
-    font-size: 24px;
-    color: var(--text-primary);
-    cursor: pointer;
-    padding: 4px 8px;
-    border-radius: 8px;
-    transition: all 0.3s;
-}
-
-.menu-toggle:hover { background: var(--bg-primary); }
-
-/* ===== BOTÓN PARA EXPANDIR MENÚ ===== */
 .expand-btn {
     display: none;
     background: none;
@@ -253,111 +238,21 @@ body { background: var(--bg-primary); color: var(--text-primary); }
     border-radius: 8px;
     transition: all 0.3s;
 }
-
 .expand-btn:hover { background: var(--bg-primary); color: var(--accent-primary); }
+.app-header.collapsed .expand-btn { display: block; }
 
-.app-header.collapsed .expand-btn {
-    display: block;
-}
-
-/* ===== RESPONSIVE ===== */
-@media (max-width: 768px) {
-    .app-header { padding: 10px 15px; }
-    .app-header.collapsed { padding: 6px 15px; }
-    
-    .nav-buttons { 
-        gap: 4px; 
-        padding: 4px;
-        overflow-x: auto;
-        flex-wrap: nowrap;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-    }
-    .nav-buttons::-webkit-scrollbar { display: none; }
-    
-    .nav-btn { 
-        padding: 6px 12px; 
-        font-size: 12px;
-        flex-shrink: 0;
-    }
-    .nav-btn i { font-size: 14px; }
-    
-    .profile-mini { padding: 4px 12px 4px 4px; }
-    .profile-mini span { font-size: 12px; }
-    .profile-mini img { width: 30px; height: 30px; }
-    
-    .notification-bell { width: 36px; height: 36px; font-size: 18px; }
-    .app-header .logo-text { font-size: 17px; }
-    
-    .menu-toggle { display: block; }
-    .app-header .nav-buttons { 
-        display: none;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        background: var(--header-bg);
-        padding: 15px;
-        border-radius: 0 0 20px 20px;
-        flex-wrap: wrap;
-        justify-content: center;
-        border-bottom: 1px solid var(--border-color);
-        max-height: none !important;
-        opacity: 1 !important;
-    }
-    .app-header .nav-buttons.open { display: flex; }
-    .app-header.collapsed .nav-buttons { display: none !important; }
-    .app-header.collapsed .expand-btn { display: none; }
-}
-
-@media (max-width: 480px) {
-    .nav-btn { padding: 5px 10px; font-size: 11px; }
-    .nav-btn i { font-size: 12px; }
-    .app-header .logo-text { font-size: 15px; }
-    .profile-mini span { font-size: 11px; }
-    .profile-mini { padding: 3px 8px 3px 3px; }
-    .profile-mini img { width: 28px; height: 28px; }
-}
-
-/* ===== NOTIFICACIONES PANEL ===== */
-#notificationsPanel {
-    position: fixed !important;
-    top: 70px !important;
-    right: 15px !important;
-    z-index: 9999 !important;
-    animation: slideDown 0.3s ease;
-    background: var(--bg-secondary);
-    border-radius: 20px;
-    padding: 20px;
-    min-width: 320px;
-    max-width: 400px;
-    max-height: 500px;
-    overflow-y: auto;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.25);
-    border: 1px solid var(--border-color);
-}
-
-.notification-item {
-    padding: 12px 15px;
-    margin-bottom: 8px;
-    border-radius: 12px;
+.menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: var(--text-primary);
     cursor: pointer;
-    transition: all 0.2s;
-    border-left: 3px solid transparent;
+    padding: 4px 8px;
+    border-radius: 8px;
+    transition: all 0.3s;
 }
-.notification-item.unread { background: var(--bg-primary); border-left-color: var(--accent-primary); }
-.notification-item:hover { transform: translateX(5px); background: var(--bg-primary) !important; }
-
-@media (max-width: 768px) {
-    #notificationsPanel {
-        right: 10px !important;
-        left: 10px !important;
-        min-width: unset !important;
-        width: calc(100% - 20px) !important;
-        top: 65px !important;
-        max-height: 60vh;
-    }
-}
+.menu-toggle:hover { background: var(--bg-primary); }
 
 /* ===== CHAT NOTIFICATION ===== */
 .chat-notification {
@@ -380,15 +275,167 @@ body { background: var(--bg-primary); color: var(--text-primary); }
     max-width: 90%;
     border: none;
 }
-
 .chat-notification:hover { transform: translateX(-50%) scale(1.05); }
 
-/* ===== RESTO DE ESTILOS ===== */
+@keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+@keyframes slideUp { from { opacity: 0; transform: translateX(-50%) translateY(20px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+
+/* ===== CONTENEDOR ===== */
 .container { max-width: 1200px; margin: 0 auto; padding: 80px 20px 20px; }
 
-@keyframes slideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes slideUp { from { opacity: 0; transform: translateX(-50%) translateY(20px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
-@keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+#login, #register, #app {
+    max-width: 1200px;
+    margin: 0 auto;
+    border-radius: 30px;
+    padding: 30px;
+    background: var(--bg-secondary);
+    box-shadow: var(--card-shadow);
+    border: 1px solid var(--border-color);
+}
+
+/* ===== ESTILOS DE LOGIN ===== */
+.logo-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 25px;
+}
+.logo-icon {
+    width: 60px;
+    height: 60px;
+    background: var(--accent-gradient);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    color: white;
+    animation: float 3s ease-in-out infinite;
+    transform: rotate(-5deg);
+}
+@keyframes float { 0%,100% { transform: translateY(0) rotate(-5deg); } 50% { transform: translateY(-8px) rotate(-5deg); } }
+.logo-text { font-size: 34px; font-weight: 900; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+.welcome-card {
+    background: var(--accent-gradient);
+    color: white;
+    padding: 30px;
+    border-radius: 25px;
+    margin-bottom: 30px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+.welcome-card h3 { font-size: 26px; margin-bottom: 10px; position: relative; z-index: 1; }
+.welcome-card p { font-size: 16px; opacity: 0.9; position: relative; z-index: 1; }
+.welcome-card::before { content: "🎓"; position: absolute; right: -20px; bottom: -20px; font-size: 120px; opacity: 0.1; }
+
+/* ===== INPUTS ===== */
+.input-group {
+    position: relative;
+    margin-bottom: 15px;
+}
+.input-group i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-secondary);
+}
+.input-group input, .input-group textarea {
+    width: 100%;
+    padding: 12px 15px 12px 45px;
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    font-size: 15px;
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    transition: all 0.3s;
+}
+.input-group input:focus, .input-group textarea:focus {
+    border-color: var(--accent-primary);
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(59,130,246,0.1);
+}
+
+/* ===== BOTONES ===== */
+.btn-primary {
+    background: var(--accent-gradient);
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 15px;
+    transition: all 0.3s;
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px -10px var(--accent-primary); }
+
+.btn-secondary {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    padding: 12px 24px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 15px;
+    transition: all 0.3s;
+}
+.btn-secondary:hover { background: var(--border-color); }
+
+.btn-danger {
+    background: var(--danger);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s;
+}
+.btn-danger:hover { background: #dc2626; }
+
+.btn-warning {
+    background: var(--warning);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s;
+}
+.btn-warning:hover { background: #d97706; }
+
+.btn-success {
+    background: var(--success);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s;
+}
+.btn-success:hover { background: #059669; }
+
+.btn-outline {
+    background: transparent;
+    color: var(--accent-primary);
+    padding: 10px 20px;
+    border: 2px solid var(--accent-primary);
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s;
+}
+.btn-outline:hover { background: var(--accent-primary); color: white; }
+
+.admin-badge { background: var(--danger); color: white; padding: 2px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+.anonymous-badge { background: var(--warning); color: white; padding: 2px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
 
 /* ===== POSTS ===== */
 .post {
@@ -402,18 +449,421 @@ body { background: var(--bg-primary); color: var(--text-primary); }
 }
 .post:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,0,0,0.1); }
 
-/* ===== OTROS ESTILOS EXISTENTES ===== */
-/* (Mantén todos los estilos que ya tenías para posts, comments, etc.) */
-/* ... */
+.post-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 15px;
+}
+.post-avatar { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 3px solid var(--accent-primary); }
+.post-user-info h4 { font-size: 16px; margin-bottom: 2px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.post-date { font-size: 12px; color: var(--text-secondary); }
 
-/* Ajustes para móvil del container */
-@media (max-width: 768px) {
-    .container { padding: 70px 12px 12px; }
+.teacher-badge {
+    background: var(--accent-gradient);
+    color: white;
+    padding: 6px 16px;
+    border-radius: 30px;
+    display: inline-block;
+    margin-bottom: 15px;
+    font-weight: 600;
+    font-size: 14px;
 }
 
-/* Ocultar secciones eliminadas */
-#tutoriasSection, #calendarioSection {
-    display: none !important;
+.post-image {
+    width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+    border-radius: 15px;
+    margin: 15px 0;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+.post-image:hover { transform: scale(1.02); }
+
+.post-description { font-size: 15px; line-height: 1.7; margin: 15px 0; }
+
+.rating-stars { display: flex; gap: 8px; margin: 10px 0; }
+.star { font-size: 30px; cursor: pointer; color: #cbd5e1; transition: all 0.2s; }
+.star:hover { transform: scale(1.2); color: #fbbf24; }
+.star.active { color: #fbbf24; }
+.star-small { font-size: 16px; color: #fbbf24; }
+
+.upload-area {
+    background: var(--bg-primary);
+    border: 3px dashed var(--accent-primary);
+    border-radius: 20px;
+    padding: 40px;
+    text-align: center;
+    cursor: pointer;
+    margin: 15px 0;
+    transition: all 0.3s;
+}
+.upload-area:hover { background: rgba(59,130,246,0.05); transform: scale(1.02); }
+.upload-area i { font-size: 40px; color: var(--accent-primary); margin-bottom: 10px; }
+
+.comments-toggle {
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: 30px;
+    background: var(--bg-primary);
+    margin: 10px 0;
+    transition: all 0.3s;
+    font-weight: 500;
+}
+.comments-toggle:hover { background: var(--accent-primary); color: white; }
+
+.comments-section {
+    margin-top: 15px;
+    border-radius: 15px;
+    padding: 15px;
+    display: none;
+    background: var(--bg-primary);
+}
+.comments-section.show { display: block; }
+
+.comment {
+    background: var(--bg-secondary);
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-left: 4px solid var(--accent-primary);
+}
+
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+}
+.comment-user {
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.comment-user img { width: 30px; height: 30px; border-radius: 50%; }
+
+.comment-input {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+.comment-input input {
+    flex: 1;
+    padding: 12px 15px;
+    border-radius: 12px;
+    border: 2px solid var(--border-color);
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+}
+.comment-input input:focus { border-color: var(--accent-primary); outline: none; }
+
+.vote-buttons { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.vote-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-secondary);
+    font-size: 13px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    transition: all 0.2s;
+}
+.vote-btn:hover { background: var(--bg-primary); color: var(--accent-primary); }
+
+.search-box {
+    background: var(--bg-secondary);
+    border-radius: 50px;
+    padding: 4px 4px 4px 20px;
+    display: flex;
+    align-items: center;
+    border: 2px solid var(--border-color);
+    margin-bottom: 20px;
+}
+.search-box input {
+    flex: 1;
+    border: none;
+    padding: 12px 0;
+    background: transparent;
+    color: var(--text-primary);
+    font-size: 15px;
+}
+.search-box input:focus { outline: none; }
+.search-box button {
+    background: var(--accent-gradient);
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+.search-box button:hover { transform: scale(1.05); }
+
+/* ===== PROFESSORS ===== */
+.professors-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    margin: 20px 0;
+}
+
+.professor-card {
+    background: var(--bg-secondary);
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: var(--card-shadow);
+    cursor: pointer;
+    transition: all 0.3s;
+    border: 1px solid var(--border-color);
+}
+.professor-card:hover { transform: translateY(-5px); box-shadow: 0 10px 40px -15px var(--accent-primary); }
+.professor-name { font-size: 18px; font-weight: 700; margin: 10px 0; }
+.professor-rating { display: flex; align-items: center; gap: 10px; margin: 10px 0; }
+.rating-number { font-size: 28px; font-weight: 800; color: var(--accent-primary); }
+
+/* ===== ADMIN ===== */
+.admin-panel {
+    background: var(--bg-secondary);
+    border-radius: 20px;
+    padding: 25px;
+    margin-bottom: 25px;
+    border-left: 5px solid var(--danger);
+}
+.admin-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+    margin: 20px 0;
+}
+.stat-card {
+    background: var(--bg-primary);
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+}
+.stat-number { font-size: 32px; font-weight: 800; color: var(--accent-primary); }
+
+/* ===== FRIENDS ===== */
+.friend-item, .request-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    background: var(--bg-primary);
+    border-radius: 12px;
+    margin-bottom: 8px;
+}
+.friend-item .friend-info, .request-item .friend-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.friend-item .friend-info img, .request-item .friend-info img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+.request-item { border-left: 4px solid var(--warning); }
+
+/* ===== CHAT ===== */
+.chat-message { margin-bottom: 12px; display: flex; flex-direction: column; }
+.chat-message.sent { align-items: flex-end; }
+.chat-message.received { align-items: flex-start; }
+.chat-bubble {
+    max-width: 75%;
+    padding: 10px 16px;
+    border-radius: 16px;
+    word-wrap: break-word;
+}
+.chat-message.sent .chat-bubble { background: var(--accent-gradient); color: white; border-bottom-right-radius: 4px; }
+.chat-message.received .chat-bubble { background: var(--bg-primary); color: var(--text-primary); border-bottom-left-radius: 4px; }
+.chat-time { font-size: 10px; color: var(--text-secondary); margin-top: 3px; opacity: 0.8; }
+
+/* ===== NOTIFICACIONES ===== */
+#notificationsPanel {
+    position: fixed !important;
+    top: 70px !important;
+    right: 15px !important;
+    z-index: 9999 !important;
+    animation: slideDown 0.3s ease;
+    background: var(--bg-secondary);
+    border-radius: 20px;
+    padding: 20px;
+    min-width: 320px;
+    max-width: 400px;
+    max-height: 500px;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+    border: 1px solid var(--border-color);
+}
+#notificationsPanel::-webkit-scrollbar { width: 4px; }
+#notificationsPanel::-webkit-scrollbar-thumb { background: var(--accent-primary); border-radius: 10px; }
+
+.notification-item {
+    padding: 12px 15px;
+    margin-bottom: 8px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border-left: 3px solid transparent;
+}
+.notification-item.unread { background: var(--bg-primary); border-left-color: var(--accent-primary); }
+.notification-item:hover { transform: translateX(5px); background: var(--bg-primary) !important; }
+.notif-icon { font-size: 20px; margin-top: 2px; }
+
+.notification-toast {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    padding: 14px 20px;
+    border-radius: 14px;
+    background: var(--bg-secondary);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    z-index: 99999;
+    border-left: 4px solid var(--success);
+    max-width: 350px;
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-color);
+}
+.notification-toast.error { border-left-color: var(--danger); }
+.notification-toast.warning { border-left-color: var(--warning); }
+
+/* ===== RANKING ===== */
+.tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+.tab-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 10px;
+    background: var(--bg-primary);
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+.tab-btn:hover { background: var(--border-color); }
+.tab-btn.active { background: var(--accent-primary); color: white; }
+
+.ranking-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--bg-primary);
+    border-radius: 12px;
+    overflow: hidden;
+}
+.ranking-table th { background: var(--accent-primary); color: white; padding: 10px 15px; text-align: left; font-weight: 600; }
+.ranking-table td { padding: 10px 15px; border-bottom: 1px solid var(--border-color); }
+.ranking-table tr:hover { background: var(--bg-secondary); }
+.rank-1 { color: #f59e0b; font-weight: 900; }
+.rank-2 { color: #94a3b8; font-weight: 700; }
+.rank-3 { color: #d97706; font-weight: 700; }
+
+/* ===== ENCUESTAS ===== */
+.encuesta-option {
+    padding: 10px 15px;
+    background: var(--bg-primary);
+    border-radius: 10px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: 2px solid transparent;
+}
+.encuesta-option:hover { border-color: var(--accent-primary); }
+.encuesta-option.selected { border-color: var(--accent-primary); background: var(--bg-secondary); }
+.encuesta-option .vote-bar { height: 6px; background: var(--accent-gradient); border-radius: 10px; margin-top: 6px; transition: width 0.5s ease; }
+
+/* ===== BADGES ===== */
+.badge-item { display: inline-flex; align-items: center; gap: 4px; padding: 3px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; margin: 2px; }
+.badge-gold { background: #f59e0b; color: white; }
+.badge-silver { background: #94a3b8; color: white; }
+.badge-bronze { background: #d97706; color: white; }
+.badge-legendary { background: linear-gradient(135deg, #f59e0b, #ef4444); color: white; }
+.level-badge { background: var(--accent-gradient); color: white; padding: 4px 14px; border-radius: 30px; font-size: 13px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; }
+
+/* ===== SWITCH ===== */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 46px;
+    height: 26px;
+}
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--border-color);
+    transition: .3s;
+    border-radius: 30px;
+}
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .3s;
+    border-radius: 50%;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+input:checked + .slider { background-color: var(--accent-primary); }
+input:checked + .slider:before { transform: translateX(20px); }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .app-header { padding: 10px 15px; }
+    .app-header.collapsed { padding: 6px 15px; }
+    .nav-buttons { 
+        gap: 4px; 
+        padding: 4px;
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+    .nav-buttons::-webkit-scrollbar { display: none; }
+    .nav-btn { padding: 6px 12px; font-size: 12px; flex-shrink: 0; }
+    .nav-btn i { font-size: 14px; }
+    .profile-mini { padding: 4px 12px 4px 4px; }
+    .profile-mini span { font-size: 12px; }
+    .profile-mini img { width: 30px; height: 30px; }
+    .notification-bell { width: 36px; height: 36px; font-size: 18px; }
+    .app-header .logo-text { font-size: 17px; }
+    .container { padding: 70px 12px 12px; }
+    #notificationsPanel {
+        right: 10px !important;
+        left: 10px !important;
+        min-width: unset !important;
+        width: calc(100% - 20px) !important;
+        top: 65px !important;
+        max-height: 60vh;
+    }
+    #login, #register, #app { padding: 20px; margin: 0 10px; }
+    .logo-text { font-size: 28px; }
+    .welcome-card h3 { font-size: 22px; }
+    .welcome-card p { font-size: 14px; }
+    .professors-grid { grid-template-columns: 1fr; }
+    .admin-stats { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 480px) {
+    .nav-btn { padding: 5px 10px; font-size: 11px; }
+    .nav-btn i { font-size: 12px; }
+    .app-header .logo-text { font-size: 15px; }
+    .profile-mini span { font-size: 11px; }
+    .profile-mini { padding: 3px 8px 3px 3px; }
+    .profile-mini img { width: 28px; height: 28px; }
 }
 </style>
 </head>
@@ -435,7 +885,6 @@ body { background: var(--bg-primary); color: var(--text-primary); }
     <span class="logo-text">Social RD</span>
   </div>
   <div class="welcome-card">
-    <i class="fas fa-graduation-cap fa-3x"></i>
     <h3>🎓 ¡Bienvenido a Social RD!</h3>
     <p>La primera red social dominicana para calificar profesores<br><strong>¡Conecta, califica y comparte tu experiencia!</strong></p>
   </div>
@@ -543,7 +992,6 @@ body { background: var(--bg-primary); color: var(--text-primary); }
   <!-- FEED -->
   <div id="feedSection">
     <div class="welcome-card">
-      <i class="fas fa-chalkboard-teacher fa-3x"></i>
       <h3>📚 Califica a tus profesores</h3>
       <p>Comparte tu experiencia y ayuda a mejorar la educación dominicana</p>
     </div>
@@ -564,7 +1012,6 @@ body { background: var(--bg-primary); color: var(--text-primary); }
     <div class="input-group"><i class="fas fa-chalkboard-teacher"></i><input type="text" id="teacherName" placeholder="Nombre del profesor *"></div>
     <div class="input-group"><i class="fas fa-book"></i><input type="text" id="subject" placeholder="Materia"></div>
     <div class="input-group"><i class="fas fa-university"></i><input type="text" id="institution" placeholder="Institución"></div>
-    <div class="input-group"><i class="fas fa-hashtag"></i><input type="text" id="hashtagsInput" placeholder="#hashtags (separados por espacio)"></div>
     <div class="input-group"><i class="fas fa-align-left"></i><textarea id="desc" placeholder="Describe tu experiencia... *" rows="4"></textarea></div>
     
     <div style="margin:20px 0;">
@@ -767,7 +1214,6 @@ let currentChatPartner = null;
 let notifications = [];
 let notificationInterval = null;
 let isMenuCollapsed = false;
-let lastScrollY = 0;
 let chatNotifTimeout = null;
 let pendingChatNotification = null;
 
@@ -783,7 +1229,6 @@ window.addEventListener('scroll', function() {
         header.classList.remove('collapsed');
         isMenuCollapsed = false;
     }
-    lastScrollY = currentScrollY;
 });
 
 function toggleMenu() {
@@ -804,10 +1249,305 @@ document.querySelectorAll('.nav-btn').forEach(btn => {
     });
 });
 
-// ===== FUNCIONES BÁSICAS =====
-// (Las mismas que ya tenías para login, register, etc.)
+// ===== FUNCIONES DE COOKIES =====
+function setCookie(name, value, days = 7) {
+    try {
+        const expires = new Date();
+        expires.setTime(expires.getTime() + (days * 24 * 60 * 60 * 1000));
+        document.cookie = `${name}=${encodeURIComponent(value)};expires=${expires.toUTCString()};path=/;SameSite=Lax;Secure`;
+    } catch (e) {}
+}
 
-// ===== NOTIFICACIONES CLICKEABLES =====
+function getCookie(name) {
+    try {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return decodeURIComponent(parts.pop().split(';').shift());
+    } catch (e) {}
+    return null;
+}
+
+function deleteCookie(name) {
+    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+}
+
+let sessionMemory = { user: null, admin: false, data: {} };
+
+function saveSession(username, admin, userData) {
+    try {
+        setCookie('socialRD_user', username);
+        setCookie('socialRD_admin', admin ? 'true' : 'false');
+        setCookie('socialRD_data', JSON.stringify(userData || {}));
+    } catch (e) {}
+    sessionMemory.user = username;
+    sessionMemory.admin = admin;
+    sessionMemory.data = userData || {};
+}
+
+function loadSession() {
+    try {
+        const savedUser = getCookie('socialRD_user');
+        const savedAdmin = getCookie('socialRD_admin') === 'true';
+        const savedData = JSON.parse(getCookie('socialRD_data') || '{}');
+        if (savedUser) {
+            currentUser = savedUser;
+            isAdmin = savedAdmin;
+            sessionMemory.user = savedUser;
+            sessionMemory.admin = savedAdmin;
+            sessionMemory.data = savedData;
+            return { currentUser: savedUser, isAdmin: savedAdmin, userData: savedData };
+        }
+    } catch (e) {}
+    if (sessionMemory.user) {
+        currentUser = sessionMemory.user;
+        isAdmin = sessionMemory.admin;
+        return { currentUser: sessionMemory.user, isAdmin: sessionMemory.admin, userData: sessionMemory.data };
+    }
+    return null;
+}
+
+function clearSession() {
+    try {
+        deleteCookie('socialRD_user');
+        deleteCookie('socialRD_admin');
+        deleteCookie('socialRD_data');
+    } catch (e) {}
+    sessionMemory.user = null;
+    sessionMemory.admin = false;
+    sessionMemory.data = {};
+    currentUser = null;
+    isAdmin = false;
+    if (chatInterval) { clearInterval(chatInterval); chatInterval = null; }
+    if (notificationInterval) { clearInterval(notificationInterval); notificationInterval = null; }
+}
+
+// ===== NOTIFICACIONES TOAST =====
+function showNotificationToast(message, type = "success") {
+    const toast = document.getElementById("notificationToast");
+    toast.style.display = "block";
+    toast.className = `notification-toast ${type}`;
+    toast.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i> ${message}`;
+    clearTimeout(toast._timeout);
+    toast._timeout = setTimeout(() => { toast.style.display = "none"; }, 4000);
+}
+
+// ===== CONSULTAS SUPABASE =====
+async function query(endpoint, options = {}) {
+    const maxRetries = 3;
+    let lastError;
+    
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+        try {
+            const url = `${SUPABASE_URL}${endpoint}`;
+            const response = await fetch(url, {
+                ...options,
+                headers: {
+                    'apikey': SUPABASE_KEY,
+                    'Authorization': `Bearer ${SUPABASE_KEY}`,
+                    'Content-Type': 'application/json',
+                    'Prefer': 'return=representation',
+                    ...options.headers
+                }
+            });
+            
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`HTTP ${response.status}: ${errorText}`);
+            }
+            return await response.json();
+        } catch (error) {
+            lastError = error;
+            if (attempt < maxRetries) {
+                await new Promise(r => setTimeout(r, 1000 * attempt));
+                continue;
+            }
+            throw error;
+        }
+    }
+    throw lastError;
+}
+
+// ===== NAVEGACIÓN =====
+function showLogin() {
+    document.getElementById("login").style.display = "block";
+    document.getElementById("register").style.display = "none";
+    document.getElementById("app").style.display = "none";
+}
+
+function showRegister() {
+    document.getElementById("login").style.display = "none";
+    document.getElementById("register").style.display = "block";
+    document.getElementById("app").style.display = "none";
+}
+
+function showFeed() {
+    document.getElementById("feedSection").style.display = "block";
+    document.getElementById("profileSection").style.display = "none";
+    document.getElementById("settingsSection").style.display = "none";
+    document.getElementById("professorsSection").style.display = "none";
+    document.getElementById("friendsSection").style.display = "none";
+    document.getElementById("chatSection").style.display = "none";
+    document.getElementById("rankingSection").style.display = "none";
+    document.getElementById("encuestasSection").style.display = "none";
+    document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+    document.getElementById("navFeed").classList.add("active");
+    if (chatInterval) { clearInterval(chatInterval); chatInterval = null; }
+    loadPosts();
+}
+
+function showFriends() {
+    document.getElementById("feedSection").style.display = "none";
+    document.getElementById("profileSection").style.display = "none";
+    document.getElementById("settingsSection").style.display = "none";
+    document.getElementById("professorsSection").style.display = "none";
+    document.getElementById("friendsSection").style.display = "block";
+    document.getElementById("chatSection").style.display = "none";
+    document.getElementById("rankingSection").style.display = "none";
+    document.getElementById("encuestasSection").style.display = "none";
+    document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+    document.getElementById("navFriends").classList.add("active");
+    if (chatInterval) { clearInterval(chatInterval); chatInterval = null; }
+    loadFriendsData();
+}
+
+function showChat(username) {
+    document.getElementById("friendsSection").style.display = "none";
+    document.getElementById("chatSection").style.display = "flex";
+    currentChatPartner = username;
+    document.getElementById("chatPartnerName").innerText = username;
+    document.getElementById("chatInput").value = "";
+    loadChatMessages();
+    if (chatInterval) { clearInterval(chatInterval); }
+    chatInterval = setInterval(loadChatMessages, 3000);
+}
+
+function showProfile() {
+    document.getElementById("feedSection").style.display = "none";
+    document.getElementById("profileSection").style.display = "block";
+    document.getElementById("settingsSection").style.display = "none";
+    document.getElementById("professorsSection").style.display = "none";
+    document.getElementById("friendsSection").style.display = "none";
+    document.getElementById("chatSection").style.display = "none";
+    document.getElementById("rankingSection").style.display = "none";
+    document.getElementById("encuestasSection").style.display = "none";
+    document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+    document.getElementById("navProfile").classList.add("active");
+    if (chatInterval) { clearInterval(chatInterval); chatInterval = null; }
+    if (currentUser) loadUserProfile();
+}
+
+function showProfessors() {
+    document.getElementById("feedSection").style.display = "none";
+    document.getElementById("profileSection").style.display = "none";
+    document.getElementById("settingsSection").style.display = "none";
+    document.getElementById("professorsSection").style.display = "block";
+    document.getElementById("friendsSection").style.display = "none";
+    document.getElementById("chatSection").style.display = "none";
+    document.getElementById("rankingSection").style.display = "none";
+    document.getElementById("encuestasSection").style.display = "none";
+    document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+    document.getElementById("navProfessors").classList.add("active");
+    if (chatInterval) { clearInterval(chatInterval); chatInterval = null; }
+    loadProfessors();
+}
+
+function showRanking() {
+    document.getElementById("feedSection").style.display = "none";
+    document.getElementById("profileSection").style.display = "none";
+    document.getElementById("settingsSection").style.display = "none";
+    document.getElementById("professorsSection").style.display = "none";
+    document.getElementById("friendsSection").style.display = "none";
+    document.getElementById("chatSection").style.display = "none";
+    document.getElementById("rankingSection").style.display = "block";
+    document.getElementById("encuestasSection").style.display = "none";
+    document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+    document.getElementById("navRanking").classList.add("active");
+    if (chatInterval) { clearInterval(chatInterval); chatInterval = null; }
+    loadRanking('general');
+}
+
+function showEncuestas() {
+    document.getElementById("feedSection").style.display = "none";
+    document.getElementById("profileSection").style.display = "none";
+    document.getElementById("settingsSection").style.display = "none";
+    document.getElementById("professorsSection").style.display = "none";
+    document.getElementById("friendsSection").style.display = "none";
+    document.getElementById("chatSection").style.display = "none";
+    document.getElementById("rankingSection").style.display = "none";
+    document.getElementById("encuestasSection").style.display = "block";
+    document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+    document.getElementById("navEncuestas").classList.add("active");
+    if (chatInterval) { clearInterval(chatInterval); chatInterval = null; }
+    loadEncuestas();
+}
+
+function showSettings() {
+    document.getElementById("feedSection").style.display = "none";
+    document.getElementById("profileSection").style.display = "none";
+    document.getElementById("settingsSection").style.display = "block";
+    document.getElementById("professorsSection").style.display = "none";
+    document.getElementById("friendsSection").style.display = "none";
+    document.getElementById("chatSection").style.display = "none";
+    document.getElementById("rankingSection").style.display = "none";
+    document.getElementById("encuestasSection").style.display = "none";
+    document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+    document.getElementById("navSettings").classList.add("active");
+    if (chatInterval) { clearInterval(chatInterval); chatInterval = null; }
+}
+
+// ===== TEMA =====
+function toggleTheme() {
+    document.body.classList.toggle("dark-theme");
+    const icon = document.getElementById("themeToggle").querySelector('i');
+    icon.className = document.body.classList.contains("dark-theme") ? "fas fa-sun" : "fas fa-moon";
+    const darkModeToggle = document.getElementById("darkModeToggle");
+    if (darkModeToggle) darkModeToggle.checked = document.body.classList.contains("dark-theme");
+    localStorage.setItem('theme', document.body.classList.contains("dark-theme") ? 'dark' : 'light');
+}
+
+function updateThemeColor() {
+    const color = document.getElementById('primaryColorPicker').value;
+    document.documentElement.style.setProperty('--accent-primary', color);
+    localStorage.setItem('primaryColor', color);
+}
+
+function updateFontSize() {
+    const size = document.getElementById('fontSizeSelect').value;
+    const sizes = { small: '14px', medium: '16px', large: '18px' };
+    document.body.style.fontSize = sizes[size];
+    localStorage.setItem('fontSize', size);
+}
+
+// Cargar tema guardado
+const savedTheme = localStorage.getItem('theme');
+if (savedTheme === 'dark') {
+    document.body.classList.add('dark-theme');
+    document.getElementById("darkModeToggle").checked = true;
+    document.getElementById("themeToggle").querySelector('i').className = "fas fa-sun";
+}
+
+// ===== RATING =====
+function setRating(rating) {
+    newPostRating = rating;
+    const stars = document.querySelectorAll("#newPostStars .star");
+    stars.forEach((star, index) => {
+        star.classList.toggle('active', index < rating);
+    });
+}
+
+// ===== NOTIFICACIONES =====
+async function loadNotifications() {
+    if (!currentUser) return;
+    try {
+        const data = await query(`/rest/v1/notifications?username=eq.${encodeURIComponent(currentUser)}&order=created_at.desc&limit=50`);
+        notifications = data || [];
+        renderNotifications();
+        updateBadge();
+    } catch (error) {
+        console.error('Error cargando notificaciones:', error);
+    }
+}
+
 function renderNotifications() {
     const container = document.getElementById('notificationsList');
     if (!container) return;
@@ -822,9 +1562,7 @@ function renderNotifications() {
         const icon = getNotificationIcon(notif.type);
         const timeAgo = getTimeAgo(notif.created_at);
         const isUnread = !notif.read;
-        const clickAction = notif.link ? `window.location.href='${notif.link}'` : `markNotificationRead(${notif.id})`;
         
-        // Determinar acción según tipo
         let action = `markNotificationRead(${notif.id})`;
         if (notif.type === 'message') {
             action = `openChatFromNotification('${notif.sender_username || ''}')`;
@@ -849,77 +1587,90 @@ function renderNotifications() {
     container.innerHTML = html;
 }
 
-// ===== NOTIFICACIÓN DE CHAT =====
-function showChatNotification(message, sender) {
-    const notif = document.getElementById('chatNotification');
-    const text = document.getElementById('chatNotifMessage');
-    
-    text.textContent = `💬 ${sender || 'Alguien'}: ${message.substring(0, 40)}${message.length > 40 ? '...' : ''}`;
-    pendingChatNotification = { sender, message };
-    notif.style.display = 'flex';
-    
-    clearTimeout(chatNotifTimeout);
-    chatNotifTimeout = setTimeout(() => {
-        notif.style.display = 'none';
-    }, 8000);
+function getNotificationIcon(type) {
+    const icons = {
+        'friend_request': '🤝',
+        'friend_accepted': '✅',
+        'new_post': '📝',
+        'new_comment': '💬',
+        'new_vote': '👍',
+        'mention': '@',
+        'message': '💌',
+        'badge_earned': '🏅',
+        'level_up': '⬆️'
+    };
+    return icons[type] || '📢';
 }
 
-function openChatFromNotification(sender) {
-    const notif = document.getElementById('chatNotification');
-    notif.style.display = 'none';
-    clearTimeout(chatNotifTimeout);
+function getTimeAgo(dateString) {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diff = Math.floor((now - date) / 1000);
     
-    const username = sender || pendingChatNotification?.sender;
-    if (username) {
-        showChat(username);
-        showFriends(); // Cambiar a la vista de amigos
+    if (diff < 60) return 'Hace ' + diff + 's';
+    if (diff < 3600) return 'Hace ' + Math.floor(diff / 60) + 'm';
+    if (diff < 86400) return 'Hace ' + Math.floor(diff / 3600) + 'h';
+    if (diff < 604800) return 'Hace ' + Math.floor(diff / 86400) + 'd';
+    return date.toLocaleDateString();
+}
+
+function updateBadge() {
+    const badge = document.getElementById('notificationBadge');
+    if (!badge) return;
+    
+    const unread = notifications.filter(n => !n.read).length;
+    const bell = document.getElementById('notificationBell');
+    
+    if (unread > 0) {
+        badge.style.display = 'block';
+        badge.textContent = unread > 99 ? '99+' : unread;
+        bell.classList.add('has-unread');
+    } else {
+        badge.style.display = 'none';
+        bell.classList.remove('has-unread');
     }
 }
 
-// ===== ENVIAR MENSAJE CON NOTIFICACIÓN =====
-async function sendMessage() {
-    if (!currentUser || !currentChatPartner) { showNotificationToast("No hay un chat abierto", "error"); return; }
-    const input = document.getElementById("chatInput");
-    const content = input.value.trim();
-    if (!content) { showNotificationToast("Escribe un mensaje", "error"); return; }
+function toggleNotifications() {
+    const panel = document.getElementById('notificationsPanel');
+    if (!panel) return;
+    
+    if (panel.style.display === 'none') {
+        panel.style.display = 'block';
+        loadNotifications();
+    } else {
+        panel.style.display = 'none';
+    }
+}
+
+async function markNotificationRead(notifId) {
     try {
-        await query('/rest/v1/private_messages', { 
-            method: 'POST', 
-            body: JSON.stringify({ 
-                sender_username: currentUser, 
-                receiver_username: currentChatPartner, 
-                content: content, 
-                read: false, 
-                created_at: new Date().toISOString() 
-            }) 
+        await query(`/rest/v1/notifications?id=eq.${notifId}`, {
+            method: 'PATCH',
+            body: JSON.stringify({ read: true })
         });
-        input.value = "";
-        loadChatMessages();
-        
-        // Notificar al receptor
-        await createNotification(
-            currentChatPartner, 
-            currentUser, 
-            'message', 
-            `${currentUser} te ha enviado un mensaje: "${content.substring(0, 30)}${content.length > 30 ? '...' : ''}"`
-        );
-        
-        // Si el receptor es el usuario actual, mostrar notificación en pantalla
-        if (currentChatPartner === currentUser) {
-            showChatNotification(content, currentUser);
-        }
-        
-        sendPushNotification('Nuevo mensaje', `${currentUser}: ${content.substring(0, 40)}${content.length > 40 ? '...' : ''}`);
+        await loadNotifications();
     } catch (error) {
-        console.error("Error enviando mensaje:", error);
-        showNotificationToast("Error al enviar mensaje: " + error.message, "error");
+        console.error('Error marcando notificación:', error);
     }
 }
 
-// ===== CREAR NOTIFICACIÓN CON ENLACE =====
+async function markAllNotificationsRead() {
+    try {
+        await query(`/rest/v1/notifications?username=eq.${encodeURIComponent(currentUser)}&read=eq.false`, {
+            method: 'PATCH',
+            body: JSON.stringify({ read: true })
+        });
+        await loadNotifications();
+        updateBadge();
+        showNotificationToast('✅ Todas las notificaciones marcadas como leídas');
+    } catch (error) {
+        console.error('Error marcando todas:', error);
+    }
+}
+
 async function createNotification(username, sender, type, message, link = null) {
     try {
-        // Determinar enlace automáticamente según tipo
         if (!link) {
             if (type === 'message') {
                 link = '/chat/' + sender;
@@ -945,133 +1696,1201 @@ async function createNotification(username, sender, type, message, link = null) 
         
         if (username === currentUser) {
             loadNotifications();
-            // Mostrar notificación toast
             showNotificationToast('🔔 ' + message);
         }
         
-        // Si es un mensaje, mostrar notificación de chat
         if (type === 'message' && username === currentUser) {
             showChatNotification(message, sender);
         }
-        
-        sendPushNotification('Nueva notificación', message);
     } catch (error) {
         console.error('Error creando notificación:', error);
     }
 }
 
-// ===== FUNCIONES DE NAVEGACIÓN =====
-// (Mantén todas las funciones que ya tenías)
+// ===== CHAT NOTIFICATION =====
+function showChatNotification(message, sender) {
+    const notif = document.getElementById('chatNotification');
+    const text = document.getElementById('chatNotifMessage');
+    
+    text.textContent = `💬 ${sender || 'Alguien'}: ${message.substring(0, 40)}${message.length > 40 ? '...' : ''}`;
+    pendingChatNotification = { sender, message };
+    notif.style.display = 'flex';
+    
+    clearTimeout(chatNotifTimeout);
+    chatNotifTimeout = setTimeout(() => {
+        notif.style.display = 'none';
+    }, 8000);
+}
 
-// ===== INICIALIZACIÓN =====
+function openChatFromNotification(sender) {
+    const notif = document.getElementById('chatNotification');
+    notif.style.display = 'none';
+    clearTimeout(chatNotifTimeout);
+    
+    const username = sender || pendingChatNotification?.sender;
+    if (username) {
+        // Buscar al amigo en la lista de amigos
+        showFriends();
+        // Abrir el chat después de un breve delay
+        setTimeout(() => {
+            showChat(username);
+        }, 300);
+    }
+}
+
+// Cerrar panel de notificaciones al hacer clic fuera
+document.addEventListener('click', function(e) {
+    const panel = document.getElementById('notificationsPanel');
+    const bell = document.querySelector('.notification-bell');
+    if (panel && panel.style.display === 'block') {
+        if (!panel.contains(e.target) && !bell.contains(e.target)) {
+            panel.style.display = 'none';
+        }
+    }
+});
+
+// ===== LOGIN =====
+async function loginFunction() {
+    const username = document.getElementById("loginUser").value.trim();
+    const password = document.getElementById("loginPass").value;
+    if (!username || !password) {
+        showNotificationToast("Ingresa usuario y contraseña", "error");
+        return;
+    }
+    try {
+        const users = await query(`/rest/v1/users?username=eq.${encodeURIComponent(username)}&select=*`);
+        if (users && users.length > 0) {
+            const user = users[0];
+            if (user.password === password) {
+                const blocked = await query(`/rest/v1/blocked_users?username=eq.${encodeURIComponent(username)}&select=*`);
+                if (blocked && blocked.length > 0) {
+                    showNotificationToast("❌ Este usuario ha sido bloqueado", "error");
+                    return;
+                }
+                currentUser = user.username;
+                isAdmin = currentUser === "ADMIN";
+                saveSession(currentUser, isAdmin, user);
+                document.getElementById("login").style.display = "none";
+                document.getElementById("app").style.display = "block";
+                document.getElementById("profileMiniName").innerText = currentUser;
+                document.getElementById("profileMiniAvatar").src = user.avatar;
+                document.getElementById("profileAvatar").src = user.avatar;
+                document.getElementById("profileName").innerText = currentUser;
+                document.getElementById("profileEmail").innerText = user.email;
+                if (isAdmin) {
+                    document.getElementById("adminMiniBadge").style.display = "inline";
+                    document.getElementById("adminPanel").style.display = "block";
+                    loadAdminPanel();
+                }
+                showNotificationToast(`🎉 ¡Bienvenido ${currentUser}!`);
+                await loadPosts();
+                loadNotifications();
+                loadUserPoints();
+                if (notificationInterval) clearInterval(notificationInterval);
+                notificationInterval = setInterval(loadNotifications, 15000);
+                showFeed();
+            } else {
+                showNotificationToast("❌ Contraseña incorrecta", "error");
+            }
+        } else {
+            showNotificationToast("❌ Usuario no encontrado", "error");
+        }
+    } catch (error) {
+        console.error('❌ Error en login:', error);
+        showNotificationToast("Error al iniciar sesión: " + error.message, "error");
+    }
+}
+
+// ===== REGISTRO =====
+async function registerFunction() {
+    const username = document.getElementById("regUser").value.trim();
+    const email = document.getElementById("regEmail").value.trim();
+    const password = document.getElementById("regPass").value;
+    const confirmPass = document.getElementById("regConfirmPass").value;
+    if (!username || !email || !password) {
+        showNotificationToast("Completa todos los campos", "error");
+        return;
+    }
+    if (password !== confirmPass) {
+        showNotificationToast("Las contraseñas no coinciden", "error");
+        return;
+    }
+    if (password.length < 6) {
+        showNotificationToast("La contraseña debe tener al menos 6 caracteres", "error");
+        return;
+    }
+    try {
+        const existing = await query(`/rest/v1/users?username=eq.${encodeURIComponent(username)}&select=username`);
+        if (existing && existing.length > 0) {
+            showNotificationToast("❌ El usuario ya existe", "error");
+            return;
+        }
+        await query('/rest/v1/users', {
+            method: 'POST',
+            body: JSON.stringify({
+                username: username,
+                email: email,
+                password: password,
+                avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(username)}&background=3b82f6&color=fff`,
+                bio: "Estudiante comprometido con la educación",
+                role: "user",
+                created_at: new Date().toISOString()
+            })
+        });
+        showNotificationToast("✅ Registro exitoso! Ahora inicia sesión");
+        showLogin();
+        document.getElementById("regUser").value = "";
+        document.getElementById("regEmail").value = "";
+        document.getElementById("regPass").value = "";
+        document.getElementById("regConfirmPass").value = "";
+    } catch (error) {
+        console.error("Error en registro:", error);
+        showNotificationToast("Error al registrar: " + error.message, "error");
+    }
+}
+
+// ===== LOGOUT =====
+function logout() {
+    currentUser = null;
+    isAdmin = false;
+    clearSession();
+    if (chatInterval) { clearInterval(chatInterval); chatInterval = null; }
+    if (notificationInterval) { clearInterval(notificationInterval); notificationInterval = null; }
+    document.getElementById("app").style.display = "none";
+    document.getElementById("login").style.display = "block";
+    showNotificationToast("👋 ¡Hasta pronto!");
+}
+
+// ===== CARGAR POSTS =====
+async function loadPosts() {
+    if (!currentUser) return;
+    try {
+        const postsData = await query('/rest/v1/posts?select=*&order=created_at.desc');
+        allPosts = postsData || [];
+        let commentsData = [], votesData = [], reportsData = [];
+        try {
+            commentsData = await query('/rest/v1/comments?select=*');
+            votesData = await query('/rest/v1/votes?select=*');
+            reportsData = await query('/rest/v1/reports?select=*');
+        } catch (e) {}
+        
+        if (!allPosts || allPosts.length === 0) {
+            document.getElementById("posts").innerHTML = "<div style='text-align:center; padding:60px; background: var(--bg-secondary); border-radius: 30px;'><i class='fas fa-inbox fa-4x' style='color: var(--text-secondary); margin-bottom: 20px;'></i><h3>No hay calificaciones aún</h3><p>¡Sé el primero en calificar un profesor!</p></div>";
+            return;
+        }
+        let html = "";
+        for (const post of allPosts) {
+            const postComments = commentsData ? commentsData.filter(c => c.post_id === post.id) : [];
+            const postVotes = votesData ? votesData.filter(v => v.post_id === post.id) : [];
+            const helpfulVotes = postVotes.filter(v => v.vote_type === 'helpful').length;
+            const notHelpfulVotes = postVotes.filter(v => v.vote_type === 'not_helpful').length;
+            const isReported = reportsData ? reportsData.some(r => r.post_id === post.id && r.status === 'pending') : false;
+            const displayName = post.is_anonymous ? "Anónimo 🕵️" : post.username;
+            const avatarUrl = post.is_anonymous ? "https://ui-avatars.com/api/?name=Anonimo&background=6b7280&color=fff" : `https://ui-avatars.com/api/?name=${encodeURIComponent(post.username)}&background=3b82f6&color=fff`;
+            
+            html += `
+                <div class="post" id="post-${post.id}">
+                    <div class="post-header">
+                        <img src="${avatarUrl}" class="post-avatar">
+                        <div class="post-user-info">
+                            <h4>${displayName} ${post.is_anonymous ? '<span class="anonymous-badge">Anónimo</span>' : ''} ${post.username === 'ADMIN' && !post.is_anonymous ? '<span class="admin-badge">Admin</span>' : ''}</h4>
+                            <div class="post-date"><i class="far fa-clock"></i> ${new Date(post.created_at).toLocaleString()}</div>
+                        </div>
+                    </div>
+                    <div class="teacher-badge">
+                        <i class="fas fa-chalkboard-teacher"></i> ${post.teacher || 'Profesor'} 
+                        ${post.subject ? ` • ${post.subject}` : ''}
+                        ${post.institution ? ` • ${post.institution}` : ''}
+                        <span style="margin-left: 10px; background: white; color: var(--accent-primary); padding: 3px 10px; border-radius: 20px;">⭐ ${post.teacher_rating || 0}/5</span>
+                    </div>
+                    ${post.image ? `<img src="${post.image}" class="post-image" onclick="window.open(this.src)">` : ''}
+                    <p class="post-description">${post.description || ''}</p>
+                    <div style="display: flex; gap: 20px; align-items: center; margin: 20px 0; flex-wrap: wrap;">
+                        <div class="vote-buttons">
+                            <button class="vote-btn" onclick="votePost(${post.id}, 'helpful')"><i class="fas fa-thumbs-up"></i> Útil (${helpfulVotes})</button>
+                            <button class="vote-btn" onclick="votePost(${post.id}, 'not_helpful')"><i class="fas fa-thumbs-down"></i> No útil (${notHelpfulVotes})</button>
+                        </div>
+                        ${!isAdmin && post.username !== currentUser && !post.is_anonymous ? `<button class="btn-warning" style="padding: 8px 15px;" onclick="reportPost(${post.id})"><i class="fas fa-flag"></i> Reportar</button>` : ''}
+                        ${currentUser && post.username !== currentUser && !post.is_anonymous ? `<button class="btn-outline" onclick="sendFriendRequest('${post.username}')"><i class="fas fa-user-plus"></i> Agregar</button>` : ''}
+                    </div>
+                    <div class="comments-toggle" onclick="toggleComments(${post.id})"><i class="fas fa-comment"></i> Comentarios (${postComments.length})</div>
+                    <div class="comments-section" id="comments-${post.id}">
+                        <div id="comments-list-${post.id}">
+                            ${postComments.map(comment => {
+                                const commentVotes = votesData ? votesData.filter(v => v.comment_id === comment.id) : [];
+                                const commentHelpful = commentVotes.filter(v => v.vote_type === 'helpful').length;
+                                const isCommentAnon = comment.is_anonymous || false;
+                                const commentDisplayName = isCommentAnon ? "Anónimo 🕵️" : comment.username;
+                                const commentAvatar = isCommentAnon ? "https://ui-avatars.com/api/?name=Anonimo&background=6b7280&color=fff" : `https://ui-avatars.com/api/?name=${encodeURIComponent(comment.username)}&background=3b82f6&color=fff`;
+                                return `
+                                    <div class="comment" id="comment-${comment.id}">
+                                        <div class="comment-header">
+                                            <span class="comment-user">
+                                                <img src="${commentAvatar}" alt="">
+                                                ${commentDisplayName}
+                                                ${isCommentAnon ? '<span class="anonymous-badge">Anónimo</span>' : ''}
+                                                ${comment.username === 'ADMIN' && !isCommentAnon ? '<span class="admin-badge">Admin</span>' : ''}
+                                            </span>
+                                            <span class="comment-date">${new Date(comment.created_at).toLocaleString()}</span>
+                                        </div>
+                                        <p>${comment.content}</p>
+                                        <div style="display: flex; gap: 15px; align-items: center; margin-top: 10px; flex-wrap: wrap;">
+                                            <div class="vote-buttons">
+                                                <button class="vote-btn" onclick="voteComment(${comment.id}, 'helpful')"><i class="fas fa-thumbs-up"></i> (${commentHelpful})</button>
+                                            </div>
+                                            ${!isAdmin && comment.username !== currentUser && !isCommentAnon ? `<button class="btn-warning" style="padding: 5px 10px; font-size: 12px;" onclick="reportComment(${comment.id})"><i class="fas fa-flag"></i> Reportar</button>` : ''}
+                                            ${(isAdmin || comment.username === currentUser) ? `<button class="btn-danger" onclick="deleteComment(${comment.id})" style="padding:5px 10px; font-size:12px;"><i class="fas fa-trash"></i> Eliminar</button>` : ''}
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                        <div class="comment-input">
+                            <input type="text" id="commentInput-${post.id}" placeholder="Escribe un comentario... (usa @ para mencionar)">
+                            <button class="btn-primary" onclick="addComment(${post.id})"><i class="fas fa-paper-plane"></i></button>
+                        </div>
+                    </div>
+                    <div class="post-actions" style="display: flex; gap: 10px; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border-color); flex-wrap: wrap;">
+                        ${(isAdmin || post.username === currentUser) ? `<button class="btn-danger" onclick="deletePost(${post.id})"><i class="fas fa-trash-alt"></i> Eliminar</button>` : ''}
+                        ${isAdmin && post.username !== 'ADMIN' ? `<button class="btn-warning" onclick="blockUser('${post.username}')"><i class="fas fa-ban"></i> Bloquear</button>` : ''}
+                        ${isAdmin && isReported ? `<button class="btn-success" onclick="resolveReport(${post.id})"><i class="fas fa-check"></i> Resolver</button>` : ''}
+                    </div>
+                </div>
+            `;
+        }
+        document.getElementById("posts").innerHTML = html;
+        if (isAdmin) loadAdminPanel();
+    } catch (error) {
+        console.error("Error cargando posts:", error);
+        document.getElementById("posts").innerHTML = "<p style='color: var(--danger); text-align:center; padding:40px;'>Error cargando posts</p>";
+    }
+}
+
+function filterPosts() {
+    const searchTerm = document.getElementById("feedSearch").value.toLowerCase();
+    if (!searchTerm) { loadPosts(); return; }
+    const filtered = allPosts.filter(post => 
+        (post.teacher && post.teacher.toLowerCase().includes(searchTerm)) ||
+        (post.subject && post.subject.toLowerCase().includes(searchTerm)) ||
+        (post.institution && post.institution.toLowerCase().includes(searchTerm)) ||
+        (post.description && post.description.toLowerCase().includes(searchTerm))
+    );
+    if (filtered.length === 0) {
+        document.getElementById("posts").innerHTML = "<div style='text-align:center; padding:60px;'><i class='fas fa-search fa-4x' style='color: var(--text-secondary);'></i><h3>No se encontraron resultados</h3></div>";
+    } else {
+        loadPosts();
+    }
+}
+
+// ===== PROFESORES =====
+async function loadProfessors() {
+    try {
+        const posts = await query('/rest/v1/posts?select=teacher,subject,institution,teacher_rating,username');
+        const professorMap = new Map();
+        posts.forEach(post => {
+            const teacherName = post.teacher;
+            if (!teacherName) return;
+            if (!professorMap.has(teacherName)) {
+                professorMap.set(teacherName, { name: teacherName, subjects: new Set(), institutions: new Set(), ratings: [], reviews: 0 });
+            }
+            const prof = professorMap.get(teacherName);
+            if (post.subject) prof.subjects.add(post.subject);
+            if (post.institution) prof.institutions.add(post.institution);
+            if (post.teacher_rating) prof.ratings.push(post.teacher_rating);
+            prof.reviews++;
+        });
+        allProfessors = Array.from(professorMap.values()).map(prof => ({
+            ...prof,
+            subjects: Array.from(prof.subjects),
+            institutions: Array.from(prof.institutions),
+            avgRating: prof.ratings.length > 0 ? (prof.ratings.reduce((a,b) => a + b, 0) / prof.ratings.length).toFixed(1) : "N/A"
+        }));
+        displayProfessors(allProfessors);
+    } catch (error) {
+        console.error("Error cargando profesores:", error);
+    }
+}
+
+function displayProfessors(professors) {
+    const container = document.getElementById("professorsList");
+    if (professors.length === 0) {
+        container.innerHTML = "<div style='text-align:center; padding:60px;'><i class='fas fa-chalkboard-teacher fa-4x'></i><h3>No hay profesores aún</h3></div>";
+        return;
+    }
+    let html = "";
+    professors.sort((a, b) => (b.avgRating || 0) - (a.avgRating || 0));
+    professors.forEach(prof => {
+        html += `
+            <div class="professor-card" onclick="viewProfessor('${prof.name}')">
+                <div style="display: flex; justify-content: space-between; align-items: start;">
+                    <i class="fas fa-chalkboard-teacher fa-2x" style="color: var(--accent-primary);"></i>
+                    <span class="admin-badge" style="background: var(--success);">${prof.reviews} reseñas</span>
+                </div>
+                <div class="professor-name">${prof.name}</div>
+                <div class="professor-rating">
+                    <span class="rating-number">${prof.avgRating}</span>
+                    <div>${Array(5).fill(0).map((_, i) => `<i class="fas fa-star star-small" style="color: ${i < Math.round(prof.avgRating) ? '#fbbf24' : '#cbd5e1'}"></i>`).join('')}</div>
+                </div>
+                <div class="professor-stats">
+                    <span><i class="fas fa-book"></i> ${prof.subjects.length} materias</span>
+                    <span><i class="fas fa-university"></i> ${prof.institutions.length} instituciones</span>
+                </div>
+            </div>
+        `;
+    });
+    container.innerHTML = html;
+}
+
+function filterProfessors() {
+    const searchTerm = document.getElementById("professorSearch").value.toLowerCase();
+    if (!searchTerm) { displayProfessors(allProfessors); return; }
+    const filtered = allProfessors.filter(prof => 
+        prof.name.toLowerCase().includes(searchTerm) ||
+        prof.subjects.some(s => s.toLowerCase().includes(searchTerm)) ||
+        prof.institutions.some(i => i.toLowerCase().includes(searchTerm))
+    );
+    displayProfessors(filtered);
+}
+
+function viewProfessor(professorName) {
+    document.getElementById("feedSearch").value = professorName;
+    showFeed();
+    filterPosts();
+}
+
+// ===== RANKING =====
+async function loadRanking(filter) {
+    const container = document.getElementById('rankingContainer');
+    container.innerHTML = '<div style="text-align:center; padding:40px;"><i class="fas fa-spinner fa-spin fa-2x"></i><p>Cargando ranking...</p></div>';
+    
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        if (btn.textContent.toLowerCase().includes(filter.replace('-', ' '))) {
+            btn.classList.add('active');
+        }
+    });
+    
+    try {
+        const rankingData = await query('/rest/v1/professor_ranking?order=avg_rating.desc&limit=50');
+        
+        if (!rankingData || rankingData.length === 0) {
+            container.innerHTML = '<div style="text-align:center; padding:40px;"><i class="fas fa-trophy fa-3x" style="color: var(--text-secondary); margin-bottom: 20px;"></i><h3>No hay datos de ranking aún</h3></div>';
+            return;
+        }
+        
+        let html = `
+            <div style="overflow-x: auto;">
+                <table class="ranking-table">
+                    <thead><tr><th>#</th><th>Profesor</th><th>Materia</th><th>Institución</th><th>⭐ Promedio</th><th>Reseñas</th></tr></thead>
+                    <tbody>
+        `;
+        
+        rankingData.forEach((prof, index) => {
+            const rankClass = index === 0 ? 'rank-1' : index === 1 ? 'rank-2' : index === 2 ? 'rank-3' : '';
+            const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `#${index + 1}`;
+            html += `
+                <tr>
+                    <td class="${rankClass}" style="font-weight: 700; font-size: 18px;">${medal}</td>
+                    <td><strong>${prof.teacher_name}</strong></td>
+                    <td>${prof.subject || 'N/A'}</td>
+                    <td>${prof.institution || 'N/A'}</td>
+                    <td><span style="font-size: 20px; font-weight: 700; color: var(--accent-primary);">${prof.avg_rating || 0}</span> ⭐</td>
+                    <td>${prof.total_reviews || 0}</td>
+                </tr>
+            `;
+        });
+        
+        html += `</tbody></table></div>`;
+        container.innerHTML = html;
+    } catch (error) {
+        console.error('Error cargando ranking:', error);
+        container.innerHTML = '<p style="color: var(--danger); text-align:center; padding:40px;">Error al cargar el ranking</p>';
+    }
+}
+
+// ===== ENCUESTAS =====
+async function loadEncuestas() {
+    if (!currentUser) return;
+    try {
+        const data = await query('/rest/v1/encuestas?active=eq.true&order=created_at.desc');
+        const container = document.getElementById('encuestasList');
+        
+        if (!data || data.length === 0) {
+            container.innerHTML = '<div style="text-align:center; padding:40px;"><i class="fas fa-poll fa-3x" style="color: var(--text-secondary); margin-bottom: 20px;"></i><h3>No hay encuestas activas</h3></div>';
+            return;
+        }
+        
+        const userVotes = await query(`/rest/v1/encuesta_votes?username=eq.${encodeURIComponent(currentUser)}`);
+        const votedMap = {};
+        userVotes.forEach(v => { votedMap[v.encuesta_id] = v.option_index; });
+        
+        let html = '';
+        for (const encuesta of data) {
+            const totalVotes = encuesta.votes ? encuesta.votes.reduce((a, b) => a + b, 0) : 0;
+            const userVoted = votedMap[encuesta.id] !== undefined;
+            
+            html += `
+                <div style="background: var(--bg-primary); border-radius: 20px; padding: 25px; margin-bottom: 20px; border-left: 4px solid var(--accent-primary);">
+                    <h3 style="font-size: 20px; margin-bottom: 5px;">${encuesta.title}</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 15px;">${encuesta.description || ''}</p>
+                    <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 15px;">
+                        <i class="fas fa-user"></i> ${encuesta.username} • 
+                        <i class="fas fa-clock"></i> ${new Date(encuesta.created_at).toLocaleString()}
+                    </div>
+                    <div style="margin: 15px 0;">
+                        ${encuesta.options.map((option, index) => {
+                            const votes = encuesta.votes && encuesta.votes[index] ? encuesta.votes[index] : 0;
+                            const percentage = totalVotes > 0 ? (votes / totalVotes * 100) : 0;
+                            const selected = userVoted && votedMap[encuesta.id] === index;
+                            return `
+                                <div class="encuesta-option ${selected ? 'selected' : ''}" onclick="voteEncuesta(${encuesta.id}, ${index})">
+                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                        <span>${option}</span>
+                                        <span style="font-weight: 600;">${percentage.toFixed(1)}% (${votes})</span>
+                                    </div>
+                                    <div class="vote-bar" style="width: ${percentage}%;"></div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                    <div style="font-size: 13px; color: var(--text-secondary);">Total votos: ${totalVotes}</div>
+                    ${encuesta.username === currentUser ? `<button class="btn-danger" onclick="deleteEncuesta(${encuesta.id})" style="margin-top: 10px; padding: 5px 15px; font-size: 12px;">Eliminar</button>` : ''}
+                </div>
+            `;
+        }
+        container.innerHTML = html;
+    } catch (error) {
+        console.error('Error cargando encuestas:', error);
+        document.getElementById('encuestasList').innerHTML = '<p style="color: var(--danger);">Error al cargar encuestas</p>';
+    }
+}
+
+function showCrearEncuesta() {
+    const title = prompt('Título de la encuesta:');
+    if (!title) return;
+    const description = prompt('Descripción (opcional):');
+    const optionsText = prompt('Opciones (separadas por coma):');
+    if (!optionsText) return;
+    const options = optionsText.split(',').map(o => o.trim()).filter(o => o);
+    if (options.length < 2) {
+        showNotificationToast('La encuesta debe tener al menos 2 opciones', 'error');
+        return;
+    }
+    createEncuesta(title, description, options);
+}
+
+async function createEncuesta(title, description, options) {
+    try {
+        const votes = new Array(options.length).fill(0);
+        await query('/rest/v1/encuestas', {
+            method: 'POST',
+            body: JSON.stringify({
+                username: currentUser,
+                title: title,
+                description: description || '',
+                options: options,
+                votes: votes,
+                active: true,
+                created_at: new Date().toISOString()
+            })
+        });
+        showNotificationToast('✅ Encuesta creada exitosamente');
+        loadEncuestas();
+    } catch (error) {
+        console.error('Error creando encuesta:', error);
+        showNotificationToast('Error al crear encuesta: ' + error.message, 'error');
+    }
+}
+
+async function voteEncuesta(encuestaId, optionIndex) {
+    if (!currentUser) return;
+    try {
+        const existing = await query(`/rest/v1/encuesta_votes?encuesta_id=eq.${encuestaId}&username=eq.${encodeURIComponent(currentUser)}`);
+        if (existing && existing.length > 0) {
+            showNotificationToast('Ya votaste en esta encuesta', 'warning');
+            return;
+        }
+        
+        await query('/rest/v1/encuesta_votes', {
+            method: 'POST',
+            body: JSON.stringify({
+                encuesta_id: encuestaId,
+                username: currentUser,
+                option_index: optionIndex,
+                created_at: new Date().toISOString()
+            })
+        });
+        
+        const encuesta = await query(`/rest/v1/encuestas?id=eq.${encuestaId}&select=votes`);
+        if (encuesta && encuesta.length > 0) {
+            const currentVotes = encuesta[0].votes || [];
+            currentVotes[optionIndex] = (currentVotes[optionIndex] || 0) + 1;
+            await query(`/rest/v1/encuestas?id=eq.${encuestaId}`, {
+                method: 'PATCH',
+                body: JSON.stringify({ votes: currentVotes })
+            });
+        }
+        
+        showNotificationToast('✅ Voto registrado');
+        loadEncuestas();
+    } catch (error) {
+        console.error('Error votando en encuesta:', error);
+        showNotificationToast('Error al votar: ' + error.message, 'error');
+    }
+}
+
+async function deleteEncuesta(encuestaId) {
+    if (!confirm('¿Eliminar esta encuesta?')) return;
+    try {
+        await query(`/rest/v1/encuestas?id=eq.${encuestaId}`, { method: 'DELETE' });
+        showNotificationToast('🗑️ Encuesta eliminada');
+        loadEncuestas();
+    } catch (error) {
+        console.error('Error eliminando encuesta:', error);
+        showNotificationToast('Error al eliminar: ' + error.message, 'error');
+    }
+}
+
+// ===== SUBIR POST =====
+async function upload() {
+    if (!currentUser) { showNotificationToast("Debes iniciar sesión", "error"); return; }
+    const imageFile = document.getElementById("image").files[0];
+    const teacher = document.getElementById("teacherName").value.trim();
+    const subject = document.getElementById("subject").value.trim();
+    const institution = document.getElementById("institution").value.trim();
+    const description = document.getElementById("desc").value.trim();
+    const isAnonymous = document.getElementById("anonymousPost").checked;
+    
+    if (!teacher || !description) {
+        showNotificationToast("Nombre del profesor y descripción son obligatorios", "error");
+        return;
+    }
+    if (newPostRating === 0) {
+        showNotificationToast("Selecciona una calificación", "error");
+        return;
+    }
+    
+    const postData = {
+        username: currentUser,
+        teacher: teacher,
+        subject: subject || null,
+        institution: institution || null,
+        description: description,
+        teacher_rating: newPostRating,
+        is_anonymous: isAnonymous,
+        created_at: new Date().toISOString()
+    };
+    
+    if (imageFile) {
+        const reader = new FileReader();
+        reader.onload = async function(e) {
+            postData.image = e.target.result;
+            await savePost(postData);
+        };
+        reader.readAsDataURL(imageFile);
+    } else {
+        await savePost(postData);
+    }
+}
+
+async function savePost(postData) {
+    try {
+        await query('/rest/v1/posts', { method: 'POST', body: JSON.stringify(postData) });
+        showNotificationToast("✅ ¡Publicación creada exitosamente!", "success");
+        document.getElementById("image").value = "";
+        document.getElementById("teacherName").value = "";
+        document.getElementById("subject").value = "";
+        document.getElementById("institution").value = "";
+        document.getElementById("desc").value = "";
+        document.getElementById("anonymousPost").checked = false;
+        newPostRating = 0;
+        document.querySelectorAll("#newPostStars .star").forEach(s => s.classList.remove("active"));
+        setTimeout(async () => { await loadPosts(); }, 500);
+    } catch (error) {
+        console.error("Error publicando:", error);
+        showNotificationToast("Error al publicar: " + error.message, "error");
+    }
+}
+
+// ===== VOTOS =====
+async function votePost(postId, voteType) {
+    if (!currentUser) { showNotificationToast("Debes iniciar sesión", "error"); return; }
+    try {
+        const existing = await query(`/rest/v1/votes?post_id=eq.${postId}&username=eq.${encodeURIComponent(currentUser)}&select=*`);
+        if (existing && existing.length > 0) {
+            await query(`/rest/v1/votes?id=eq.${existing[0].id}`, { method: 'PATCH', body: JSON.stringify({ vote_type: voteType }) });
+        } else {
+            await query('/rest/v1/votes', { method: 'POST', body: JSON.stringify({ post_id: postId, username: currentUser, vote_type: voteType, created_at: new Date().toISOString() }) });
+        }
+        showNotificationToast("✅ Voto registrado");
+        await loadPosts();
+    } catch (error) {
+        console.error("Error votando:", error);
+        showNotificationToast("Error al votar: " + error.message, "error");
+    }
+}
+
+async function voteComment(commentId, voteType) {
+    if (!currentUser) { showNotificationToast("Debes iniciar sesión", "error"); return; }
+    try {
+        const existing = await query(`/rest/v1/votes?comment_id=eq.${commentId}&username=eq.${encodeURIComponent(currentUser)}&select=*`);
+        if (existing && existing.length > 0) {
+            await query(`/rest/v1/votes?id=eq.${existing[0].id}`, { method: 'PATCH', body: JSON.stringify({ vote_type: voteType }) });
+        } else {
+            await query('/rest/v1/votes', { method: 'POST', body: JSON.stringify({ comment_id: commentId, username: currentUser, vote_type: voteType, created_at: new Date().toISOString() }) });
+        }
+        showNotificationToast("✅ Voto registrado");
+        await loadPosts();
+    } catch (error) {
+        console.error("Error votando:", error);
+    }
+}
+
+// ===== REPORTES =====
+async function reportPost(postId) {
+    if (!currentUser) { showNotificationToast("Debes iniciar sesión", "error"); return; }
+    if (!confirm("¿Reportar esta publicación como inapropiada?")) return;
+    try {
+        await query('/rest/v1/reports', { method: 'POST', body: JSON.stringify({ post_id: postId, username: currentUser, reason: "Contenido inapropiado", status: "pending", created_at: new Date().toISOString() }) });
+        showNotificationToast("✅ Publicación reportada");
+    } catch (error) {
+        console.error("Error reportando:", error);
+        showNotificationToast("Error al reportar: " + error.message, "error");
+    }
+}
+
+async function reportComment(commentId) {
+    if (!currentUser) { showNotificationToast("Debes iniciar sesión", "error"); return; }
+    if (!confirm("¿Reportar este comentario como inapropiado?")) return;
+    try {
+        await query('/rest/v1/reports', { method: 'POST', body: JSON.stringify({ comment_id: commentId, username: currentUser, reason: "Comentario inapropiado", status: "pending", created_at: new Date().toISOString() }) });
+        showNotificationToast("✅ Comentario reportado");
+    } catch (error) {
+        console.error("Error reportando:", error);
+    }
+}
+
+async function resolveReport(postId) {
+    try {
+        await query(`/rest/v1/reports?post_id=eq.${postId}`, { method: 'PATCH', body: JSON.stringify({ status: "resolved" }) });
+        showNotificationToast("✅ Reporte resuelto");
+        await loadPosts();
+    } catch (error) {
+        console.error("Error resolviendo reporte:", error);
+    }
+}
+
+// ===== COMENTARIOS =====
+function toggleComments(postId) {
+    const commentsSection = document.getElementById(`comments-${postId}`);
+    if (commentsSection) commentsSection.classList.toggle("show");
+}
+
+async function addComment(postId) {
+    if (!currentUser) { showNotificationToast("Debes iniciar sesión", "error"); return; }
+    const input = document.getElementById(`commentInput-${postId}`);
+    const content = input.value.trim();
+    if (!content) { showNotificationToast("Escribe un comentario", "error"); return; }
+    try {
+        await query('/rest/v1/comments', { method: 'POST', body: JSON.stringify({ post_id: postId, username: currentUser, content: content, is_anonymous: false, created_at: new Date().toISOString() }) });
+        showNotificationToast("💬 Comentario agregado");
+        input.value = "";
+        await loadPosts();
+        const commentsSection = document.getElementById(`comments-${postId}`);
+        if (commentsSection) commentsSection.classList.add("show");
+    } catch (error) {
+        console.error("Error agregando comentario:", error);
+        showNotificationToast("Error al comentar: " + error.message, "error");
+    }
+}
+
+async function deleteComment(commentId) {
+    if (!confirm("¿Eliminar este comentario?")) return;
+    try {
+        await query(`/rest/v1/comments?id=eq.${commentId}`, { method: 'DELETE' });
+        showNotificationToast("🗑️ Comentario eliminado");
+        await loadPosts();
+    } catch (error) {
+        console.error("Error eliminando comentario:", error);
+        showNotificationToast("Error al eliminar: " + error.message, "error");
+    }
+}
+
+async function deletePost(postId) {
+    if (!confirm("¿Eliminar esta publicación?")) return;
+    try {
+        await query(`/rest/v1/comments?post_id=eq.${postId}`, { method: 'DELETE' });
+        await query(`/rest/v1/votes?post_id=eq.${postId}`, { method: 'DELETE' });
+        await query(`/rest/v1/reports?post_id=eq.${postId}`, { method: 'DELETE' });
+        await query(`/rest/v1/posts?id=eq.${postId}`, { method: 'DELETE' });
+        showNotificationToast("🗑️ Publicación eliminada");
+        await loadPosts();
+    } catch (error) {
+        console.error("Error eliminando post:", error);
+        showNotificationToast("Error al eliminar: " + error.message, "error");
+    }
+}
+
+// ===== ADMIN =====
+async function loadAdminPanel() {
+    try {
+        const usersData = await query('/rest/v1/users?select=id');
+        const postsData = await query('/rest/v1/posts?select=id');
+        const commentsData = await query('/rest/v1/comments?select=id');
+        const blockedData = await query('/rest/v1/blocked_users?select=*');
+        const reportsData = await query('/rest/v1/reports?status=eq.pending&select=*,posts(*),comments(*)');
+        const professorsData = await query('/rest/v1/posts?select=teacher');
+        const uniqueProfessors = new Set(professorsData.map(p => p.teacher).filter(Boolean)).size;
+        
+        document.getElementById("totalUsers").innerText = usersData ? usersData.length : 0;
+        document.getElementById("totalPosts").innerText = postsData ? postsData.length : 0;
+        document.getElementById("totalComments").innerText = commentsData ? commentsData.length : 0;
+        document.getElementById("totalProfessors").innerText = uniqueProfessors;
+        
+        const blockedDiv = document.getElementById("blockedUsers");
+        if (!blockedData || blockedData.length === 0) {
+            blockedDiv.innerHTML = "<p style='text-align:center; padding:20px;'>No hay usuarios bloqueados</p>";
+        } else {
+            blockedDiv.innerHTML = blockedData.map(user => `
+                <div class="blocked-user-item">
+                    <span><i class="fas fa-ban" style="color: var(--danger);"></i> ${user.username}</span>
+                    <button class="btn-success" onclick="unblockUser('${user.username}')" style="padding:8px 15px;"><i class="fas fa-check"></i> Desbloquear</button>
+                </div>
+            `).join('');
+        }
+        
+        const reportsDiv = document.getElementById("reportedComments");
+        if (!reportsData || reportsData.length === 0) {
+            reportsDiv.innerHTML = "<p style='text-align:center; padding:20px;'>No hay reportes pendientes</p>";
+        } else {
+            reportsDiv.innerHTML = reportsData.map(report => `
+                <div class="blocked-user-item">
+                    <div>
+                        <i class="fas fa-flag" style="color: var(--warning);"></i>
+                        ${report.post_id ? 'Publicación' : 'Comentario'} reportado
+                        <div style="font-size:12px; color: var(--text-secondary);">Por: ${report.username}</div>
+                    </div>
+                    <button class="btn-success" onclick="resolveReport(${report.post_id || report.comment_id})" style="padding:8px 15px;"><i class="fas fa-check"></i> Resolver</button>
+                </div>
+            `).join('');
+        }
+    } catch (error) {
+        console.error("Error cargando panel admin:", error);
+    }
+}
+
+async function blockUser(username) {
+    if (!confirm(`¿Bloquear al usuario ${username}?`)) return;
+    try {
+        await query('/rest/v1/blocked_users', { method: 'POST', body: JSON.stringify({ username: username, blocked_at: new Date().toISOString() }) });
+        showNotificationToast(`✅ Usuario ${username} bloqueado`);
+        await loadPosts();
+        if (isAdmin) loadAdminPanel();
+    } catch (error) {
+        console.error("Error bloqueando usuario:", error);
+        showNotificationToast("Error al bloquear: " + error.message, "error");
+    }
+}
+
+async function unblockUser(username) {
+    try {
+        await query(`/rest/v1/blocked_users?username=eq.${encodeURIComponent(username)}`, { method: 'DELETE' });
+        showNotificationToast(`✅ Usuario ${username} desbloqueado`);
+        loadAdminPanel();
+    } catch (error) {
+        console.error("Error desbloqueando usuario:", error);
+        showNotificationToast("Error al desbloquear: " + error.message, "error");
+    }
+}
+
+// ===== PERFIL =====
+async function loadUserProfile() {
+    if (!currentUser) return;
+    try {
+        const userData = await query(`/rest/v1/users?username=eq.${encodeURIComponent(currentUser)}&select=*`);
+        const userPosts = await query(`/rest/v1/posts?username=eq.${encodeURIComponent(currentUser)}&order=created_at.desc`);
+        const friends = await query(`/rest/v1/friends?or=(user1_username.eq.${encodeURIComponent(currentUser)},user2_username.eq.${encodeURIComponent(currentUser)})`);
+        const pointsData = await query(`/rest/v1/user_points?username=eq.${encodeURIComponent(currentUser)}&select=*`);
+        
+        if (userData && userData.length > 0) {
+            const user = userData[0];
+            const points = pointsData && pointsData.length > 0 ? pointsData[0] : { points: 0, level: 1, badges: [] };
+            
+            document.getElementById("profileName").innerText = user.username;
+            document.getElementById("profileEmail").innerText = user.email;
+            document.getElementById("profileAvatar").src = user.avatar;
+            document.getElementById("profileMiniAvatar").src = user.avatar;
+            document.getElementById("profileBio").innerHTML = user.bio || "Estudiante comprometido con la educación";
+            document.getElementById("profilePostsCount").innerText = userPosts ? userPosts.length : 0;
+            document.getElementById("profileFriendsCount").innerText = friends ? friends.length : 0;
+            document.getElementById("profilePoints").innerText = points.points || 0;
+            document.getElementById("profileLevel").innerText = points.level || 1;
+            document.getElementById("profileMiniLevel").innerText = `Nv.${points.level || 1}`;
+            
+            let totalRating = 0;
+            if (userPosts) userPosts.forEach(p => totalRating += p.teacher_rating || 0);
+            const avg = userPosts && userPosts.length > 0 ? (totalRating / userPosts.length).toFixed(1) : "0.0";
+            document.getElementById("profileRatingAvg").innerText = avg;
+            
+            const badgesContainer = document.getElementById('profileBadges');
+            const badges = points.badges || [];
+            if (badges.length > 0) {
+                badgesContainer.innerHTML = badges.map(b => {
+                    const badgeClass = b === 'Legendario' ? 'badge-legendary' : 
+                                      b === 'Crítico Pro' ? 'badge-gold' :
+                                      b === 'Comentarista Activo' ? 'badge-silver' : 'badge-bronze';
+                    return `<span class="badge-item ${badgeClass}"><i class="fas fa-medal"></i> ${b}</span>`;
+                }).join('');
+            } else {
+                badgesContainer.innerHTML = '<span style="color: var(--text-secondary); font-size: 14px;">Aún no tienes insignias.</span>';
+            }
+            
+            let userPostsHtml = "";
+            if (userPosts && userPosts.length > 0) {
+                userPosts.forEach(post => {
+                    userPostsHtml += `
+                        <div class="post" style="margin-bottom:15px;">
+                            <div style="background: var(--accent-gradient); color:white; padding:8px 20px; border-radius:30px; display:inline-block; margin-bottom:15px;">
+                                ${post.teacher} ⭐ ${post.teacher_rating || 0}/5
+                                ${post.subject ? ` • ${post.subject}` : ''}
+                                ${post.is_anonymous ? ' • 🕵️ Anónimo' : ''}
+                            </div>
+                            ${post.image ? `<img src="${post.image}" style="width:100%; border-radius:15px; margin:15px 0;">` : ''}
+                            <p>${post.description}</p>
+                            <small style="color: var(--text-secondary);">${new Date(post.created_at).toLocaleString()}</small>
+                        </div>
+                    `;
+                });
+            } else {
+                userPostsHtml = "<div style='text-align:center; padding:40px; background: var(--bg-primary); border-radius: 20px;'><i class='fas fa-inbox fa-3x' style='color: var(--text-secondary);'></i><h4>No has calificado profesores aún</h4></div>";
+            }
+            document.getElementById("userPosts").innerHTML = userPostsHtml;
+        }
+    } catch (error) {
+        console.error("Error cargando perfil:", error);
+    }
+}
+
+async function loadUserPoints() {
+    if (!currentUser) return;
+    try {
+        const data = await query(`/rest/v1/user_points?username=eq.${encodeURIComponent(currentUser)}&select=*`);
+        if (data && data.length > 0) {
+            const points = data[0];
+            document.getElementById("profilePoints").innerText = points.points || 0;
+            document.getElementById("profileLevel").innerText = points.level || 1;
+            document.getElementById("profileMiniLevel").innerText = `Nv.${points.level || 1}`;
+        }
+    } catch (error) {
+        console.error('Error cargando puntos:', error);
+    }
+}
+
+function editBio() {
+    const newBio = prompt("Escribe tu nueva biografía:");
+    if (newBio) updateProfile({ bio: newBio });
+}
+
+function changeUsername() {
+    const newUsername = prompt("Nuevo nombre de usuario:");
+    if (newUsername && newUsername !== currentUser) updateProfile({ username: newUsername });
+}
+
+function changeEmail() {
+    const newEmail = prompt("Nuevo correo electrónico:");
+    if (newEmail && newEmail.includes('@')) updateProfile({ email: newEmail });
+    else showNotificationToast("Correo electrónico inválido", "error");
+}
+
+function changePassword() {
+    const newPass = prompt("Nueva contraseña (mínimo 6 caracteres):");
+    if (newPass && newPass.length >= 6) updateProfile({ password: newPass });
+    else showNotificationToast("La contraseña debe tener al menos 6 caracteres", "error");
+}
+
+async function updateProfile(updates) {
+    try {
+        await query(`/rest/v1/users?username=eq.${encodeURIComponent(currentUser)}`, { method: 'PATCH', body: JSON.stringify(updates) });
+        if (updates.username) {
+            currentUser = updates.username;
+            document.getElementById("profileMiniName").innerText = currentUser;
+            document.getElementById("profileName").innerText = currentUser;
+            saveSession(currentUser, isAdmin, updates);
+        }
+        showNotificationToast("✅ Perfil actualizado");
+        loadUserProfile();
+    } catch (error) {
+        console.error("Error actualizando perfil:", error);
+        showNotificationToast("Error al actualizar: " + error.message, "error");
+    }
+}
+
+async function updateAvatar(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = async function(e) {
+        const avatarUrl = e.target.result;
+        try {
+            await query(`/rest/v1/users?username=eq.${encodeURIComponent(currentUser)}`, { method: 'PATCH', body: JSON.stringify({ avatar: avatarUrl }) });
+            document.getElementById("profileAvatar").src = avatarUrl;
+            document.getElementById("profileMiniAvatar").src = avatarUrl;
+            showNotificationToast("📸 Foto actualizada");
+        } catch (error) {
+            console.error("Error actualizando avatar:", error);
+            showNotificationToast("Error al actualizar foto: " + error.message, "error");
+        }
+    };
+    reader.readAsDataURL(file);
+}
+
+// ===== SISTEMA DE AMISTAD =====
+async function sendFriendRequest(username) {
+    if (!currentUser) { showNotificationToast("Debes iniciar sesión", "error"); return; }
+    if (username === currentUser) { showNotificationToast("No puedes enviarte una solicitud a ti mismo", "warning"); return; }
+    try {
+        const existingFriends = await query(`/rest/v1/friends?or=(user1_username.eq.${encodeURIComponent(currentUser)},user2_username.eq.${encodeURIComponent(currentUser)})`);
+        const isFriend = existingFriends.some(f => (f.user1_username === username && f.user2_username === currentUser) || (f.user1_username === currentUser && f.user2_username === username));
+        if (isFriend) { showNotificationToast("Ya son amigos", "warning"); return; }
+        const existingRequest = await query(`/rest/v1/friend_requests?or=(sender_username.eq.${encodeURIComponent(currentUser)},receiver_username.eq.${encodeURIComponent(currentUser)})&status=eq.pending`);
+        const requestExists = existingRequest.some(r => (r.sender_username === username && r.receiver_username === currentUser) || (r.sender_username === currentUser && r.receiver_username === username));
+        if (requestExists) { showNotificationToast("Ya hay una solicitud pendiente", "warning"); return; }
+        await query('/rest/v1/friend_requests', { method: 'POST', body: JSON.stringify({ sender_username: currentUser, receiver_username: username, status: 'pending', created_at: new Date().toISOString() }) });
+        showNotificationToast(`✅ Solicitud enviada a ${username}`);
+        await createNotification(username, currentUser, 'friend_request', `${currentUser} te ha enviado una solicitud de amistad`);
+        loadFriendsData();
+    } catch (error) {
+        console.error("Error enviando solicitud:", error);
+        showNotificationToast("Error al enviar solicitud: " + error.message, "error");
+    }
+}
+
+async function acceptFriendRequest(requestId, senderUsername) {
+    try {
+        await query(`/rest/v1/friend_requests?id=eq.${requestId}`, { method: 'PATCH', body: JSON.stringify({ status: 'accepted', updated_at: new Date().toISOString() }) });
+        await query('/rest/v1/friends', { method: 'POST', body: JSON.stringify({ user1_username: currentUser, user2_username: senderUsername, created_at: new Date().toISOString() }) });
+        showNotificationToast(`✅ Ahora eres amigo de ${senderUsername}`);
+        await createNotification(senderUsername, currentUser, 'friend_accepted', `${currentUser} ha aceptado tu solicitud de amistad`);
+        loadFriendsData();
+    } catch (error) {
+        console.error("Error aceptando solicitud:", error);
+        showNotificationToast("Error al aceptar solicitud: " + error.message, "error");
+    }
+}
+
+async function rejectFriendRequest(requestId) {
+    try {
+        await query(`/rest/v1/friend_requests?id=eq.${requestId}`, { method: 'DELETE' });
+        showNotificationToast("Solicitud rechazada");
+        loadFriendsData();
+    } catch (error) {
+        console.error("Error rechazando solicitud:", error);
+        showNotificationToast("Error al rechazar solicitud: " + error.message, "error");
+    }
+}
+
+async function searchUsers() {
+    const searchTerm = document.getElementById("searchUsersInput").value.trim();
+    if (!searchTerm) { document.getElementById("searchResults").innerHTML = ""; return; }
+    try {
+        const users = await query(`/rest/v1/users?username=ilike.%25${encodeURIComponent(searchTerm)}%25&select=username,avatar`);
+        const friends = await query(`/rest/v1/friends?or=(user1_username.eq.${encodeURIComponent(currentUser)},user2_username.eq.${encodeURIComponent(currentUser)})`);
+        const friendRequests = await query(`/rest/v1/friend_requests?or=(sender_username.eq.${encodeURIComponent(currentUser)},receiver_username.eq.${encodeURIComponent(currentUser)})&status=eq.pending`);
+        let html = "";
+        users.forEach(user => {
+            if (user.username === currentUser) return;
+            const isFriend = friends.some(f => (f.user1_username === user.username && f.user2_username === currentUser) || (f.user1_username === currentUser && f.user2_username === user.username));
+            const hasPendingRequest = friendRequests.some(r => (r.sender_username === user.username && r.receiver_username === currentUser) || (r.sender_username === currentUser && r.receiver_username === user.username));
+            html += `
+                <div class="friend-item">
+                    <div class="friend-info">
+                        <img src="${user.avatar}" alt="${user.username}">
+                        <span style="font-weight: 600;">${user.username}</span>
+                    </div>
+                    <div>
+                        ${isFriend ? `<button class="btn-success" onclick="openChat('${user.username}')"><i class="fas fa-comment"></i> Chat</button>` :
+                        hasPendingRequest ? `<button class="btn-secondary" disabled><i class="fas fa-clock"></i> Pendiente</button>` :
+                        `<button class="btn-primary" onclick="sendFriendRequest('${user.username}')"><i class="fas fa-user-plus"></i> Agregar</button>`}
+                    </div>
+                </div>
+            `;
+        });
+        document.getElementById("searchResults").innerHTML = html || "<p style='text-align:center; padding:20px;'>No se encontraron usuarios</p>";
+    } catch (error) {
+        console.error("Error buscando usuarios:", error);
+        showNotificationToast("Error al buscar usuarios: " + error.message, "error");
+    }
+}
+
+async function loadFriendsData() {
+    if (!currentUser) return;
+    try {
+        const requests = await query(`/rest/v1/friend_requests?receiver_username=eq.${encodeURIComponent(currentUser)}&status=eq.pending`);
+        const requestsContainer = document.getElementById("requestsList");
+        if (requests && requests.length > 0) {
+            let html = "";
+            for (const req of requests) {
+                const senderData = await query(`/rest/v1/users?username=eq.${encodeURIComponent(req.sender_username)}&select=avatar`);
+                const avatar = senderData && senderData.length > 0 ? senderData[0].avatar : `https://ui-avatars.com/api/?name=${encodeURIComponent(req.sender_username)}&background=3b82f6&color=fff`;
+                html += `
+                    <div class="request-item">
+                        <div class="friend-info">
+                            <img src="${avatar}" alt="${req.sender_username}">
+                            <span style="font-weight: 600;">${req.sender_username}</span>
+                            <span style="font-size: 12px; color: var(--text-secondary);"><i class="fas fa-clock"></i> ${new Date(req.created_at).toLocaleString()}</span>
+                        </div>
+                        <div style="display: flex; gap: 10px;">
+                            <button class="btn-success" onclick="acceptFriendRequest(${req.id}, '${req.sender_username}')"><i class="fas fa-check"></i> Aceptar</button>
+                            <button class="btn-danger" onclick="rejectFriendRequest(${req.id})"><i class="fas fa-times"></i></button>
+                        </div>
+                    </div>
+                `;
+            }
+            requestsContainer.innerHTML = html;
+        } else {
+            requestsContainer.innerHTML = "<p style='text-align:center; padding:20px; color: var(--text-secondary);'>No tienes solicitudes pendientes</p>";
+        }
+        const friends = await query(`/rest/v1/friends?or=(user1_username.eq.${encodeURIComponent(currentUser)},user2_username.eq.${encodeURIComponent(currentUser)})`);
+        const friendsList = document.getElementById("friendsList");
+        if (friends && friends.length > 0) {
+            let html = "";
+            for (const friend of friends) {
+                const friendUsername = friend.user1_username === currentUser ? friend.user2_username : friend.user1_username;
+                const friendData = await query(`/rest/v1/users?username=eq.${encodeURIComponent(friendUsername)}&select=avatar`);
+                const avatar = friendData && friendData.length > 0 ? friendData[0].avatar : `https://ui-avatars.com/api/?name=${encodeURIComponent(friendUsername)}&background=3b82f6&color=fff`;
+                html += `
+                    <div class="friend-item">
+                        <div class="friend-info">
+                            <img src="${avatar}" alt="${friendUsername}">
+                            <span style="font-weight: 600;">${friendUsername}</span>
+                        </div>
+                        <div style="display: flex; gap: 10px;">
+                            <button class="btn-primary" onclick="openChat('${friendUsername}')"><i class="fas fa-comment"></i> Chat</button>
+                        </div>
+                    </div>
+                `;
+            }
+            friendsList.innerHTML = html;
+        } else {
+            friendsList.innerHTML = "<p style='text-align:center; padding:20px; color: var(--text-secondary);'>Aún no tienes amigos. ¡Envía solicitudes!</p>";
+        }
+    } catch (error) {
+        console.error("Error cargando amigos:", error);
+    }
+}
+
+// ===== CHAT PRIVADO =====
+function openChat(username) {
+    if (!currentUser) { showNotificationToast("Debes iniciar sesión", "error"); return; }
+    showChat(username);
+}
+
+async function loadChatMessages() {
+    if (!currentUser || !currentChatPartner) return;
+    try {
+        const messages = await query(`/rest/v1/private_messages?or=(sender_username.eq.${encodeURIComponent(currentUser)},receiver_username.eq.${encodeURIComponent(currentUser)})&order=created_at.asc`);
+        const chatMessages = messages.filter(m => (m.sender_username === currentUser && m.receiver_username === currentChatPartner) || (m.sender_username === currentChatPartner && m.receiver_username === currentUser));
+        const container = document.getElementById("chatMessages");
+        if (chatMessages.length === 0) {
+            container.innerHTML = "<div style='text-align:center; padding:40px; color: var(--text-secondary);'><i class='fas fa-comment-dots fa-3x' style='margin-bottom: 20px;'></i><p>No hay mensajes aún. ¡Envía el primero!</p></div>";
+            return;
+        }
+        let html = "";
+        for (const msg of chatMessages) {
+            const isSent = msg.sender_username === currentUser;
+            const time = new Date(msg.created_at).toLocaleTimeString();
+            html += `
+                <div class="chat-message ${isSent ? 'sent' : 'received'}">
+                    <div class="chat-bubble">${msg.content}<div class="chat-time">${time}</div></div>
+                </div>
+            `;
+        }
+        container.innerHTML = html;
+        container.scrollTop = container.scrollHeight;
+        const unreadMessages = chatMessages.filter(m => m.receiver_username === currentUser && !m.read);
+        for (const msg of unreadMessages) {
+            await query(`/rest/v1/private_messages?id=eq.${msg.id}`, { method: 'PATCH', body: JSON.stringify({ read: true }) });
+        }
+    } catch (error) {
+        console.error("Error cargando mensajes:", error);
+    }
+}
+
+async function sendMessage() {
+    if (!currentUser || !currentChatPartner) { showNotificationToast("No hay un chat abierto", "error"); return; }
+    const input = document.getElementById("chatInput");
+    const content = input.value.trim();
+    if (!content) { showNotificationToast("Escribe un mensaje", "error"); return; }
+    try {
+        await query('/rest/v1/private_messages', { method: 'POST', body: JSON.stringify({ sender_username: currentUser, receiver_username: currentChatPartner, content: content, read: false, created_at: new Date().toISOString() }) });
+        input.value = "";
+        loadChatMessages();
+        await createNotification(currentChatPartner, currentUser, 'message', `${currentUser} te ha enviado un mensaje: "${content.substring(0, 30)}${content.length > 30 ? '...' : ''}"`);
+        if (currentChatPartner === currentUser) {
+            showChatNotification(content, currentUser);
+        }
+    } catch (error) {
+        console.error("Error enviando mensaje:", error);
+        showNotificationToast("Error al enviar mensaje: " + error.message, "error");
+    }
+}
+
+// ===== VERIFICAR SESIÓN =====
+async function checkSession() {
+    const session = loadSession();
+    if (session) {
+        currentUser = session.currentUser;
+        isAdmin = session.isAdmin;
+        try {
+            const users = await query(`/rest/v1/users?username=eq.${encodeURIComponent(currentUser)}&select=*`);
+            if (users && users.length > 0) {
+                const user = users[0];
+                const blocked = await query(`/rest/v1/blocked_users?username=eq.${encodeURIComponent(currentUser)}&select=*`);
+                if (blocked && blocked.length > 0) {
+                    clearSession();
+                    showNotificationToast("❌ Tu cuenta ha sido bloqueada", "error");
+                    return;
+                }
+                document.getElementById("login").style.display = "none";
+                document.getElementById("app").style.display = "block";
+                document.getElementById("profileMiniName").innerText = currentUser;
+                document.getElementById("profileMiniAvatar").src = user.avatar;
+                document.getElementById("profileAvatar").src = user.avatar;
+                document.getElementById("profileName").innerText = currentUser;
+                document.getElementById("profileEmail").innerText = user.email;
+                if (isAdmin) {
+                    document.getElementById("adminMiniBadge").style.display = "inline";
+                    document.getElementById("adminPanel").style.display = "block";
+                    loadAdminPanel();
+                }
+                showNotificationToast(`🎉 ¡Bienvenido de nuevo ${currentUser}!`);
+                await loadPosts();
+                loadNotifications();
+                loadUserPoints();
+                if (notificationInterval) clearInterval(notificationInterval);
+                notificationInterval = setInterval(loadNotifications, 15000);
+                showFeed();
+            } else {
+                clearSession();
+            }
+        } catch (error) {
+            console.error("Error verificando sesión:", error);
+            clearSession();
+        }
+    }
+}
+
+// ===== EVENTOS =====
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && document.getElementById("chatInput") === document.activeElement) {
+        sendMessage();
+    }
+});
+
+// ===== INICIAR =====
 window.onload = function() {
     checkSession();
 };
-
-// ===== ESTILOS ADICIONALES =====
-// Agregar estilos para el admin-badge, level-badge, etc.
-const styleAdd = document.createElement('style');
-styleAdd.textContent = `
-    .admin-badge { background: var(--danger); color: white; padding: 2px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
-    .level-badge { background: var(--accent-gradient); color: white; padding: 4px 14px; border-radius: 30px; font-size: 13px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; }
-    .btn-primary { background: var(--accent-gradient); color: white; padding: 12px 24px; border: none; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 15px; transition: all 0.3s; }
-    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px -10px var(--accent-primary); }
-    .btn-secondary { background: var(--bg-primary); color: var(--text-primary); padding: 12px 24px; border: none; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 15px; transition: all 0.3s; }
-    .btn-secondary:hover { background: var(--border-color); }
-    .btn-danger { background: var(--danger); color: white; padding: 10px 20px; border: none; border-radius: 12px; cursor: pointer; font-weight: 500; transition: all 0.3s; }
-    .btn-danger:hover { background: #dc2626; }
-    .btn-warning { background: var(--warning); color: white; padding: 10px 20px; border: none; border-radius: 12px; cursor: pointer; font-weight: 500; transition: all 0.3s; }
-    .btn-warning:hover { background: #d97706; }
-    .btn-success { background: var(--success); color: white; padding: 10px 20px; border: none; border-radius: 12px; cursor: pointer; font-weight: 500; transition: all 0.3s; }
-    .btn-success:hover { background: #059669; }
-    .btn-outline { background: transparent; color: var(--accent-primary); padding: 10px 20px; border: 2px solid var(--accent-primary); border-radius: 12px; cursor: pointer; font-weight: 500; transition: all 0.3s; }
-    .btn-outline:hover { background: var(--accent-primary); color: white; }
-    .input-group { position: relative; margin-bottom: 15px; }
-    .input-group i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); }
-    .input-group input, .input-group textarea { width: 100%; padding: 12px 15px 12px 45px; border: 2px solid var(--border-color); border-radius: 12px; font-size: 15px; background: var(--bg-secondary); color: var(--text-primary); transition: all 0.3s; }
-    .input-group input:focus, .input-group textarea:focus { border-color: var(--accent-primary); outline: none; box-shadow: 0 0 0 4px rgba(59,130,246,0.1); }
-    .search-box { background: var(--bg-secondary); border-radius: 50px; padding: 4px 4px 4px 20px; display: flex; align-items: center; border: 2px solid var(--border-color); margin-bottom: 20px; }
-    .search-box input { flex: 1; border: none; padding: 12px 0; background: transparent; color: var(--text-primary); font-size: 15px; }
-    .search-box input:focus { outline: none; }
-    .search-box button { background: var(--accent-gradient); color: white; border: none; padding: 12px 25px; border-radius: 50px; cursor: pointer; font-weight: 600; transition: all 0.3s; }
-    .search-box button:hover { transform: scale(1.05); }
-    .welcome-card { background: var(--accent-gradient); color: white; padding: 30px; border-radius: 25px; margin-bottom: 30px; text-align: center; position: relative; overflow: hidden; }
-    .welcome-card h3 { font-size: 26px; margin-bottom: 10px; }
-    .welcome-card p { font-size: 16px; opacity: 0.9; }
-    .admin-panel { background: var(--bg-secondary); border-radius: 20px; padding: 25px; margin-bottom: 25px; border-left: 5px solid var(--danger); }
-    .admin-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin: 20px 0; }
-    .stat-card { background: var(--bg-primary); padding: 20px; border-radius: 15px; text-align: center; }
-    .stat-number { font-size: 32px; font-weight: 800; color: var(--accent-primary); }
-    .professors-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; margin: 20px 0; }
-    .professor-card { background: var(--bg-secondary); border-radius: 20px; padding: 20px; box-shadow: var(--card-shadow); cursor: pointer; transition: all 0.3s; border: 1px solid var(--border-color); }
-    .professor-card:hover { transform: translateY(-5px); box-shadow: 0 10px 40px -15px var(--accent-primary); }
-    .professor-name { font-size: 18px; font-weight: 700; margin: 10px 0; }
-    .professor-rating { display: flex; align-items: center; gap: 10px; margin: 10px 0; }
-    .rating-number { font-size: 28px; font-weight: 800; color: var(--accent-primary); }
-    .rating-stars { display: flex; gap: 8px; margin: 10px 0; }
-    .star { font-size: 30px; cursor: pointer; color: #cbd5e1; transition: all 0.2s; }
-    .star:hover { transform: scale(1.2); color: #fbbf24; }
-    .star.active { color: #fbbf24; }
-    .star-small { font-size: 16px; color: #fbbf24; }
-    .upload-area { background: var(--bg-primary); border: 3px dashed var(--accent-primary); border-radius: 20px; padding: 40px; text-align: center; cursor: pointer; margin: 15px 0; transition: all 0.3s; }
-    .upload-area:hover { background: rgba(59,130,246,0.05); transform: scale(1.02); }
-    .upload-area i { font-size: 40px; color: var(--accent-primary); margin-bottom: 10px; }
-    .comments-toggle { cursor: pointer; display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: 30px; background: var(--bg-primary); margin: 10px 0; transition: all 0.3s; font-weight: 500; }
-    .comments-toggle:hover { background: var(--accent-primary); color: white; }
-    .comments-section { margin-top: 15px; border-radius: 15px; padding: 15px; display: none; background: var(--bg-primary); }
-    .comments-section.show { display: block; }
-    .comment { background: var(--bg-secondary); border-radius: 12px; padding: 15px; margin-bottom: 10px; border-left: 4px solid var(--accent-primary); }
-    .friend-item, .request-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; background: var(--bg-primary); border-radius: 12px; margin-bottom: 8px; }
-    .friend-item .friend-info, .request-item .friend-info { display: flex; align-items: center; gap: 12px; }
-    .friend-item .friend-info img, .request-item .friend-info img { width: 40px; height: 40px; border-radius: 50%; }
-    .request-item { border-left: 4px solid var(--warning); }
-    .chat-message { margin-bottom: 12px; display: flex; flex-direction: column; }
-    .chat-message.sent { align-items: flex-end; }
-    .chat-message.received { align-items: flex-start; }
-    .chat-bubble { max-width: 75%; padding: 10px 16px; border-radius: 16px; word-wrap: break-word; }
-    .chat-message.sent .chat-bubble { background: var(--accent-gradient); color: white; border-bottom-right-radius: 4px; }
-    .chat-message.received .chat-bubble { background: var(--bg-primary); color: var(--text-primary); border-bottom-left-radius: 4px; }
-    .chat-time { font-size: 10px; color: var(--text-secondary); margin-top: 3px; opacity: 0.8; }
-    .vote-buttons { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-    .vote-btn { background: none; border: none; cursor: pointer; color: var(--text-secondary); font-size: 13px; padding: 4px 10px; border-radius: 6px; transition: all 0.2s; }
-    .vote-btn:hover { background: var(--bg-primary); color: var(--accent-primary); }
-    .notification-toast { position: fixed; bottom: 80px; right: 20px; padding: 14px 20px; border-radius: 14px; background: var(--bg-secondary); box-shadow: 0 10px 40px rgba(0,0,0,0.2); z-index: 99999; border-left: 4px solid var(--success); max-width: 350px; backdrop-filter: blur(10px); border: 1px solid var(--border-color); }
-    .notification-toast.error { border-left-color: var(--danger); }
-    .notification-toast.warning { border-left-color: var(--warning); }
-    .switch { position: relative; display: inline-block; width: 46px; height: 26px; }
-    .switch input { opacity: 0; width: 0; height: 0; }
-    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--border-color); transition: .3s; border-radius: 30px; }
-    .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
-    input:checked + .slider { background-color: var(--accent-primary); }
-    input:checked + .slider:before { transform: translateX(20px); }
-    .tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
-    .tab-btn { padding: 8px 16px; border: none; border-radius: 10px; background: var(--bg-primary); color: var(--text-secondary); cursor: pointer; font-weight: 600; transition: all 0.3s; }
-    .tab-btn:hover { background: var(--border-color); }
-    .tab-btn.active { background: var(--accent-primary); color: white; }
-    .ranking-table { width: 100%; border-collapse: collapse; background: var(--bg-primary); border-radius: 12px; overflow: hidden; }
-    .ranking-table th { background: var(--accent-primary); color: white; padding: 10px 15px; text-align: left; font-weight: 600; }
-    .ranking-table td { padding: 10px 15px; border-bottom: 1px solid var(--border-color); }
-    .ranking-table tr:hover { background: var(--bg-secondary); }
-    .rank-1 { color: var(--gold, #f59e0b); font-weight: 900; }
-    .rank-2 { color: var(--silver, #94a3b8); font-weight: 700; }
-    .rank-3 { color: var(--bronze, #d97706); font-weight: 700; }
-    .badge-item { display: inline-flex; align-items: center; gap: 4px; padding: 3px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; margin: 2px; }
-    .badge-gold { background: #f59e0b; color: white; }
-    .badge-silver { background: #94a3b8; color: white; }
-    .badge-bronze { background: #d97706; color: white; }
-    .badge-legendary { background: linear-gradient(135deg, #f59e0b, #ef4444); color: white; }
-    .encuesta-option { padding: 10px 15px; background: var(--bg-primary); border-radius: 10px; margin-bottom: 8px; cursor: pointer; transition: all 0.3s; border: 2px solid transparent; }
-    .encuesta-option:hover { border-color: var(--accent-primary); }
-    .encuesta-option.selected { border-color: var(--accent-primary); background: var(--bg-secondary); }
-    .encuesta-option .vote-bar { height: 6px; background: var(--accent-gradient); border-radius: 10px; margin-top: 6px; transition: width 0.5s ease; }
-    .logo-container { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 25px; }
-    .logo-icon { width: 60px; height: 60px; background: var(--accent-gradient); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 28px; color: white; animation: float 3s ease-in-out infinite; transform: rotate(-5deg); }
-    @keyframes float { 0%,100% { transform: translateY(0) rotate(-5deg); } 50% { transform: translateY(-8px) rotate(-5deg); } }
-    .logo-text { font-size: 34px; font-weight: 900; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    #notificationsPanel::-webkit-scrollbar { width: 4px; }
-    #notificationsPanel::-webkit-scrollbar-thumb { background: var(--accent-primary); border-radius: 10px; }
-`;
-document.head.appendChild(styleAdd);
 </script>
 </body>
 </html>
