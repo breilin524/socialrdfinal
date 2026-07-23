@@ -136,6 +136,7 @@
     box-shadow: var(--card-shadow);
     flex-wrap: wrap;
     gap: 15px;
+    position: relative;
   }
   
   .nav-buttons {
@@ -645,7 +646,7 @@
     background: white;
     box-shadow: 0 20px 40px rgba(0,0,0,0.2);
     animation: slideIn 0.3s ease;
-    z-index: 9999;
+    z-index: 99999;
     border-left: 4px solid var(--success);
     max-width: 350px;
   }
@@ -694,6 +695,60 @@
   input:checked + .slider { background-color: var(--accent-primary); }
   input:checked + .slider:before { transform: translateX(30px); }
   
+  /* ===== NOTIFICACIONES PANEL ===== */
+  #notificationsPanel {
+    position: fixed !important;
+    top: 80px !important;
+    right: 20px !important;
+    z-index: 9999 !important;
+    animation: slideDown 0.3s ease;
+    background: var(--bg-secondary);
+    border-radius: 20px;
+    padding: 20px;
+    min-width: 350px;
+    max-width: 400px;
+    max-height: 500px;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    border: 1px solid var(--border-color);
+  }
+  
+  #notificationsPanel::-webkit-scrollbar { width: 6px; }
+  #notificationsPanel::-webkit-scrollbar-thumb { background: var(--accent-primary); border-radius: 10px; }
+  
+  .notification-item:hover {
+    background: var(--bg-primary) !important;
+    transform: translateX(5px);
+  }
+  
+  .notification-bell {
+    position: relative;
+    cursor: pointer;
+    font-size: 24px;
+    color: var(--text-primary);
+    transition: all 0.3s;
+  }
+  
+  .notification-bell:hover { transform: scale(1.1); }
+  
+  .notification-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: var(--danger);
+    color: white;
+    border-radius: 50%;
+    padding: 2px 8px;
+    font-size: 12px;
+    font-weight: bold;
+    display: none;
+  }
+  
+  .notif-icon {
+    font-size: 20px;
+    margin-top: 2px;
+  }
+  
   @media (max-width: 768px) {
     .app-header { flex-direction: column; }
     .nav-buttons { width: 100%; justify-content: center; }
@@ -701,6 +756,14 @@
     .search-box { flex-direction: column; background: transparent; padding: 0; }
     .search-box button { width: 100%; margin-top: 10px; }
     .chat-bubble { max-width: 90%; }
+    #notificationsPanel {
+      right: 10px !important;
+      left: 10px !important;
+      min-width: unset !important;
+      width: calc(100% - 20px) !important;
+      max-width: none !important;
+      top: 70px !important;
+    }
   }
 </style>
 </head>
@@ -806,16 +869,32 @@
       </div>
     </div>
     
-    <div class="header-right">
+    <div class="header-right" style="display: flex; align-items: center; gap: 15px;">
+      <!-- CAMPANA DE NOTIFICACIONES -->
+      <div class="notification-bell" onclick="toggleNotifications()" title="Notificaciones">
+        <i class="fas fa-bell"></i>
+        <span id="notificationBadge" class="notification-badge">0</span>
+      </div>
+      
       <div class="profile-mini" onclick="showProfile()">
         <img id="profileMiniAvatar" src="https://ui-avatars.com/api/?name=User&background=3b82f6&color=fff" alt="Avatar">
         <span id="profileMiniName"></span>
         <span id="adminMiniBadge" style="display: none;" class="admin-badge">Admin</span>
       </div>
+      
       <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle">
         <i class="fas fa-moon"></i>
       </button>
     </div>
+  </div>
+  
+  <!-- PANEL DE NOTIFICACIONES -->
+  <div id="notificationsPanel" style="display: none;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+      <h3 style="font-size: 18px;"><i class="fas fa-bell"></i> Notificaciones</h3>
+      <button class="btn-secondary" onclick="markAllNotificationsRead()" style="padding: 5px 15px; font-size: 12px;">Marcar todas leídas</button>
+    </div>
+    <div id="notificationsList"></div>
   </div>
   
   <!-- PANEL DE ADMIN -->
@@ -1069,6 +1148,8 @@ let allPosts = [];
 let allProfessors = [];
 let chatInterval = null;
 let currentChatPartner = null;
+let notifications = [];
+let notificationInterval = null;
 
 // ===== FUNCIONES DE COOKIES (SOLUCIÓN LOCALSTORAGE) =====
 function setCookie(name, value, days = 7) {
@@ -1152,6 +1233,7 @@ function clearSession() {
     currentUser = null;
     isAdmin = false;
     if (chatInterval) { clearInterval(chatInterval); chatInterval = null; }
+    if (notificationInterval) { clearInterval(notificationInterval); notificationInterval = null; }
 }
 
 // ===== NOTIFICACIONES =====
@@ -1160,7 +1242,7 @@ function showNotification(message, type = "success") {
     notification.style.display = "block";
     notification.className = `notification ${type}`;
     notification.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i> ${message}`;
-    setTimeout(() => { notification.style.display = "none"; }, 3000);
+    setTimeout(() => { notification.style.display = "none"; }, 4000);
 }
 
 // ===== CONSULTAS SUPABASE =====
@@ -1295,6 +1377,150 @@ function setRating(rating) {
     });
 }
 
+// ===== NOTIFICACIONES =====
+async function loadNotifications() {
+    if (!currentUser) return;
+    try {
+        const data = await query(`/rest/v1/notifications?username=eq.${encodeURIComponent(currentUser)}&order=created_at.desc&limit=50`);
+        notifications = data || [];
+        renderNotifications();
+        updateBadge();
+    } catch (error) {
+        console.error('Error cargando notificaciones:', error);
+    }
+}
+
+function renderNotifications() {
+    const container = document.getElementById('notificationsList');
+    if (!container) return;
+    
+    if (notifications.length === 0) {
+        container.innerHTML = '<div style="text-align:center; padding:30px; color: var(--text-secondary);"><i class="fas fa-inbox fa-2x" style="margin-bottom:10px;"></i><p>No hay notificaciones</p></div>';
+        return;
+    }
+    
+    let html = '';
+    for (const notif of notifications) {
+        const icon = getNotificationIcon(notif.type);
+        const timeAgo = getTimeAgo(notif.created_at);
+        const isUnread = !notif.read;
+        
+        html += `
+            <div class="notification-item" style="padding: 12px 15px; margin-bottom: 8px; border-radius: 12px; background: ${isUnread ? 'var(--bg-primary)' : 'transparent'}; border-left: 3px solid ${isUnread ? 'var(--accent-primary)' : 'transparent'}; cursor: pointer; transition: all 0.2s;" onclick="markNotificationRead(${notif.id})">
+                <div style="display: flex; align-items: start; gap: 10px;">
+                    <div class="notif-icon">${icon}</div>
+                    <div style="flex: 1;">
+                        <div style="font-size: 14px; ${isUnread ? 'font-weight: 600;' : ''}">${notif.message}</div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 5px;">
+                            <span style="font-size: 12px; color: var(--text-secondary);">${timeAgo}</span>
+                            ${notif.link ? `<a href="#" onclick="event.preventDefault(); window.location.href='${notif.link}'" style="font-size: 12px; color: var(--accent-primary); text-decoration: none;">Ver</a>` : ''}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+    container.innerHTML = html;
+}
+
+function getNotificationIcon(type) {
+    const icons = {
+        'friend_request': '🤝',
+        'friend_accepted': '✅',
+        'new_post': '📝',
+        'new_comment': '💬',
+        'new_vote': '👍',
+        'mention': '@',
+        'message': '💌'
+    };
+    return icons[type] || '📢';
+}
+
+function getTimeAgo(dateString) {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diff = Math.floor((now - date) / 1000);
+    
+    if (diff < 60) return 'Hace ' + diff + 's';
+    if (diff < 3600) return 'Hace ' + Math.floor(diff / 60) + 'm';
+    if (diff < 86400) return 'Hace ' + Math.floor(diff / 3600) + 'h';
+    if (diff < 604800) return 'Hace ' + Math.floor(diff / 86400) + 'd';
+    return date.toLocaleDateString();
+}
+
+function updateBadge() {
+    const badge = document.getElementById('notificationBadge');
+    if (!badge) return;
+    
+    const unread = notifications.filter(n => !n.read).length;
+    if (unread > 0) {
+        badge.style.display = 'block';
+        badge.textContent = unread > 99 ? '99+' : unread;
+    } else {
+        badge.style.display = 'none';
+    }
+}
+
+function toggleNotifications() {
+    const panel = document.getElementById('notificationsPanel');
+    if (!panel) return;
+    
+    if (panel.style.display === 'none') {
+        panel.style.display = 'block';
+        loadNotifications();
+    } else {
+        panel.style.display = 'none';
+    }
+}
+
+async function markNotificationRead(notifId) {
+    try {
+        await query(`/rest/v1/notifications?id=eq.${notifId}`, {
+            method: 'PATCH',
+            body: JSON.stringify({ read: true })
+        });
+        await loadNotifications();
+    } catch (error) {
+        console.error('Error marcando notificación:', error);
+    }
+}
+
+async function markAllNotificationsRead() {
+    try {
+        await query(`/rest/v1/notifications?username=eq.${encodeURIComponent(currentUser)}&read=eq.false`, {
+            method: 'PATCH',
+            body: JSON.stringify({ read: true })
+        });
+        await loadNotifications();
+        updateBadge();
+    } catch (error) {
+        console.error('Error marcando todas:', error);
+    }
+}
+
+async function createNotification(username, sender, type, message, link = null) {
+    try {
+        await query('/rest/v1/notifications', {
+            method: 'POST',
+            body: JSON.stringify({
+                username: username,
+                sender_username: sender || null,
+                type: type,
+                message: message,
+                link: link,
+                read: false,
+                created_at: new Date().toISOString()
+            })
+        });
+        // Si el usuario actual es el que recibe, recargar notificaciones
+        if (username === currentUser) {
+            loadNotifications();
+        }
+    } catch (error) {
+        console.error('Error creando notificación:', error);
+    }
+}
+
 // ===== LOGIN =====
 async function loginFunction() {
     const username = document.getElementById("loginUser").value.trim();
@@ -1330,6 +1556,7 @@ async function loginFunction() {
                 }
                 showNotification(`🎉 ¡Bienvenido ${currentUser}!`);
                 await loadPosts();
+                loadNotifications();
                 showFeed();
             } else {
                 showNotification("❌ Contraseña incorrecta", "error");
@@ -1397,6 +1624,7 @@ function logout() {
     isAdmin = false;
     clearSession();
     if (chatInterval) { clearInterval(chatInterval); chatInterval = null; }
+    if (notificationInterval) { clearInterval(notificationInterval); notificationInterval = null; }
     document.getElementById("app").style.display = "none";
     document.getElementById("login").style.display = "block";
     showNotification("👋 ¡Hasta pronto!");
@@ -1643,6 +1871,8 @@ async function savePost(postData) {
         newPostRating = 0;
         document.querySelectorAll("#newPostStars .star").forEach(s => s.classList.remove("active"));
         setTimeout(async () => { await loadPosts(); }, 500);
+        // Notificación para amigos (el trigger de DB lo hace, pero también podemos notificar manualmente)
+        showNotification('📢 Publicación creada!');
     } catch (error) {
         console.error("Error publicando:", error);
         showNotification("Error al publicar: " + error.message, "error");
@@ -1954,6 +2184,8 @@ async function sendFriendRequest(username) {
         if (requestExists) { showNotification("Ya hay una solicitud pendiente", "warning"); return; }
         await query('/rest/v1/friend_requests', { method: 'POST', body: JSON.stringify({ sender_username: currentUser, receiver_username: username, status: 'pending', created_at: new Date().toISOString() }) });
         showNotification(`✅ Solicitud enviada a ${username}`);
+        // Notificar al receptor
+        await createNotification(username, currentUser, 'friend_request', `${currentUser} te ha enviado una solicitud de amistad`);
         loadFriendsData();
     } catch (error) {
         console.error("Error enviando solicitud:", error);
@@ -1966,6 +2198,8 @@ async function acceptFriendRequest(requestId, senderUsername) {
         await query(`/rest/v1/friend_requests?id=eq.${requestId}`, { method: 'PATCH', body: JSON.stringify({ status: 'accepted', updated_at: new Date().toISOString() }) });
         await query('/rest/v1/friends', { method: 'POST', body: JSON.stringify({ user1_username: currentUser, user2_username: senderUsername, created_at: new Date().toISOString() }) });
         showNotification(`✅ Ahora eres amigo de ${senderUsername}`);
+        // Notificar al emisor
+        await createNotification(senderUsername, currentUser, 'friend_accepted', `${currentUser} ha aceptado tu solicitud de amistad`);
         loadFriendsData();
     } catch (error) {
         console.error("Error aceptando solicitud:", error);
@@ -2120,6 +2354,8 @@ async function sendMessage() {
         await query('/rest/v1/private_messages', { method: 'POST', body: JSON.stringify({ sender_username: currentUser, receiver_username: currentChatPartner, content: content, read: false, created_at: new Date().toISOString() }) });
         input.value = "";
         loadChatMessages();
+        // Notificar al receptor
+        await createNotification(currentChatPartner, currentUser, 'message', `${currentUser} te ha enviado un mensaje: "${content.substring(0, 30)}${content.length > 30 ? '...' : ''}"`);
     } catch (error) {
         console.error("Error enviando mensaje:", error);
         showNotification("Error al enviar mensaje: " + error.message, "error");
@@ -2156,7 +2392,11 @@ async function checkSession() {
                 }
                 showNotification(`🎉 ¡Bienvenido de nuevo ${currentUser}!`);
                 await loadPosts();
+                loadNotifications();
                 showFeed();
+                // Iniciar intervalo para recargar notificaciones
+                if (notificationInterval) clearInterval(notificationInterval);
+                notificationInterval = setInterval(loadNotifications, 10000);
             } else {
                 clearSession();
             }
@@ -2171,6 +2411,17 @@ async function checkSession() {
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Enter' && document.getElementById("chatInput") === document.activeElement) {
         sendMessage();
+    }
+});
+
+// Cerrar panel de notificaciones al hacer clic fuera
+document.addEventListener('click', function(e) {
+    const panel = document.getElementById('notificationsPanel');
+    const bell = document.querySelector('.notification-bell');
+    if (panel && panel.style.display === 'block') {
+        if (!panel.contains(e.target) && !bell.contains(e.target)) {
+            panel.style.display = 'none';
+        }
     }
 });
 
