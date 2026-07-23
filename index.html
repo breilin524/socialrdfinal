@@ -3751,6 +3751,114 @@ document.addEventListener('keydown', function(e) {
 window.onload = function() {
     checkSession();
 };
+// ===== CALENDARIO - CREAR EVENTO (VERSIÓN MEJORADA) =====
+function showCrearEvento() {
+    const title = prompt('📅 Título del evento:');
+    if (!title) return;
+    
+    const description = prompt('📝 Descripción (opcional):');
+    
+    const eventTypeOptions = 'examen, entrega, clase, evento, otro';
+    const eventType = prompt(`📌 Tipo (${eventTypeOptions}):`) || 'otro';
+    
+    const subject = prompt('📚 Materia (opcional):');
+    const institution = prompt('🏫 Institución (opcional):');
+    
+    // Pedir fecha en formato ISO
+    const dateStr = prompt('📆 Fecha (formato: AAAA-MM-DD, ej: 2026-08-20):');
+    if (!dateStr) {
+        showNotificationToast('❌ La fecha es obligatoria', 'error');
+        return;
+    }
+    
+    // Pedir hora
+    const timeStr = prompt('🕐 Hora (formato: HH:MM, ej: 14:30):');
+    if (!timeStr) {
+        showNotificationToast('❌ La hora es obligatoria', 'error');
+        return;
+    }
+    
+    // Validar formato
+    const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+    const timeRegex = /^\d{2}:\d{2}$/;
+    
+    if (!dateRegex.test(dateStr)) {
+        showNotificationToast('❌ Formato de fecha inválido. Usa AAAA-MM-DD', 'error');
+        return;
+    }
+    
+    if (!timeRegex.test(timeStr)) {
+        showNotificationToast('❌ Formato de hora inválido. Usa HH:MM', 'error');
+        return;
+    }
+    
+    // Validar que la fecha es real
+    const parts = dateStr.split('-');
+    const year = parseInt(parts[0]);
+    const month = parseInt(parts[1]) - 1;
+    const day = parseInt(parts[2]);
+    const timeParts = timeStr.split(':');
+    const hours = parseInt(timeParts[0]);
+    const minutes = parseInt(timeParts[1]);
+    
+    const eventDate = new Date(year, month, day, hours, minutes);
+    
+    if (isNaN(eventDate.getTime())) {
+        showNotificationToast('❌ Fecha inválida', 'error');
+        return;
+    }
+    
+    // Mostrar resumen antes de crear
+    const confirmMsg = `📅 Resumen del evento:
+    
+📌 Título: ${title}
+📝 Descripción: ${description || 'Sin descripción'}
+📚 Materia: ${subject || 'No especificada'}
+🏫 Institución: ${institution || 'No especificada'}
+📆 Fecha: ${eventDate.toLocaleDateString()}
+🕐 Hora: ${eventDate.toLocaleTimeString()}
+📌 Tipo: ${eventType}
+
+¿Crear este evento?`;
+    
+    if (!confirm(confirmMsg)) return;
+    
+    createEvento(title, description, eventType, subject, institution, eventDate);
+}
+
+async function createEvento(title, description, eventType, subject, institution, eventDate) {
+    try {
+        console.log('📅 Creando evento:', {
+            title,
+            description,
+            eventType,
+            subject,
+            institution,
+            eventDate: eventDate.toISOString()
+        });
+        
+        await query('/rest/v1/calendario', {
+            method: 'POST',
+            body: JSON.stringify({
+                username: currentUser,
+                title: title,
+                description: description || '',
+                event_type: eventType,
+                subject: subject || null,
+                institution: institution || null,
+                event_date: eventDate.toISOString(),
+                created_at: new Date().toISOString()
+            })
+        });
+        
+        showNotificationToast('✅ Evento agregado al calendario');
+        loadCalendario('todos');
+        
+    } catch (error) {
+        console.error('❌ Error creando evento:', error);
+        showNotificationToast('❌ Error al crear evento: ' + error.message, 'error');
+    }
+}    
 </script>
 </body>
 </html>
