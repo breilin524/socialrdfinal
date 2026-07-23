@@ -186,6 +186,7 @@
     background: var(--bg-primary);
     padding: 5px;
     border-radius: 20px;
+    flex-wrap: wrap;
   }
 
   .nav-btn {
@@ -236,6 +237,16 @@
 
   .admin-badge {
     background: var(--danger);
+    color: white;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-left: 5px;
+  }
+
+  .anonymous-badge {
+    background: var(--warning);
     color: white;
     padding: 3px 10px;
     border-radius: 20px;
@@ -324,6 +335,23 @@
 
   .btn-success:hover {
     background: #059669;
+    transform: translateY(-2px);
+  }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--accent-primary);
+    padding: 10px 20px;
+    border: 2px solid var(--accent-primary);
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s;
+  }
+
+  .btn-outline:hover {
+    background: var(--accent-primary);
+    color: white;
     transform: translateY(-2px);
   }
 
@@ -744,6 +772,46 @@
     border-bottom: 1px solid var(--border-color);
   }
 
+  /* ===== CHAT ===== */
+  .chat-message {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .chat-message.sent {
+    align-items: flex-end;
+  }
+
+  .chat-message.received {
+    align-items: flex-start;
+  }
+
+  .chat-bubble {
+    max-width: 70%;
+    padding: 12px 20px;
+    border-radius: 20px;
+    word-wrap: break-word;
+  }
+
+  .chat-message.sent .chat-bubble {
+    background: var(--accent-gradient);
+    color: white;
+    border-bottom-right-radius: 5px;
+  }
+
+  .chat-message.received .chat-bubble {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    border-bottom-left-radius: 5px;
+  }
+
+  .chat-time {
+    font-size: 11px;
+    color: var(--text-secondary);
+    margin-top: 5px;
+  }
+
   /* ===== NOTIFICACIONES ===== */
   .notification {
     position: fixed;
@@ -818,6 +886,40 @@
     transform: translateX(30px);
   }
 
+  /* ===== FRIENDS LIST ===== */
+  .friend-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background: var(--bg-primary);
+    border-radius: 15px;
+    margin-bottom: 10px;
+  }
+
+  .friend-item .friend-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .friend-item .friend-info img {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+  }
+
+  .request-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background: var(--bg-primary);
+    border-radius: 15px;
+    margin-bottom: 10px;
+    border-left: 4px solid var(--warning);
+  }
+
   /* ===== RESPONSIVE ===== */
   @media (max-width: 768px) {
     .app-header {
@@ -843,6 +945,10 @@
       width: 100%;
       margin-top: 10px;
     }
+
+    .chat-bubble {
+      max-width: 90%;
+    }
   }
 </style>
 </head>
@@ -864,7 +970,7 @@
     <i class="fas fa-graduation-cap fa-3x mb-4"></i>
     <h3>🎓 ¡Bienvenido a Social RD!</h3>
     <p>La primera red social dominicana para calificar profesores<br>
-    <strong>¡Ayuda a mejorar la educación con tu opinión!</strong></p>
+    <strong>¡Conecta, califica y comparte tu experiencia!</strong></p>
   </div>
   
   <div class="input-group">
@@ -937,6 +1043,9 @@
       <div class="nav-buttons">
         <button class="nav-btn active" onclick="window.showFeed()" id="navFeed">
           <i class="fas fa-home"></i> Inicio
+        </button>
+        <button class="nav-btn" onclick="window.showFriends()" id="navFriends">
+          <i class="fas fa-user-friends"></i> Amigos
         </button>
         <button class="nav-btn" onclick="window.showProfile()" id="navProfile">
           <i class="fas fa-user"></i> Perfil
@@ -1046,6 +1155,14 @@
       </div>
     </div>
     
+    <div style="margin: 20px 0; display: flex; align-items: center; gap: 15px;">
+      <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+        <input type="checkbox" id="anonymousPost">
+        <i class="fas fa-user-secret"></i>
+        <span>Publicar de forma anónima</span>
+      </label>
+    </div>
+    
     <button class="btn-primary" onclick="window.upload()" style="width: 100%; padding: 18px; margin-bottom: 40px;">
       <i class="fas fa-paper-plane"></i> Publicar Calificación
     </button>
@@ -1058,6 +1175,59 @@
     </div>
     
     <div id="posts"></div>
+  </div>
+  
+  <!-- SECCIÓN AMIGOS -->
+  <div id="friendsSection" style="display: none;">
+    <div style="background: var(--bg-secondary); border-radius: 30px; padding: 30px;">
+      <h2 style="margin-bottom: 20px;"><i class="fas fa-user-friends"></i> Amigos</h2>
+      
+      <!-- Solicitudes pendientes -->
+      <div id="friendRequests" style="margin-bottom: 30px;">
+        <h3><i class="fas fa-bell"></i> Solicitudes pendientes</h3>
+        <div id="requestsList"></div>
+      </div>
+      
+      <!-- Buscar usuarios -->
+      <div style="margin: 30px 0;">
+        <h3><i class="fas fa-search"></i> Buscar usuarios</h3>
+        <div class="search-box" style="margin-bottom: 20px;">
+          <input type="text" id="searchUsersInput" placeholder="Buscar por nombre de usuario...">
+          <button onclick="window.searchUsers()"><i class="fas fa-search"></i> Buscar</button>
+        </div>
+        <div id="searchResults"></div>
+      </div>
+      
+      <!-- Lista de amigos -->
+      <h3><i class="fas fa-users"></i> Mis Amigos</h3>
+      <div id="friendsList" style="display: grid; gap: 15px;"></div>
+    </div>
+  </div>
+  
+  <!-- SECCIÓN CHAT PRIVADO -->
+  <div id="chatSection" style="display: none;">
+    <div style="background: var(--bg-secondary); border-radius: 30px; padding: 30px; height: 600px; display: flex; flex-direction: column;">
+      <div style="display: flex; align-items: center; justify-content: space-between; padding-bottom: 20px; border-bottom: 2px solid var(--border-color);">
+        <div>
+          <button class="btn-secondary" onclick="window.showFriends()" style="margin-right: 15px; padding: 10px 15px;">
+            <i class="fas fa-arrow-left"></i>
+          </button>
+          <span id="chatPartnerName" style="font-size: 20px; font-weight: 700;"></span>
+        </div>
+        <span id="chatOnlineStatus" style="color: var(--success);"><i class="fas fa-circle"></i> En línea</span>
+      </div>
+      
+      <div id="chatMessages" style="flex: 1; overflow-y: auto; padding: 20px 0; margin: 20px 0;">
+        <!-- Los mensajes se cargarán aquí -->
+      </div>
+      
+      <div style="display: flex; gap: 10px; padding-top: 20px; border-top: 2px solid var(--border-color);">
+        <input type="text" id="chatInput" placeholder="Escribe un mensaje..." style="flex: 1; padding: 15px; border-radius: 15px; border: 2px solid var(--border-color); background: var(--bg-primary); color: var(--text-primary);">
+        <button class="btn-primary" onclick="window.sendMessage()" style="padding: 15px 25px;">
+          <i class="fas fa-paper-plane"></i>
+        </button>
+      </div>
+    </div>
   </div>
   
   <!-- SECCIÓN PROFESORES -->
@@ -1099,6 +1269,10 @@
             <div>
               <div style="font-size: 28px; font-weight: 700; color: var(--accent-primary);" id="profileRatingAvg">0.0</div>
               <div>Promedio</div>
+            </div>
+            <div>
+              <div style="font-size: 28px; font-weight: 700; color: var(--accent-primary);" id="profileFriendsCount">0</div>
+              <div>Amigos</div>
             </div>
           </div>
         </div>
@@ -1163,6 +1337,9 @@ let isAdmin = false;
 let newPostRating = 0;
 let allPosts = [];
 let allProfessors = [];
+let chatInterval = null;
+let currentChatPartner = null;
+let pendingRequests = [];
 
 // ===== FUNCIONES DE UTILIDAD =====
 function saveSession(username, admin, userData) {
@@ -1188,6 +1365,10 @@ function clearSession() {
     localStorage.removeItem('socialRD_user');
     localStorage.removeItem('socialRD_admin');
     localStorage.removeItem('socialRD_data');
+    if (chatInterval) {
+        clearInterval(chatInterval);
+        chatInterval = null;
+    }
 }
 
 // ===== NOTIFICACIONES =====
@@ -1250,11 +1431,53 @@ function showFeed() {
     document.getElementById("profileSection").style.display = "none";
     document.getElementById("settingsSection").style.display = "none";
     document.getElementById("professorsSection").style.display = "none";
+    document.getElementById("friendsSection").style.display = "none";
+    document.getElementById("chatSection").style.display = "none";
     
     document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
     document.getElementById("navFeed").classList.add("active");
     
+    if (chatInterval) {
+        clearInterval(chatInterval);
+        chatInterval = null;
+    }
+    
     loadPosts();
+}
+
+function showFriends() {
+    document.getElementById("feedSection").style.display = "none";
+    document.getElementById("profileSection").style.display = "none";
+    document.getElementById("settingsSection").style.display = "none";
+    document.getElementById("professorsSection").style.display = "none";
+    document.getElementById("friendsSection").style.display = "block";
+    document.getElementById("chatSection").style.display = "none";
+    
+    document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+    document.getElementById("navFriends").classList.add("active");
+    
+    if (chatInterval) {
+        clearInterval(chatInterval);
+        chatInterval = null;
+    }
+    
+    loadFriendsData();
+}
+
+function showChat(username) {
+    document.getElementById("friendsSection").style.display = "none";
+    document.getElementById("chatSection").style.display = "flex";
+    
+    currentChatPartner = username;
+    document.getElementById("chatPartnerName").innerText = username;
+    document.getElementById("chatInput").value = "";
+    
+    loadChatMessages();
+    
+    if (chatInterval) {
+        clearInterval(chatInterval);
+    }
+    chatInterval = setInterval(loadChatMessages, 3000);
 }
 
 function showProfile() {
@@ -1262,9 +1485,16 @@ function showProfile() {
     document.getElementById("profileSection").style.display = "block";
     document.getElementById("settingsSection").style.display = "none";
     document.getElementById("professorsSection").style.display = "none";
+    document.getElementById("friendsSection").style.display = "none";
+    document.getElementById("chatSection").style.display = "none";
     
     document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
     document.getElementById("navProfile").classList.add("active");
+    
+    if (chatInterval) {
+        clearInterval(chatInterval);
+        chatInterval = null;
+    }
     
     if (currentUser) {
         loadUserProfile();
@@ -1276,9 +1506,16 @@ function showProfessors() {
     document.getElementById("profileSection").style.display = "none";
     document.getElementById("settingsSection").style.display = "none";
     document.getElementById("professorsSection").style.display = "block";
+    document.getElementById("friendsSection").style.display = "none";
+    document.getElementById("chatSection").style.display = "none";
     
     document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
     document.getElementById("navProfessors").classList.add("active");
+    
+    if (chatInterval) {
+        clearInterval(chatInterval);
+        chatInterval = null;
+    }
     
     loadProfessors();
 }
@@ -1288,9 +1525,16 @@ function showSettings() {
     document.getElementById("profileSection").style.display = "none";
     document.getElementById("settingsSection").style.display = "block";
     document.getElementById("professorsSection").style.display = "none";
+    document.getElementById("friendsSection").style.display = "none";
+    document.getElementById("chatSection").style.display = "none";
     
     document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
     document.getElementById("navSettings").classList.add("active");
+    
+    if (chatInterval) {
+        clearInterval(chatInterval);
+        chatInterval = null;
+    }
 }
 
 // ===== TEMA =====
@@ -1299,7 +1543,6 @@ function toggleTheme() {
     const icon = document.getElementById("themeToggle").querySelector('i');
     icon.className = document.body.classList.contains("dark-theme") ? "fas fa-sun" : "fas fa-moon";
     
-    // Sincronizar switch
     const darkModeToggle = document.getElementById("darkModeToggle");
     if (darkModeToggle) {
         darkModeToggle.checked = document.body.classList.contains("dark-theme");
@@ -1338,7 +1581,6 @@ async function loginFunction() {
             const user = users[0];
             
             if (user.password === password) {
-                // Verificar si está bloqueado
                 const blocked = await query(`/rest/v1/blocked_users?username=eq.${encodeURIComponent(username)}&select=*`);
                 
                 if (blocked && blocked.length > 0) {
@@ -1346,7 +1588,6 @@ async function loginFunction() {
                     return;
                 }
                 
-                // Login exitoso
                 currentUser = user.username;
                 isAdmin = currentUser === "ADMIN";
                 
@@ -1404,7 +1645,6 @@ async function registerFunction() {
     }
     
     try {
-        // Verificar si existe
         const existing = await query(`/rest/v1/users?username=eq.${encodeURIComponent(username)}&select=username`);
         
         if (existing && existing.length > 0) {
@@ -1412,7 +1652,6 @@ async function registerFunction() {
             return;
         }
         
-        // Crear usuario
         await query('/rest/v1/users', {
             method: 'POST',
             body: JSON.stringify({
@@ -1429,7 +1668,6 @@ async function registerFunction() {
         showNotification("✅ Registro exitoso! Ahora inicia sesión");
         showLogin();
         
-        // Limpiar campos
         document.getElementById("regUser").value = "";
         document.getElementById("regEmail").value = "";
         document.getElementById("regPass").value = "";
@@ -1446,6 +1684,10 @@ function logout() {
     currentUser = null;
     isAdmin = false;
     clearSession();
+    if (chatInterval) {
+        clearInterval(chatInterval);
+        chatInterval = null;
+    }
     document.getElementById("app").style.display = "none";
     document.getElementById("login").style.display = "block";
     showNotification("👋 ¡Hasta pronto!");
@@ -1486,12 +1728,15 @@ async function loadPosts() {
             const notHelpfulVotes = postVotes.filter(v => v.vote_type === 'not_helpful').length;
             const isReported = reportsData ? reportsData.some(r => r.post_id === post.id && r.status === 'pending') : false;
             
+            const displayName = post.is_anonymous ? "Anónimo 🕵️" : post.username;
+            const avatarUrl = post.is_anonymous ? "https://ui-avatars.com/api/?name=Anonimo&background=6b7280&color=fff" : `https://ui-avatars.com/api/?name=${encodeURIComponent(post.username)}&background=3b82f6&color=fff`;
+            
             html += `
                 <div class="post" id="post-${post.id}">
                     <div class="post-header">
-                        <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(post.username)}&background=3b82f6&color=fff" class="post-avatar">
+                        <img src="${avatarUrl}" class="post-avatar">
                         <div class="post-user-info">
-                            <h4>${post.username} ${post.username === 'ADMIN' ? '<span class="admin-badge">Admin</span>' : ''}</h4>
+                            <h4>${displayName} ${post.is_anonymous ? '<span class="anonymous-badge">Anónimo</span>' : ''} ${post.username === 'ADMIN' && !post.is_anonymous ? '<span class="admin-badge">Admin</span>' : ''}</h4>
                             <div class="post-date"><i class="far fa-clock"></i> ${new Date(post.created_at).toLocaleString()}</div>
                         </div>
                     </div>
@@ -1518,7 +1763,7 @@ async function loadPosts() {
                                 <i class="fas fa-thumbs-down"></i> No útil (${notHelpfulVotes})
                             </button>
                         </div>
-                        ${!isAdmin && post.username !== currentUser ? `
+                        ${!isAdmin && post.username !== currentUser && !post.is_anonymous ? `
                             <button class="btn-warning" style="padding: 8px 15px;" onclick="window.reportPost(${post.id})">
                                 <i class="fas fa-flag"></i> Reportar
                             </button>
@@ -1534,13 +1779,17 @@ async function loadPosts() {
                             ${postComments.map(comment => {
                                 const commentVotes = votesData ? votesData.filter(v => v.comment_id === comment.id) : [];
                                 const commentHelpful = commentVotes.filter(v => v.vote_type === 'helpful').length;
+                                const isCommentAnon = comment.is_anonymous || false;
+                                const commentDisplayName = isCommentAnon ? "Anónimo 🕵️" : comment.username;
+                                const commentAvatar = isCommentAnon ? "https://ui-avatars.com/api/?name=Anonimo&background=6b7280&color=fff" : `https://ui-avatars.com/api/?name=${encodeURIComponent(comment.username)}&background=3b82f6&color=fff`;
                                 return `
                                     <div class="comment" id="comment-${comment.id}">
                                         <div class="comment-header">
                                             <span class="comment-user">
-                                                <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(comment.username)}&background=3b82f6&color=fff" alt="">
-                                                ${comment.username}
-                                                ${comment.username === 'ADMIN' ? '<span class="admin-badge">Admin</span>' : ''}
+                                                <img src="${commentAvatar}" alt="">
+                                                ${commentDisplayName}
+                                                ${isCommentAnon ? '<span class="anonymous-badge">Anónimo</span>' : ''}
+                                                ${comment.username === 'ADMIN' && !isCommentAnon ? '<span class="admin-badge">Admin</span>' : ''}
                                             </span>
                                             <span class="comment-date">${new Date(comment.created_at).toLocaleString()}</span>
                                         </div>
@@ -1551,7 +1800,7 @@ async function loadPosts() {
                                                     <i class="fas fa-thumbs-up"></i> (${commentHelpful})
                                                 </button>
                                             </div>
-                                            ${!isAdmin && comment.username !== currentUser ? `
+                                            ${!isAdmin && comment.username !== currentUser && !isCommentAnon ? `
                                                 <button class="btn-warning" style="padding: 5px 10px; font-size: 12px;" onclick="window.reportComment(${comment.id})">
                                                     <i class="fas fa-flag"></i> Reportar
                                                 </button>
@@ -1575,7 +1824,7 @@ async function loadPosts() {
                         </div>
                     </div>
                     
-                    <div class="post-actions" style="display: flex; gap: 10px; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border-color);">
+                    <div class="post-actions" style="display: flex; gap: 10px; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border-color); flex-wrap: wrap;">
                         ${(isAdmin || post.username === currentUser) ? `
                             <button class="btn-danger" onclick="window.deletePost(${post.id})">
                                 <i class="fas fa-trash-alt"></i> Eliminar Publicación
@@ -1591,6 +1840,12 @@ async function loadPosts() {
                         ${isAdmin && isReported ? `
                             <button class="btn-success" onclick="window.resolveReport(${post.id})">
                                 <i class="fas fa-check"></i> Resolver Reporte
+                            </button>
+                        ` : ''}
+                        
+                        ${currentUser && post.username !== currentUser && !post.is_anonymous ? `
+                            <button class="btn-outline" onclick="window.sendFriendRequest('${post.username}')">
+                                <i class="fas fa-user-plus"></i> Agregar Amigo
                             </button>
                         ` : ''}
                     </div>
@@ -1632,9 +1887,6 @@ function displayFilteredPosts(posts) {
         document.getElementById("posts").innerHTML = "<div style='text-align:center; padding:60px;'><i class='fas fa-search fa-4x' style='color: var(--text-secondary);'></i><h3>No se encontraron resultados</h3></div>";
         return;
     }
-    
-    // Aquí iría la lógica para mostrar los posts filtrados
-    // Por simplicidad, recargamos todos y luego filtramos en memoria
     loadPosts();
 }
 
@@ -1643,7 +1895,6 @@ async function loadProfessors() {
     try {
         const posts = await query('/rest/v1/posts?select=teacher,subject,institution,teacher_rating,username');
         
-        // Agrupar por profesor
         const professorMap = new Map();
         
         posts.forEach(post => {
@@ -1756,6 +2007,7 @@ async function upload() {
     const subject = document.getElementById("subject").value.trim();
     const institution = document.getElementById("institution").value.trim();
     const description = document.getElementById("desc").value.trim();
+    const isAnonymous = document.getElementById("anonymousPost").checked;
     
     if (!teacher || !description) {
         showNotification("Nombre del profesor y descripción son obligatorios", "error");
@@ -1774,6 +2026,7 @@ async function upload() {
         institution: institution || null,
         description: description,
         teacher_rating: newPostRating,
+        is_anonymous: isAnonymous,
         created_at: new Date().toISOString()
     };
     
@@ -1798,12 +2051,12 @@ async function savePost(postData) {
         
         showNotification("✅ ¡Publicación creada exitosamente!", "success");
         
-        // Limpiar formulario
         document.getElementById("image").value = "";
         document.getElementById("teacherName").value = "";
         document.getElementById("subject").value = "";
         document.getElementById("institution").value = "";
         document.getElementById("desc").value = "";
+        document.getElementById("anonymousPost").checked = false;
         newPostRating = 0;
         document.querySelectorAll("#newPostStars .star").forEach(s => s.classList.remove("active"));
         
@@ -1825,17 +2078,14 @@ async function votePost(postId, voteType) {
     }
     
     try {
-        // Verificar si ya votó
         const existing = await query(`/rest/v1/votes?post_id=eq.${postId}&username=eq.${encodeURIComponent(currentUser)}&select=*`);
         
         if (existing && existing.length > 0) {
-            // Actualizar voto existente
             await query(`/rest/v1/votes?id=eq.${existing[0].id}`, {
                 method: 'PATCH',
                 body: JSON.stringify({ vote_type: voteType })
             });
         } else {
-            // Crear nuevo voto
             await query('/rest/v1/votes', {
                 method: 'POST',
                 body: JSON.stringify({
@@ -1990,6 +2240,7 @@ async function addComment(postId) {
                 post_id: postId,
                 username: currentUser,
                 content: content,
+                is_anonymous: false,
                 created_at: new Date().toISOString()
             })
         });
@@ -2030,22 +2281,18 @@ async function deletePost(postId) {
     if (!confirm("¿Eliminar esta publicación?")) return;
     
     try {
-        // Eliminar comentarios asociados
         await query(`/rest/v1/comments?post_id=eq.${postId}`, {
             method: 'DELETE'
         });
         
-        // Eliminar votos asociados
         await query(`/rest/v1/votes?post_id=eq.${postId}`, {
             method: 'DELETE'
         });
         
-        // Eliminar reportes asociados
         await query(`/rest/v1/reports?post_id=eq.${postId}`, {
             method: 'DELETE'
         });
         
-        // Eliminar post
         await query(`/rest/v1/posts?id=eq.${postId}`, {
             method: 'DELETE'
         });
@@ -2068,7 +2315,6 @@ async function loadAdminPanel() {
         const blockedData = await query('/rest/v1/blocked_users?select=*');
         const reportsData = await query('/rest/v1/reports?status=eq.pending&select=*,posts(*),comments(*)');
         
-        // Contar profesores únicos
         const professorsData = await query('/rest/v1/posts?select=teacher');
         const uniqueProfessors = new Set(professorsData.map(p => p.teacher).filter(Boolean)).size;
         
@@ -2077,7 +2323,6 @@ async function loadAdminPanel() {
         document.getElementById("totalComments").innerText = commentsData ? commentsData.length : 0;
         document.getElementById("totalProfessors").innerText = uniqueProfessors;
         
-        // Usuarios bloqueados
         const blockedDiv = document.getElementById("blockedUsers");
         if (!blockedData || blockedData.length === 0) {
             blockedDiv.innerHTML = "<p style='text-align:center; padding:20px;'>No hay usuarios bloqueados</p>";
@@ -2092,7 +2337,6 @@ async function loadAdminPanel() {
             `).join('');
         }
         
-        // Comentarios reportados
         const reportsDiv = document.getElementById("reportedComments");
         if (!reportsData || reportsData.length === 0) {
             reportsDiv.innerHTML = "<p style='text-align:center; padding:20px;'>No hay reportes pendientes</p>";
@@ -2161,6 +2405,9 @@ async function loadUserProfile() {
         const userData = await query(`/rest/v1/users?username=eq.${encodeURIComponent(currentUser)}&select=*`);
         const userPosts = await query(`/rest/v1/posts?username=eq.${encodeURIComponent(currentUser)}&order=created_at.desc`);
         
+        // Contar amigos
+        const friends = await query(`/rest/v1/friends?or=(user1_username.eq.${encodeURIComponent(currentUser)},user2_username.eq.${encodeURIComponent(currentUser)})`);
+        
         if (userData && userData.length > 0) {
             const user = userData[0];
             
@@ -2170,8 +2417,8 @@ async function loadUserProfile() {
             document.getElementById("profileMiniAvatar").src = user.avatar;
             document.getElementById("profileBio").innerHTML = user.bio || "Estudiante comprometido con la educación";
             document.getElementById("profilePostsCount").innerText = userPosts ? userPosts.length : 0;
+            document.getElementById("profileFriendsCount").innerText = friends ? friends.length : 0;
             
-            // Calcular promedio
             let totalRating = 0;
             if (userPosts) {
                 userPosts.forEach(p => totalRating += p.teacher_rating || 0);
@@ -2179,15 +2426,16 @@ async function loadUserProfile() {
             const avg = userPosts && userPosts.length > 0 ? (totalRating / userPosts.length).toFixed(1) : "0.0";
             document.getElementById("profileRatingAvg").innerText = avg;
             
-            // Mostrar posts del usuario
             let userPostsHtml = "";
             if (userPosts && userPosts.length > 0) {
                 userPosts.forEach(post => {
+                    const displayName = post.is_anonymous ? "Anónimo 🕵️" : post.username;
                     userPostsHtml += `
                         <div class="post" style="margin-bottom:15px;">
                             <div style="background: var(--accent-gradient); color:white; padding:8px 20px; border-radius:30px; display:inline-block; margin-bottom:15px;">
                                 ${post.teacher} ⭐ ${post.teacher_rating || 0}/5
                                 ${post.subject ? ` • ${post.subject}` : ''}
+                                ${post.is_anonymous ? ' • 🕵️ Anónimo' : ''}
                             </div>
                             ${post.image ? `<img src="${post.image}" style="width:100%; border-radius:15px; margin:15px 0;">` : ''}
                             <p>${post.description}</p>
@@ -2207,10 +2455,6 @@ async function loadUserProfile() {
 }
 
 // ===== FUNCIONES DE PERFIL =====
-function editProfile() {
-    editBio();
-}
-
 function editBio() {
     const newBio = prompt("Escribe tu nueva biografía:");
     if (newBio) {
@@ -2292,6 +2536,350 @@ async function updateAvatar(event) {
     reader.readAsDataURL(file);
 }
 
+// ===== SISTEMA DE AMISTAD =====
+
+// Enviar solicitud de amistad
+async function sendFriendRequest(username) {
+    if (!currentUser) {
+        showNotification("Debes iniciar sesión", "error");
+        return;
+    }
+    
+    if (username === currentUser) {
+        showNotification("No puedes enviarte una solicitud a ti mismo", "warning");
+        return;
+    }
+    
+    try {
+        // Verificar si ya son amigos
+        const existingFriends = await query(`/rest/v1/friends?or=(user1_username.eq.${encodeURIComponent(currentUser)},user2_username.eq.${encodeURIComponent(currentUser)})`);
+        const isFriend = existingFriends.some(f => 
+            (f.user1_username === username && f.user2_username === currentUser) ||
+            (f.user1_username === currentUser && f.user2_username === username)
+        );
+        
+        if (isFriend) {
+            showNotification("Ya son amigos", "warning");
+            return;
+        }
+        
+        // Verificar si ya hay solicitud pendiente
+        const existingRequest = await query(`/rest/v1/friend_requests?or=(sender_username.eq.${encodeURIComponent(currentUser)},receiver_username.eq.${encodeURIComponent(currentUser)})&status=eq.pending`);
+        
+        const requestExists = existingRequest.some(r => 
+            (r.sender_username === username && r.receiver_username === currentUser) ||
+            (r.sender_username === currentUser && r.receiver_username === username)
+        );
+        
+        if (requestExists) {
+            showNotification("Ya hay una solicitud pendiente", "warning");
+            return;
+        }
+        
+        await query('/rest/v1/friend_requests', {
+            method: 'POST',
+            body: JSON.stringify({
+                sender_username: currentUser,
+                receiver_username: username,
+                status: 'pending',
+                created_at: new Date().toISOString()
+            })
+        });
+        
+        showNotification(`✅ Solicitud enviada a ${username}`);
+        loadFriendsData();
+        
+    } catch (error) {
+        console.error("Error enviando solicitud:", error);
+        showNotification("Error al enviar solicitud: " + error.message, "error");
+    }
+}
+
+// Aceptar solicitud de amistad
+async function acceptFriendRequest(requestId, senderUsername) {
+    try {
+        // Actualizar estado de la solicitud
+        await query(`/rest/v1/friend_requests?id=eq.${requestId}`, {
+            method: 'PATCH',
+            body: JSON.stringify({ 
+                status: 'accepted',
+                updated_at: new Date().toISOString()
+            })
+        });
+        
+        // Crear relación de amistad
+        await query('/rest/v1/friends', {
+            method: 'POST',
+            body: JSON.stringify({
+                user1_username: currentUser,
+                user2_username: senderUsername,
+                created_at: new Date().toISOString()
+            })
+        });
+        
+        showNotification(`✅ Ahora eres amigo de ${senderUsername}`);
+        loadFriendsData();
+        
+    } catch (error) {
+        console.error("Error aceptando solicitud:", error);
+        showNotification("Error al aceptar solicitud: " + error.message, "error");
+    }
+}
+
+// Rechazar solicitud de amistad
+async function rejectFriendRequest(requestId) {
+    try {
+        await query(`/rest/v1/friend_requests?id=eq.${requestId}`, {
+            method: 'DELETE'
+        });
+        
+        showNotification("Solicitud rechazada");
+        loadFriendsData();
+        
+    } catch (error) {
+        console.error("Error rechazando solicitud:", error);
+        showNotification("Error al rechazar solicitud: " + error.message, "error");
+    }
+}
+
+// Buscar usuarios
+async function searchUsers() {
+    const searchTerm = document.getElementById("searchUsersInput").value.trim();
+    
+    if (!searchTerm) {
+        document.getElementById("searchResults").innerHTML = "";
+        return;
+    }
+    
+    try {
+        const users = await query(`/rest/v1/users?username=ilike.%25${encodeURIComponent(searchTerm)}%25&select=username,avatar`);
+        
+        const friends = await query(`/rest/v1/friends?or=(user1_username.eq.${encodeURIComponent(currentUser)},user2_username.eq.${encodeURIComponent(currentUser)})`);
+        
+        const friendRequests = await query(`/rest/v1/friend_requests?or=(sender_username.eq.${encodeURIComponent(currentUser)},receiver_username.eq.${encodeURIComponent(currentUser)})&status=eq.pending`);
+        
+        let html = "";
+        users.forEach(user => {
+            if (user.username === currentUser) return;
+            
+            const isFriend = friends.some(f => 
+                (f.user1_username === user.username && f.user2_username === currentUser) ||
+                (f.user1_username === currentUser && f.user2_username === user.username)
+            );
+            
+            const hasPendingRequest = friendRequests.some(r => 
+                (r.sender_username === user.username && r.receiver_username === currentUser) ||
+                (r.sender_username === currentUser && r.receiver_username === user.username)
+            );
+            
+            html += `
+                <div class="friend-item">
+                    <div class="friend-info">
+                        <img src="${user.avatar}" alt="${user.username}">
+                        <span style="font-weight: 600;">${user.username}</span>
+                    </div>
+                    <div>
+                        ${isFriend ? 
+                            `<button class="btn-success" onclick="window.openChat('${user.username}')"><i class="fas fa-comment"></i> Chat</button>` :
+                            hasPendingRequest ?
+                                `<button class="btn-secondary" disabled><i class="fas fa-clock"></i> Pendiente</button>` :
+                                `<button class="btn-primary" onclick="window.sendFriendRequest('${user.username}')"><i class="fas fa-user-plus"></i> Agregar</button>`
+                        }
+                    </div>
+                </div>
+            `;
+        });
+        
+        document.getElementById("searchResults").innerHTML = html || "<p style='text-align:center; padding:20px;'>No se encontraron usuarios</p>";
+        
+    } catch (error) {
+        console.error("Error buscando usuarios:", error);
+        showNotification("Error al buscar usuarios: " + error.message, "error");
+    }
+}
+
+// Cargar datos de amigos
+async function loadFriendsData() {
+    if (!currentUser) return;
+    
+    try {
+        // Cargar solicitudes pendientes recibidas
+        const requests = await query(`/rest/v1/friend_requests?receiver_username=eq.${encodeURIComponent(currentUser)}&status=eq.pending`);
+        
+        const requestsContainer = document.getElementById("requestsList");
+        if (requests && requests.length > 0) {
+            let html = "";
+            for (const req of requests) {
+                const senderData = await query(`/rest/v1/users?username=eq.${encodeURIComponent(req.sender_username)}&select=avatar`);
+                const avatar = senderData && senderData.length > 0 ? senderData[0].avatar : `https://ui-avatars.com/api/?name=${encodeURIComponent(req.sender_username)}&background=3b82f6&color=fff`;
+                html += `
+                    <div class="request-item">
+                        <div class="friend-info">
+                            <img src="${avatar}" alt="${req.sender_username}">
+                            <span style="font-weight: 600;">${req.sender_username}</span>
+                            <span style="font-size: 12px; color: var(--text-secondary);"><i class="fas fa-clock"></i> ${new Date(req.created_at).toLocaleString()}</span>
+                        </div>
+                        <div style="display: flex; gap: 10px;">
+                            <button class="btn-success" onclick="window.acceptFriendRequest(${req.id}, '${req.sender_username}')">
+                                <i class="fas fa-check"></i> Aceptar
+                            </button>
+                            <button class="btn-danger" onclick="window.rejectFriendRequest(${req.id})">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+            requestsContainer.innerHTML = html;
+        } else {
+            requestsContainer.innerHTML = "<p style='text-align:center; padding:20px; color: var(--text-secondary);'>No tienes solicitudes pendientes</p>";
+        }
+        
+        // Cargar lista de amigos
+        const friends = await query(`/rest/v1/friends?or=(user1_username.eq.${encodeURIComponent(currentUser)},user2_username.eq.${encodeURIComponent(currentUser)})`);
+        
+        const friendsList = document.getElementById("friendsList");
+        if (friends && friends.length > 0) {
+            let html = "";
+            for (const friend of friends) {
+                const friendUsername = friend.user1_username === currentUser ? friend.user2_username : friend.user1_username;
+                const friendData = await query(`/rest/v1/users?username=eq.${encodeURIComponent(friendUsername)}&select=avatar`);
+                const avatar = friendData && friendData.length > 0 ? friendData[0].avatar : `https://ui-avatars.com/api/?name=${encodeURIComponent(friendUsername)}&background=3b82f6&color=fff`;
+                
+                html += `
+                    <div class="friend-item">
+                        <div class="friend-info">
+                            <img src="${avatar}" alt="${friendUsername}">
+                            <span style="font-weight: 600;">${friendUsername}</span>
+                        </div>
+                        <div style="display: flex; gap: 10px;">
+                            <button class="btn-primary" onclick="window.openChat('${friendUsername}')">
+                                <i class="fas fa-comment"></i> Chat
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+            friendsList.innerHTML = html;
+        } else {
+            friendsList.innerHTML = "<p style='text-align:center; padding:20px; color: var(--text-secondary);'>Aún no tienes amigos. ¡Envía solicitudes!</p>";
+        }
+        
+    } catch (error) {
+        console.error("Error cargando amigos:", error);
+    }
+}
+
+// ===== CHAT PRIVADO =====
+
+// Abrir chat con un amigo
+function openChat(username) {
+    if (!currentUser) {
+        showNotification("Debes iniciar sesión", "error");
+        return;
+    }
+    
+    showChat(username);
+}
+
+// Cargar mensajes del chat
+async function loadChatMessages() {
+    if (!currentUser || !currentChatPartner) return;
+    
+    try {
+        const messages = await query(`/rest/v1/private_messages?or=(sender_username.eq.${encodeURIComponent(currentUser)},receiver_username.eq.${encodeURIComponent(currentUser)})&order=created_at.asc`);
+        
+        // Filtrar mensajes entre los dos usuarios
+        const chatMessages = messages.filter(m => 
+            (m.sender_username === currentUser && m.receiver_username === currentChatPartner) ||
+            (m.sender_username === currentChatPartner && m.receiver_username === currentUser)
+        );
+        
+        const container = document.getElementById("chatMessages");
+        
+        if (chatMessages.length === 0) {
+            container.innerHTML = "<div style='text-align:center; padding:40px; color: var(--text-secondary);'><i class='fas fa-comment-dots fa-3x' style='margin-bottom: 20px;'></i><p>No hay mensajes aún. ¡Envía el primero!</p></div>";
+            return;
+        }
+        
+        let html = "";
+        for (const msg of chatMessages) {
+            const isSent = msg.sender_username === currentUser;
+            const time = new Date(msg.created_at).toLocaleTimeString();
+            
+            html += `
+                <div class="chat-message ${isSent ? 'sent' : 'received'}">
+                    <div class="chat-bubble">
+                        ${msg.content}
+                        <div class="chat-time">${time}</div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        container.innerHTML = html;
+        container.scrollTop = container.scrollHeight;
+        
+        // Marcar mensajes como leídos
+        const unreadMessages = chatMessages.filter(m => 
+            m.receiver_username === currentUser && !m.read
+        );
+        
+        for (const msg of unreadMessages) {
+            await query(`/rest/v1/private_messages?id=eq.${msg.id}`, {
+                method: 'PATCH',
+                body: JSON.stringify({ read: true })
+            });
+        }
+        
+    } catch (error) {
+        console.error("Error cargando mensajes:", error);
+    }
+}
+
+// Enviar mensaje
+async function sendMessage() {
+    if (!currentUser || !currentChatPartner) {
+        showNotification("No hay un chat abierto", "error");
+        return;
+    }
+    
+    const input = document.getElementById("chatInput");
+    const content = input.value.trim();
+    
+    if (!content) {
+        showNotification("Escribe un mensaje", "error");
+        return;
+    }
+    
+    try {
+        await query('/rest/v1/private_messages', {
+            method: 'POST',
+            body: JSON.stringify({
+                sender_username: currentUser,
+                receiver_username: currentChatPartner,
+                content: content,
+                read: false,
+                created_at: new Date().toISOString()
+            })
+        });
+        
+        input.value = "";
+        loadChatMessages();
+        
+    } catch (error) {
+        console.error("Error enviando mensaje:", error);
+        showNotification("Error al enviar mensaje: " + error.message, "error");
+    }
+}
+
+// Enviar mensaje con Enter
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && document.getElementById("chatInput") === document.activeElement) {
+        sendMessage();
+    }
+});
+
 // ===== VERIFICAR SESIÓN =====
 async function checkSession() {
     const session = loadSession();
@@ -2346,6 +2934,8 @@ window.registerFunction = registerFunction;
 window.showLogin = showLogin;
 window.showRegister = showRegister;
 window.showFeed = showFeed;
+window.showFriends = showFriends;
+window.showChat = showChat;
 window.showProfile = showProfile;
 window.showProfessors = showProfessors;
 window.showSettings = showSettings;
@@ -2368,12 +2958,19 @@ window.reportComment = reportComment;
 window.resolveReport = resolveReport;
 window.blockUser = blockUser;
 window.unblockUser = unblockUser;
-window.editProfile = editProfile;
 window.editBio = editBio;
 window.changeUsername = changeUsername;
 window.changeEmail = changeEmail;
 window.changePassword = changePassword;
 window.updateAvatar = updateAvatar;
+window.sendFriendRequest = sendFriendRequest;
+window.acceptFriendRequest = acceptFriendRequest;
+window.rejectFriendRequest = rejectFriendRequest;
+window.searchUsers = searchUsers;
+window.loadFriendsData = loadFriendsData;
+window.openChat = openChat;
+window.loadChatMessages = loadChatMessages;
+window.sendMessage = sendMessage;
 
 // ===== INICIAR =====
 window.onload = function() {
